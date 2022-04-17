@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require("cookie-parser")
 const cors = require("cors")
 //router
-const fight = require('./router/fight')
+const fight = require('./router/real-time-arena')
 
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -18,12 +18,14 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use('/fight', fight)
+app.use('/real-time-arena', fight)
 
 app.get('/', function (req, res) {
+    const { cookies } = req;
+    console.log('Cookies: ', cookies)
     res.send('Fight micro services')
 })
 
 app.listen(3002, () => {
-    console.log("app started");
+    console.log("fight webservice started");
 })
