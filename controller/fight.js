@@ -9,7 +9,8 @@ const setMapFightById = (fightId, playersInfo) => {
 };
 
 const getNewFightId = () => {
-    return Date.now().toString();
+    //a voir comment les identifier
+    return "fid_" + Date.now().toString();
 };
 
 exports.launchFight = (playersInfo) => {

@@ -6,6 +6,7 @@ const router = express.Router()
 router.use(cookieParser());
 
 const COOKIE_FIGHT_ID = "fightId";
+//Setup le cookie
 
 router.post("/launch", (req, res) => {
     fight = launchFight(req.body);
