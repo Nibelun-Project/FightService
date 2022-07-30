@@ -109,7 +109,11 @@ const fight = () => {
 		else return null;
 	};
 
-	const _doActions = (instance) => {};
+	const _doActions = (instance) => {
+		console.log(instance);
+
+		return instance;
+	};
 
 	return { ready, waitActions };
 };

@@ -20,8 +20,8 @@ const comm = (io) => {
 		});
 
 		socket.on("actions", (actions, playerID, fightID) => {
-			const [playerInfo] = fightmode.waitActions(actions, playerID, fightID);
-			if (res) _socketTo(playerInfo, "action-done", playerInfo);
+			const playerInfo = fightmode.waitActions(actions, playerID, fightID);
+			if (playerInfo) _socketTo(playerInfo, "action-done", playerInfo);
 			else socket.emit("action-pending");
 		});
 	});
