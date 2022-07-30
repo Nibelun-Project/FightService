@@ -1,41 +1,47 @@
-// let mapFights = {};
+let mapFights = {};
 
-// const getMapFight = () => {
-// 	return mapFights;
-// };
+const getMapFight = () => {
+	return mapFights;
+};
 
-// const setMapFightById = (fightId, playersInfo) => {
-// 	mapFights[fightId.toString()] = playersInfo;
-// };
+const setMapFightById = (fightId, playersInfo) => {
+	mapFights[fightId.toString()] = playersInfo;
+};
 
-// const getNewFightId = () => {
-// 	return "fid_" + Date.now().toString();
-// };
+const getNewFightId = () => {
+	return "fid_" + Date.now().toString();
+};
 
-// const launchFight = (playersInfo) => {
-// 	const fightId = getNewFightId();
-// 	setMapFightById(fightId, playersInfo);
-// 	console.log("fight n°", fightId, "started");
-// 	console.log(getMapFight());
-// 	return { id: fightId };
-// };
+const launchFight = (playersInfo) => {
+	const fightId = getNewFightId();
+	setMapFightById(fightId, playersInfo);
+	console.log("fight n°", fightId, "started");
+	console.log(getMapFight());
+	return { id: fightId };
+};
+
+const getTeam = (playerID) => {
+	return [{ dd: "d" }, { ddd: "d545" }];
+};
 
 const fight = () => {
 	let instance = [];
-	let teams = [];
+	let players = [];
 
-	const ready = (team) => {
-		// launchFight();
-		teams.push(team);
-		if (teams.length >= 2) return _startCombat();
+	const ready = (match) => {
+		match.map((player) => {
+			player["team"] = getTeam(player.id);
+		});
+
+		return _startCombat(match);
 	};
 
-	const _startCombat = () => {
-		return teams;
+	const _startCombat = (match) => {
+		players.push(match);
+		return match;
 	};
 
 	return { ready };
 };
 
-// export { launchFight };
 export default fight;

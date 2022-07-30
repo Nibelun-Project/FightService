@@ -1,11 +1,10 @@
 import express from "express";
 const app = express();
 //http server
-import http from "http";
-const httpServer = http.createServer(app);
+const server = app.listen(3010);
 //socket.io
 import { Server } from "socket.io";
-const io = new Server(httpServer, {});
+const io = new Server(server, { cors: { origin: "*" } });
 //middleware
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -13,6 +12,10 @@ import cors from "cors";
 //router
 // const fight = require("./router/real-time-arena");
 import fight from "./router/combat.js";
+
+import { comm } from "./controller/communication.js";
+
+const communication = comm(io);
 
 app.use(bodyParser.json());
 app.use(cookieParser());
