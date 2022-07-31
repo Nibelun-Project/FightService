@@ -23,7 +23,7 @@ const launchFight = (playersInfo) => {
 const getTeam = (playerID) => {
 	return [
 		{
-			id: "1",
+			id: (parseInt(playerID)/100000)*1,
 			name: "ronkarétoal",
 			typeName: {
 				firstType: "fire",
@@ -33,7 +33,7 @@ const getTeam = (playerID) => {
 				hp: 100,
 				attack: 100,
 				def: 100,
-				speed: 100,
+				speed: (parseInt(playerID)/100000)*50,
 				// precision: 100,
 				// statusRes: 100,
 				stamina: 100,
@@ -45,7 +45,7 @@ const getTeam = (playerID) => {
 			buff: [],
 		},
 		{
-			id: "2",
+			id: (parseInt(playerID)/100000)*2,
 			name: "étoalronkaré",
 			typeName: {
 				firstType: "fire",
@@ -55,7 +55,7 @@ const getTeam = (playerID) => {
 				hp: 100,
 				attack: 100,
 				def: 100,
-				speed: 100,
+				speed: 100,//(parseInt(playerID)/100000)*100,
 				// precision: 100,
 				// statusRes: 100,
 				stamina: 100,
@@ -97,11 +97,9 @@ const fight = () => {
 
 		if (_isActionsFilled(tempInstance)) {
 			const modifyInstance = _doActions(tempInstance)
-
-			//clear cache
 			instance[fightID] = modifyInstance;
 			return modifyInstance
-		} //action
+		}
 		else return null;
 	};
 
@@ -112,10 +110,10 @@ const fight = () => {
 		return true
 	}
 
-
 	const _doActions = (instance) => {
 		console.log(instance);
 		//speed contest
+		const sortedMonsters = _speedContest(instance)
 		//do actions
 		//clear actions
 		for (const [key, value] of Object.entries(instance)) {
@@ -125,6 +123,26 @@ const fight = () => {
 		//send info
 		return instance;
 	};
+
+	const _speedContest = (instance) => {
+		let sortedMonsters = []
+		let tempMonstersList = []
+		for (const [key, value] of Object.entries(instance)) {
+			value.team.forEach(monster => {
+				monster.playerID = key
+			})
+			tempMonstersList = tempMonstersList.concat(value.team)
+		}
+		tempMonstersList.forEach(tempMonster => {
+			const count = tempMonstersList.filter(monster => {
+				if (monster.stats.speed > tempMonster.stats.speed || monster.stats.speed === tempMonster.stats.speed && monster.id > tempMonster.id) return true;
+				return false;
+			  }).length;
+			  sortedMonsters[count] = tempMonster
+		})
+
+		return sortedMonsters
+	}
 
 	return { ready, waitActions };
 };
