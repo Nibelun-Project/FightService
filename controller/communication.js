@@ -12,6 +12,7 @@ const comm = (io) => {
 
 		socket.on("init", (playerID) => {
 			playerInit(playerID, socket.id);
+			console.log(playerSockets);
 			const match = matchmake.addPlayer(playerID);
 			if (match) {
 				const [playerInfo, fightID] = fightmode.ready(match);
@@ -23,6 +24,15 @@ const comm = (io) => {
 			const playerInfo = fightmode.waitActions(actions, playerID, fightID);
 			if (playerInfo) _socketTo(playerInfo, "action-done", playerInfo);
 			else socket.emit("action-pending");
+		});
+
+		socket.on("disconnect", () => {
+			let keyToDelete;
+			for (const [key, value] of Object.entries(playerSockets)) {
+				if (value === socket.id) keyToDelete = key;
+			}
+			if (keyToDelete) delete playerSockets[keyToDelete];
+			console.log(playerSockets);
 		});
 	});
 

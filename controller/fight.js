@@ -110,8 +110,6 @@ const fight = () => {
 	};
 
 	const _doActions = (instance) => {
-		console.log(instance);
-
 		return instance;
 	};
 
