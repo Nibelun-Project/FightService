@@ -8,7 +8,9 @@ const matchmaking = () => {
 	};
 
 	const createMatch = () => {
-		const match = [{ id: waitingPlayers[0] }, { id: waitingPlayers[1] }];
+		const match = {}
+		match[waitingPlayers[0].toString()] = {}
+		match[waitingPlayers[1].toString()] = {}
 
 		waitingPlayers = waitingPlayers.filter(
 			(player) => player != waitingPlayers[1] && waitingPlayers[0]

@@ -73,11 +73,10 @@ const fight = () => {
 	let instance = {};
 
 	const ready = (match) => {
-		match.map((player) => {
-			player["team"] = getTeam(player.id);
-			player["actions"] = [];
-		});
-
+		for (const [key, value] of Object.entries(match)) {
+			value["team"] = getTeam(key)
+			value["actions"] = []
+		}
 		return _startCombat(match);
 	};
 
@@ -92,24 +91,38 @@ const fight = () => {
 	};
 
 	const waitActions = (actions, playerID, fightID) => {
-		let playerActions = 0;
 		const tempInstance = instance[fightID];
 		if (!tempInstance) return null;
-		const tempTeamArray = tempInstance.filter(
-			(player) => player.id == playerID
-		);
-		if (tempTeamArray.length < 0) return null;
-		const tempPlayer = tempTeamArray[0];
-		tempPlayer.actions = actions;
-		tempInstance.forEach((player) => {
-			if (player.actions.length > 0) playerActions++;
-		});
+		tempInstance[playerID].actions = actions
 
-		if (playerActions >= 2) return _doActions(tempInstance); //action
+		if (_isActionsFilled(tempInstance)) {
+			const modifyInstance = _doActions(tempInstance)
+
+			//clear cache
+			instance[fightID] = modifyInstance;
+			return modifyInstance
+		} //action
 		else return null;
 	};
 
+	const _isActionsFilled = (tempInstance) => {
+		for (const [key, value] of Object.entries(tempInstance)) {
+			if (value.actions.length === 0) return false
+		}
+		return true
+	}
+
+
 	const _doActions = (instance) => {
+		console.log(instance);
+		//speed contest
+		//do actions
+		//clear actions
+		for (const [key, value] of Object.entries(instance)) {
+			value.actions = []
+		}
+
+		//send info
 		return instance;
 	};
 

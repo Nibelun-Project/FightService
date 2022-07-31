@@ -41,9 +41,9 @@ const comm = (io) => {
 	};
 
 	const _socketTo = (playerInfo, emit, data) => {
-		playerInfo.forEach((player) => {
-			io.to(playerSockets[player.id]).emit(emit, data);
-		});
+		for (const [key, value] of Object.entries(playerInfo)) {
+			io.to(playerSockets[key]).emit(emit, data);
+		}
 	};
 };
 
