@@ -1,36 +1,36 @@
-let mapFights = {};
+// let mapFights = {};
 
-const getMapFight = () => {
-	return mapFights;
-};
+// const getMapFight = () => {
+// 	return mapFights;
+// };
 
-const setMapFightById = (fightId, playersInfo) => {
-	mapFights[fightId.toString()] = playersInfo;
-};
+// const setMapFightById = (fightId, playersInfo) => {
+// 	mapFights[fightId.toString()] = playersInfo;
+// };
 
-const getNewFightId = () => {
-	return "fid_" + Date.now().toString();
-};
+// const getNewFightId = () => {
+// 	return "fid_" + Date.now().toString();
+// };
 
-const launchFight = (playersInfo) => {
-	const fightId = getNewFightId();
-	setMapFightById(fightId, playersInfo);
-	console.log("fight n°", fightId, "started");
-	console.log(getMapFight());
-	return { id: fightId };
-};
+// const launchFight = (playersInfo) => {
+// 	const fightId = getNewFightId();
+// 	setMapFightById(fightId, playersInfo);
+// 	console.log("fight n°", fightId, "started");
+// 	console.log(getMapFight());
+// 	return { id: fightId };
+// };
 
 const getTeam = (playerID) => {
 	return [
 		{
-			id: (parseInt(playerID)/100000)*1,
+			id: ((parseInt(playerID)/100000)*1).toString() ,
 			name: "ronkarétoal",
 			typeName: {
 				firstType: "fire",
 				secondType: "mental",
 			},
 			stats: {
-				hp: 100,
+				hp: 300,
 				attack: 100,
 				def: 100,
 				speed: (parseInt(playerID)/100000)*50,
@@ -45,14 +45,14 @@ const getTeam = (playerID) => {
 			buff: [],
 		},
 		{
-			id: (parseInt(playerID)/100000)*2,
+			id: ((parseInt(playerID)/100000)*2).toString() , 
 			name: "étoalronkaré",
 			typeName: {
 				firstType: "fire",
 				secondType: "mental",
 			},
 			stats: {
-				hp: 100,
+				hp: 300,
 				attack: 100,
 				def: 100,
 				speed: 100,//(parseInt(playerID)/100000)*100,
@@ -70,7 +70,7 @@ const getTeam = (playerID) => {
 };
 
 const fight = () => {
-	let instance = {};
+	let mapFights = {};
 
 	const ready = (match) => {
 		for (const [key, value] of Object.entries(match)) {
@@ -86,18 +86,18 @@ const fight = () => {
 
 	const _startCombat = (match) => {
 		const fightId = _getNewFightId();
-		instance[fightId.toString()] = match;
+		mapFights[fightId.toString()] = match;
 		return [match, fightId];
 	};
 
 	const waitActions = (actions, playerID, fightID) => {
-		const tempInstance = instance[fightID];
+		const tempInstance = mapFights[fightID];
 		if (!tempInstance) return null;
 		tempInstance[playerID].actions = actions
 
 		if (_isActionsFilled(tempInstance)) {
-			const modifyInstance = _doActions(tempInstance)
-			instance[fightID] = modifyInstance;
+			const modifyInstance = _playRound(tempInstance)
+			mapFights[fightID] = modifyInstance;
 			return modifyInstance
 		}
 		else return null;
@@ -110,22 +110,28 @@ const fight = () => {
 		return true
 	}
 
-	const _doActions = (instance) => {
+	const _playRound = (instance) => {
 		console.log(instance);
 		//speed contest
-		const sortedMonsters = _speedContest(instance)
+		const sortedMonstersID = _speedContest(instance)
 		//do actions
+		sortedMonstersID.forEach(monsterID => {
+			if (_getMonsterByID(instance, monsterID).stats.hp > 0) {
+				const monstersChanges = _doAction(instance, monsterID)
+				instance = _applyChanges(instance, monstersChanges)
+			} 
+		})
 		//clear actions
 		for (const [key, value] of Object.entries(instance)) {
 			value.actions = []
 		}
-
+		
 		//send info
 		return instance;
 	};
 
 	const _speedContest = (instance) => {
-		let sortedMonsters = []
+		let sortedMonsters   = []
 		let tempMonstersList = []
 		for (const [key, value] of Object.entries(instance)) {
 			value.team.forEach(monster => {
@@ -135,13 +141,101 @@ const fight = () => {
 		}
 		tempMonstersList.forEach(tempMonster => {
 			const count = tempMonstersList.filter(monster => {
-				if (monster.stats.speed > tempMonster.stats.speed || monster.stats.speed === tempMonster.stats.speed && monster.id > tempMonster.id) return true;
+				//condition a refaire
+				if (monster.stats.speed > tempMonster.stats.speed || 
+					monster.stats.speed === tempMonster.stats.speed && 
+					monster.id > tempMonster.id) return true;
 				return false;
 			  }).length;
-			  sortedMonsters[count] = tempMonster
+			  sortedMonsters[count] = tempMonster.id
 		})
 
 		return sortedMonsters
+	}
+
+	const _getActionByMonsterID = (instance, monsterID) => {
+		for (const [key, value] of Object.entries(instance)) {
+			if (value.actions.some((action => action.sourceID === monsterID))) {
+				return value.actions.filter(action => action.sourceID === monsterID)[0]
+			}
+		}
+	}
+
+	const _getActionByID = (actionID) => {
+		const sampleAttack  = {"1": {
+			name: "charge",
+			description: "text sample...",
+			type: "neutral",
+			degat: "45",
+			equilibre: "5",
+			// status: /[{ id: 1, round: 2 }]/ [],
+			// buff: /[{ id: 2, value: 5}]/ [],
+			target: "single" ///double, "clock-wise", everyone, ennemies/
+			}
+		};
+		return sampleAttack[actionID.toString()]
+	}
+
+	const _applyChanges = (instance, changes) => {
+		for (const [key, value] of Object.entries(instance)) {
+			changes.forEach(change => {
+				if (value.team.some(monster => monster.id == change.id)) {
+					value.team.forEach(monster => {
+						if (value.team.some(monster => monster.id == change.id)) {
+							monster.stats.hp = change.stats.hp;
+						}
+					})
+				}
+			})
+		//console.log(value.team);
+		}
+
+		return instance
+	}
+
+	// action a refaire
+	const _doAction = (instance, monsterID) => {
+		const monstersChanges = []
+		const action 		  = _getActionByMonsterID(instance, monsterID)
+
+		monstersChanges.push(_doCalculChanges(instance, action))
+		console.log("monstersChanges");
+		console.log(monstersChanges);
+		return monstersChanges
+	}
+
+	const _getMonsterByID = (instance, monsterID) => {
+		for (const [key, value] of Object.entries(instance)) {
+			if (value.team.some((monster => monster.id === monsterID))) {
+				return value.team.filter(monster => monster.id === monsterID)[0]
+			}
+		}
+
+	}
+
+	const _doCalculChanges = (instance, action) => {
+		const skill 		 = _getActionByID(action.skillID)
+		const monsterSource  = _getMonsterByID(instance, action.sourceID)
+		const monsterTarget  = _getMonsterByID(instance, action.targetID)
+		const typeEfficiency = _getTypeEfficiency(monsterSource.type, monsterTarget.type)
+		const isSTAB 		 = _isSTAB(monsterSource.type, skill.type)
+
+		const hpChanges = -((monsterSource.stats.attack*skill.degat)/ // source
+						   (monsterTarget.stats.def*0.5))* // target
+						   (typeEfficiency*isSTAB) // multiplying factor
+		monsterTarget.stats.hp += hpChanges
+		return monsterTarget
+	}
+
+	/**
+	 * return 1.25 if true else return 1
+	 */
+	const _isSTAB = (monsterType, skillType) => {
+		return 1
+	}
+
+	const _getTypeEfficiency = (sourceType, targetType) => {
+		return 1
 	}
 
 	return { ready, waitActions };
