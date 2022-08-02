@@ -12,9 +12,7 @@ const matchmaking = () => {
 		match[waitingPlayers[0].toString()] = {}
 		match[waitingPlayers[1].toString()] = {}
 
-		waitingPlayers = waitingPlayers.filter(
-			(player) => player != waitingPlayers[1] && waitingPlayers[0]
-		);
+		waitingPlayers = [];
 		return match;
 	};
 

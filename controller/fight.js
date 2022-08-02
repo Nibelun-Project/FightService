@@ -91,8 +91,8 @@ const fight = () => {
 	};
 
 	const waitActions = (actions, playerID, fightID) => {
-		const tempInstance = mapFights[fightID];
-		if (!tempInstance) return null;
+		// const tempInstance = mapFights[fightID];
+		if (!mapFights[fightID]) return null;
 		//On remplis le champ "actions" avec les actions envoyé par le client
 		//Mais c'est la variable temporaire pas l'objet globale 'mapFights'
 		//Donc fonctionne mais seulement dans le contexte ou on a que 2 joueurs dès qu'on dépasse
@@ -100,16 +100,16 @@ const fight = () => {
 
 		//Solution est de MapFights[fightID] = tempInstance
 		//Comme ça on sauvegarde dans mapFights au bon endroit(fightID) les modifs faite a la variable temporaire
-		tempInstance[playerID].actions = actions;
+		mapFights[fightID][playerID].actions = actions;
 
 		//il faut changer le paramètre et envoyer "mapFights[fightID]"
-		if (_isActionsFilled(tempInstance)) {
+		if (_isActionsFilled(mapFights[fightID])) {
 			//il faut changer le paramètre et envoyer "mapFights[fightID]"
-			const modifyInstance = _playRound(tempInstance);
+			const modifyInstance = _playRound(mapFights[fightID]);
 			mapFights[fightID] = modifyInstance;
 			//je retournerai "mapFights[fightID]" en gage de sureté que mon
 			//"mapFights[fightID]" est bien le meme que l'object renvoyé au client
-			return modifyInstance;
+			return mapFights[fightID];
 		} else return null;
 	};
 
