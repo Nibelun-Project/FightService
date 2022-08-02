@@ -8,9 +8,9 @@ const matchmaking = () => {
 	};
 
 	const createMatch = () => {
-		const match = {}
-		match[waitingPlayers[0].toString()] = {}
-		match[waitingPlayers[1].toString()] = {}
+		const match = {};
+		match[waitingPlayers[0].toString()] = {};
+		match[waitingPlayers[1].toString()] = {};
 
 		waitingPlayers = [];
 		return match;

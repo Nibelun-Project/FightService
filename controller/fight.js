@@ -1,25 +1,3 @@
-// let mapFights = {};
-
-// const getMapFight = () => {
-// 	return mapFights;
-// };
-
-// const setMapFightById = (fightId, playersInfo) => {
-// 	mapFights[fightId.toString()] = playersInfo;
-// };
-
-// const getNewFightId = () => {
-// 	return "fid_" + Date.now().toString();
-// };
-
-// const launchFight = (playersInfo) => {
-// 	const fightId = getNewFightId();
-// 	setMapFightById(fightId, playersInfo);
-// 	console.log("fight n°", fightId, "started");
-// 	console.log(getMapFight());
-// 	return { id: fightId };
-// };
-
 const getTeam = (playerID) => {
 	return [
 		{
@@ -91,24 +69,11 @@ const fight = () => {
 	};
 
 	const waitActions = (actions, playerID, fightID) => {
-		// const tempInstance = mapFights[fightID];
 		if (!mapFights[fightID]) return null;
-		//On remplis le champ "actions" avec les actions envoyé par le client
-		//Mais c'est la variable temporaire pas l'objet globale 'mapFights'
-		//Donc fonctionne mais seulement dans le contexte ou on a que 2 joueurs dès qu'on dépasse
-		//je pense que ça bug
-
-		//Solution est de MapFights[fightID] = tempInstance
-		//Comme ça on sauvegarde dans mapFights au bon endroit(fightID) les modifs faite a la variable temporaire
 		mapFights[fightID][playerID].actions = actions;
-
-		//il faut changer le paramètre et envoyer "mapFights[fightID]"
 		if (_isActionsFilled(mapFights[fightID])) {
-			//il faut changer le paramètre et envoyer "mapFights[fightID]"
 			const modifyInstance = _playRound(mapFights[fightID]);
 			mapFights[fightID] = modifyInstance;
-			//je retournerai "mapFights[fightID]" en gage de sureté que mon
-			//"mapFights[fightID]" est bien le meme que l'object renvoyé au client
 			return mapFights[fightID];
 		} else return null;
 	};
@@ -121,22 +86,17 @@ const fight = () => {
 	};
 
 	const _playRound = (instance) => {
-		console.log(instance);
-		//speed contest
 		const sortedMonstersID = _speedContest(instance);
-		//do actions
 		sortedMonstersID.forEach((monsterID) => {
 			if (_getMonsterByID(instance, monsterID).stats.hp > 0) {
 				const monstersChanges = _doAction(instance, monsterID);
 				instance = _applyChanges(instance, monstersChanges);
 			}
 		});
-		//clear actions
+
 		for (const [key, value] of Object.entries(instance)) {
 			value.actions = [];
 		}
-
-		//send info
 		return instance;
 	};
 
@@ -151,7 +111,6 @@ const fight = () => {
 		}
 		tempMonstersList.forEach((tempMonster) => {
 			const count = tempMonstersList.filter((monster) => {
-				//condition a refaire
 				if (
 					monster.stats.speed > tempMonster.stats.speed ||
 					(monster.stats.speed === tempMonster.stats.speed &&
@@ -184,42 +143,26 @@ const fight = () => {
 				type: "neutral",
 				degat: "45",
 				equilibre: "5",
-				// status: /[{ id: 1, round: 2 }]/ [],
-				// buff: /[{ id: 2, value: 5}]/ [],
-				target: "single", ///double, "clock-wise", everyone, ennemies/
+				target: "single",
 			},
 		};
 		return sampleAttack[actionID.toString()];
 	};
 
 	const _applyChanges = (instance, changes) => {
-
-		changes.forEach(change => {
-			instance[change.playerID.toString()].team.forEach(monster => {
-				if (monster.id === change.id) monster.stats.hp = change.stats.hp //try this => monster = change
-			})
-		})
-		// for (const [key, value] of Object.entries(instance)) {
-		// 	for (const [k, v] of Object.entries(value.team)) {
-		// 		changes.forEach((change) => {
-		// 			if (value.id === change.id) {
-		// 				monster.stats.hp = change.stats.hp;
-		// 			}
-		// 		});
-		// 	}
-		// }
-
+		changes.forEach((change) => {
+			instance[change.playerID.toString()].team.forEach((monster) => {
+				if (monster.id === change.id) monster.stats.hp = change.stats.hp; //try this => monster = change
+			});
+		});
 		return instance;
 	};
 
-	// action a refaire
 	const _doAction = (instance, monsterID) => {
 		const monstersChanges = [];
 		const action = _getActionByMonsterID(instance, monsterID);
 
 		monstersChanges.push(_doCalculChanges(instance, action));
-		console.log("monstersChanges");
-		console.log(monstersChanges);
 		return monstersChanges;
 	};
 

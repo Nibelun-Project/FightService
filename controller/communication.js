@@ -12,7 +12,6 @@ const comm = (io) => {
 
 		socket.on("init", (playerID) => {
 			playerInit(playerID, socket.id);
-			console.log(playerSockets);
 			const match = matchmake.addPlayer(playerID);
 			if (match) {
 				const [playerInfo, fightID] = fightmode.ready(match);
@@ -32,7 +31,6 @@ const comm = (io) => {
 				if (value === socket.id) keyToDelete = key;
 			}
 			if (keyToDelete) delete playerSockets[keyToDelete];
-			console.log(playerSockets);
 		});
 	});
 
