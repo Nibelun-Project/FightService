@@ -193,15 +193,21 @@ const fight = () => {
 	};
 
 	const _applyChanges = (instance, changes) => {
-		for (const [key, value] of Object.entries(instance)) {
-			for (const [k, v] of Object.entries(value.team)) {
-				changes.forEach((change) => {
-					if (value.id === change.id) {
-						monster.stats.hp = change.stats.hp;
-					}
-				});
-			}
-		}
+
+		changes.forEach(change => {
+			instance[change.playerID.toString()].team.forEach(monster => {
+				if (monster.id === change.id) monster.stats.hp = change.stats.hp //try this => monster = change
+			})
+		})
+		// for (const [key, value] of Object.entries(instance)) {
+		// 	for (const [k, v] of Object.entries(value.team)) {
+		// 		changes.forEach((change) => {
+		// 			if (value.id === change.id) {
+		// 				monster.stats.hp = change.stats.hp;
+		// 			}
+		// 		});
+		// 	}
+		// }
 
 		return instance;
 	};
