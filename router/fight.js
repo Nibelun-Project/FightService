@@ -1,7 +1,0 @@
-const express = require('express');
-const router = express.Router()
-
-router.post("/fight/launch", (req, res) => {
-    console.log(req.body)
-  });
-module.exports = router;
