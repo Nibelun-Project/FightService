@@ -90,8 +90,8 @@ const fight = () => {
 		if (!mapFights[fightID]) return null;
 		mapFights[fightID][playerID].actions = actions;
 		if (_isActionsFilled(mapFights[fightID])) {
-			const modifyInstance = _playRound(mapFights[fightID]);
-			mapFights[fightID] = modifyInstance;
+			const modifiedInstance = _playRound(mapFights[fightID]);
+			mapFights[fightID] = modifiedInstance;
 			return mapFights[fightID];
 		} else return null;
 	};
@@ -123,7 +123,7 @@ const fight = () => {
 		let tempMonstersList = [];
 		for (const [key, value] of Object.entries(instance)) {
 			value.team.forEach((monster) => {
-				monster.playerID = key;
+				monster.playerID = key; // Ca a rien a faire ici faut le changer d'endroit
 			});
 			tempMonstersList = tempMonstersList.concat(value.team);
 		}
@@ -132,12 +132,12 @@ const fight = () => {
 				if (
 					monster.stats.speed > tempMonster.stats.speed ||
 					(monster.stats.speed === tempMonster.stats.speed &&
-						monster.id > tempMonster.id)
+						monster.id > tempMonster.id) // condition à changer
 				)
 					return true;
 				return false;
 			}).length;
-			sortedMonsters[count] = tempMonster.id;
+			sortedMonsters[count] = tempMonster.id; // faut faire un check pour éviter un cas [ , x, , x, x, x] genre avec des champs vides
 		});
 
 		return sortedMonsters;
@@ -148,7 +148,7 @@ const fight = () => {
 			if (value.actions.some((action) => action.sourceID === monsterID)) {
 				return value.actions.filter(
 					(action) => action.sourceID === monsterID
-				)[0];
+				)[0]; // voir si on peux mieux faire
 			}
 		}
 	};
@@ -169,7 +169,7 @@ const fight = () => {
 
 	const _applyChanges = (instance, changes) => {
 		changes.forEach((change) => {
-			instance[change.playerID.toString()].team.forEach((monster) => {
+			instance[change.playerID.toString()].team.forEach((monster) => { // ca serait bien de pas avoir un deuxieme forEach à faire. voir si possible
 				if (monster.id === change.id) monster.stats.hp = change.stats.hp; //try this => monster = change
 			});
 		});
@@ -177,7 +177,7 @@ const fight = () => {
 	};
 
 	const _doAction = (instance, monsterID) => {
-		const monstersChanges = [];
+		const monstersChanges = []; // voir la porté de cette variable (cause peut etre des probleme si plusieur combat en meme temps)
 		const action = _getActionByMonsterID(instance, monsterID);
 
 		monstersChanges.push(_doCalculChanges(instance, action));
@@ -187,7 +187,7 @@ const fight = () => {
 	const _getMonsterByID = (instance, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
 			if (value.team.some((monster) => monster.id === monsterID)) {
-				return value.team.filter((monster) => monster.id === monsterID)[0];
+				return value.team.filter((monster) => monster.id === monsterID)[0]; // voir si améliorable
 			}
 		}
 	};
@@ -202,7 +202,9 @@ const fight = () => {
 		);
 		const isSTAB = _isSTAB(monsterSource.type, skill.type);
 
-		const hpChanges =
+		// considérer d'autre changement que juste hp ( autres stats, changement de montre, attendre...)
+
+		const hpChanges = // améliorer le calcul
 			-(
 				(monsterSource.stats.attack * skill.degat) / // source
 				(monsterTarget.stats.def * 0.5)// target
@@ -216,11 +218,11 @@ const fight = () => {
 	 * return 1.25 if true else return 1
 	 */
 	const _isSTAB = (monsterType, skillType) => {
-		return 1;
+		return 1; // A faire
 	};
 
 	const _getTypeEfficiency = (sourceType, targetType) => {
-		return 1;
+		return 1; // A faire
 	};
 
 	return { ready, waitActions };
