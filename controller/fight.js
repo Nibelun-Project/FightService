@@ -205,8 +205,8 @@ const fight = () => {
 		const hpChanges =
 			-(
 				(monsterSource.stats.attack * skill.degat) / // source
-				(monsterTarget.stats.def * 0.5)
-			) * // target
+				(monsterTarget.stats.def * 0.5)// target
+			) * 
 			(typeEfficiency * isSTAB); // multiplying factor
 		monsterTarget.stats.hp += hpChanges;
 		return monsterTarget;
