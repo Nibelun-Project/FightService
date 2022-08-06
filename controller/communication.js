@@ -20,9 +20,10 @@ const comm = (io) => {
 	});
 
 	const init = (playerID, socketID) => {
+		console.log(playerID, socketID);
 		_playerInit(playerID, socketID);
 		const playersID = matchmakingModule.addPlayer(playerID);
-		console.log(playersID);
+		console.log("ids", playersID);
 		if (playersID) {
 			const [match, fightID] = fightModule.ready(playersID);
 			return _socketTo(match, "combat-started", { match, fightID });
@@ -35,13 +36,13 @@ const comm = (io) => {
 
 	const actions = (actions, playerID, fightID) => {
 		const playerInfo = fightModule.waitActions(actions, playerID, fightID);
-		if (playerInfo) _socketTo(playerInfo, "action-done", playerInfo);
-		else _socketTo(playerID, "action-pending", "");
+		if (playerInfo) return _socketTo(playerInfo, "action-done", playerInfo);
+		else return _socketTo(playerID, "action-pending", "");
 	};
 
 	const _socketTo = (target, emit, data) => {
 		if (typeof target !== "object" && typeof target === "string")
-			io.to(playerSockets[target].emit(emit, data));
+			io.to(playerSockets[target], emit, data);
 		else {
 			for (const [key, value] of Object.entries(target)) {
 				console.log(playerSockets[key]);
