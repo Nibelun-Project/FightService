@@ -1,8 +1,8 @@
 import fight from "./fight.js";
 import matchmaking from "./matchmaking.js";
 
-const matchmake = matchmaking();
-const fightmode = fight();
+const matchmakingModule = matchmaking();
+const fightModule = fight();
 
 const comm = (io) => {
 	const playerSockets = {};
@@ -12,15 +12,15 @@ const comm = (io) => {
 
 		socket.on("init", (playerID) => {
 			playerInit(playerID, socket.id);
-			const match = matchmake.addPlayer(playerID);
-			if (match) {
-				const [playerInfo, fightID] = fightmode.ready(match);
-				_socketTo(playerInfo, "gongue", { playerInfo, fightID });
-			} else socket.emit("matchmaking-pending");
+			const playersID = matchmakingModule.addPlayer(playerID);
+			if (playersID) {
+				const [match, fightID] = fightModule.ready(playersID);
+				_socketTo(match, "combat-started", { match, fightID });
+			} else socket.emit("combat-pending");
 		});
 
 		socket.on("actions", (actions, playerID, fightID) => {
-			const playerInfo = fightmode.waitActions(actions, playerID, fightID);
+			const playerInfo = fightModule.waitActions(actions, playerID, fightID);
 			if (playerInfo) _socketTo(playerInfo, "action-done", playerInfo);
 			else socket.emit("action-pending");
 		});
@@ -38,8 +38,10 @@ const comm = (io) => {
 		if (playerID && socketID) playerSockets[playerID.toString()] = socketID;
 	};
 
-	const _socketTo = (playerInfo, emit, data) => {
-		for (const [key, value] of Object.entries(playerInfo)) {
+	const _socketTo = (match, emit, data) => {
+		for (const [key, value] of Object.entries(match)) {
+			console.log(playerSockets[key]);
+			console.log(emit);
 			io.to(playerSockets[key]).emit(emit, data);
 		}
 	};
