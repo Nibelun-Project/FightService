@@ -1,14 +1,17 @@
 import express from "express";
-const router = express.Router();
 
-import fight from "../controller/fight.js";
-const fightModule = fight();
+const combatRouter = (communicationInstance) => {
+	const router = express.Router();
+	router.get("/", (req, res) => {
+		res.send("accessing the fight router");
+	});
 
-router.post("/ready", (req, res) => {
-	if (true) {
-		console.log(fightModule.ready(req.body.team));
-	} else res.status(400);
-	res.status(200);
-});
+	router.post("/ready", (req, res) => {
+		if (req.body.playerID)
+			res.send(communicationInstance.init(req.body.playerID));
+	});
 
-export default router;
+	return router;
+};
+
+export default combatRouter;
