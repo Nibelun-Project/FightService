@@ -23,13 +23,14 @@ const comm = (io) => {
 	const init = (playerID, socketID) => {
 		const initialized = _playerInit(playerID, socketID);
 		if (initialized) {
-			//change the return for "fight" && "matchmaking", 0 = error, 1 = 1-player, 2-player
-			const playersID = matchmakingModule.addPlayer(playerID);
-			if (playersID) {
+			const { status, playersID } = matchmakingModule.addPlayer(playerID);
+			if (status >= 2) {
 				const [match, fightID] = fightModule.ready(playersID);
-				return _socketTo(match, "combat-started", { match, fightID });
-			} else return _socketTo(playerID, "combat-pending", "");
-		} else return "already initialized";
+				return _socketTo(match, "combat-started", { match, fightID }, status);
+			} else if (status >= 1)
+				return _socketTo(playerID, "combat-pending", "", status);
+			else return status;
+		} else return 3;
 	};
 
 	const _playerInit = (playerID, socketID) => {
@@ -40,15 +41,21 @@ const comm = (io) => {
 	};
 
 	const actions = (actions, playerID, fightID) => {
-		//change the return for "fight" && "matchmaking", 0 = error, 1 = 1-player, 2-player
 		if (playerSockets[playerID]) {
-			const playerInfo = fightModule.waitActions(actions, playerID, fightID);
-			if (playerInfo) return _socketTo(playerInfo, "action-done", playerInfo);
-			else return _socketTo(playerID, "action-pending", "");
-		} else return "player is not in combat";
+			const { status, playerInfo } = fightModule.waitActions(
+				actions,
+				playerID,
+				fightID
+			);
+			if (status >= 2)
+				return _socketTo(playerInfo, "action-done", playerInfo, status);
+			else if (status >= 1)
+				return _socketTo(playerID, "action-pending", "", status);
+			else return status;
+		} else return 3;
 	};
 
-	const _socketTo = (target, emit, data) => {
+	const _socketTo = (target, emit, data, status) => {
 		if (typeof target !== "object" && typeof target === "string")
 			io.to(playerSockets[target], emit, data);
 		else {
@@ -56,7 +63,7 @@ const comm = (io) => {
 				io.to(playerSockets[key]).emit(emit, data);
 			}
 		}
-		return "message sent trough sockets";
+		return status;
 	};
 
 	return { init, actions };
