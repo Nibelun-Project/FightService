@@ -11,6 +11,7 @@ const combatRouter = (communicationInstance) => {
 			res.send(
 				communicationInstance.init(req.body.playerID, req.body.socketID)
 			);
+		else res.status(400).send("Missing arguments");
 	});
 
 	router.post("/actions", (req, res) => {
@@ -22,6 +23,7 @@ const combatRouter = (communicationInstance) => {
 					req.body.fightID
 				)
 			);
+		else res.status(400).send("Missing arguments");
 	});
 
 	return router;
