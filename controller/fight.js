@@ -58,7 +58,7 @@ const getTeam = (playerID) => {
 			},
 			image: "../etoal.png",
 			passifId: 2,
-			skills: [5, 6, 7, 8],
+			skills: [1, 6, 7, 8],
 			status: [],
 			buff: [],
 		},
@@ -87,13 +87,13 @@ const fight = () => {
 	};
 
 	const waitActions = (actions, playerID, fightID) => {
-		if (!mapFights[fightID]) return null;
+		if (!mapFights[fightID]) return { status: 3 };
 		mapFights[fightID][playerID].actions = actions;
 		if (_isActionsFilled(mapFights[fightID])) {
 			const modifiedInstance = _playRound(mapFights[fightID]);
 			mapFights[fightID] = modifiedInstance;
-			return mapFights[fightID];
-		} else return null;
+			return { status: 2, match: mapFights[fightID] };
+		} else return { status: 1 };
 	};
 
 	const _isActionsFilled = (tempInstance) => {
@@ -169,7 +169,8 @@ const fight = () => {
 
 	const _applyChanges = (instance, changes) => {
 		changes.forEach((change) => {
-			instance[change.playerID.toString()].team.forEach((monster) => { // ca serait bien de pas avoir un deuxieme forEach à faire. voir si possible
+			instance[change.playerID.toString()].team.forEach((monster) => {
+				// ca serait bien de pas avoir un deuxieme forEach à faire. voir si possible
 				if (monster.id === change.id) monster.stats.hp = change.stats.hp; //try this => monster = change
 			});
 		});
@@ -206,9 +207,11 @@ const fight = () => {
 
 		const hpChanges = // améliorer le calcul
 			-(
-				(monsterSource.stats.attack * skill.degat) / // source
-				(monsterTarget.stats.def * 0.5)// target
-			) * 
+				(
+					(monsterSource.stats.attack * skill.degat) / // source
+					(monsterTarget.stats.def * 0.5)
+				) // target
+			) *
 			(typeEfficiency * isSTAB); // multiplying factor
 		monsterTarget.stats.hp += hpChanges;
 		return monsterTarget;

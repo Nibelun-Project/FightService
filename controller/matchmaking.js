@@ -4,7 +4,7 @@ const matchmaking = () => {
 	const addPlayer = (player) => {
 		waitingPlayers.push(player);
 		if (waitingPlayers.length >= 2)
-			return { status: 2, payload: createMatch() };
+			return { status: 2, matchIDs: createMatch() };
 		return { status: 1 };
 	};
 
