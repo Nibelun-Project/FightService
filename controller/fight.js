@@ -30,6 +30,7 @@ const getTeam = (playerID) => {
 			skills: [1, 2, 3, 4],
 			status: [],
 			buff: [],
+			playerID: playerID.toString()
 		},
 		{
 			id: ((parseInt(playerID) / 100000) * 2).toString(),
@@ -61,6 +62,7 @@ const getTeam = (playerID) => {
 			skills: [5, 6, 7, 8],
 			status: [],
 			buff: [],
+			playerID: playerID.toString()
 		},
 	];
 };
@@ -122,9 +124,6 @@ const fight = () => {
 		let sortedMonsters = [];
 		let tempMonstersList = [];
 		for (const [key, value] of Object.entries(instance)) {
-			value.team.forEach((monster) => {
-				monster.playerID = key; // Ca a rien a faire ici faut le changer d'endroit
-			});
 			tempMonstersList = tempMonstersList.concat(value.team);
 		}
 		tempMonstersList.forEach((tempMonster) => {
