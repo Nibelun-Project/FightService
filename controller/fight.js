@@ -30,6 +30,7 @@ const getTeam = (playerID) => {
 			skills: [1, 2, 3, 4],
 			status: [],
 			buff: [],
+			playerID: playerID.toString()
 		},
 		{
 			id: ((parseInt(playerID) / 100000) * 2).toString(),
@@ -61,6 +62,7 @@ const getTeam = (playerID) => {
 			skills: [5, 6, 7, 8],
 			status: [],
 			buff: [],
+			playerID: playerID.toString()
 		},
 	];
 };
@@ -87,13 +89,13 @@ const fight = () => {
 	};
 
 	const waitActions = (actions, playerID, fightID) => {
-		if (!mapFights[fightID]) return null;
+		if (!mapFights[fightID]) return { status: 3, match: null };
 		mapFights[fightID][playerID].actions = actions;
 		if (_isActionsFilled(mapFights[fightID])) {
 			const modifiedInstance = _playRound(mapFights[fightID]);
 			mapFights[fightID] = modifiedInstance;
-			return mapFights[fightID];
-		} else return null;
+			return { status: 2, match: mapFights[fightID] };
+		} else return { status: 1, match: mapFights[fightID] };
 	};
 
 	const _isActionsFilled = (tempInstance) => {
@@ -122,9 +124,6 @@ const fight = () => {
 		let sortedMonsters = [];
 		let tempMonstersList = [];
 		for (const [key, value] of Object.entries(instance)) {
-			value.team.forEach((monster) => {
-				monster.playerID = key; // Ca a rien a faire ici faut le changer d'endroit
-			});
 			tempMonstersList = tempMonstersList.concat(value.team);
 		}
 		tempMonstersList.forEach((tempMonster) => {
@@ -163,13 +162,70 @@ const fight = () => {
 				equilibre: "5",
 				target: "single",
 			},
+			2: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			3: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			4: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			5: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			6: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			7: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			8: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
 		};
 		return sampleAttack[actionID.toString()];
 	};
 
 	const _applyChanges = (instance, changes) => {
 		changes.forEach((change) => {
-			instance[change.playerID.toString()].team.forEach((monster) => { // ca serait bien de pas avoir un deuxieme forEach à faire. voir si possible
+			instance[change.playerID.toString()].team.forEach((monster) => {
+				// ca serait bien de pas avoir un deuxieme forEach à faire. voir si possible
 				if (monster.id === change.id) monster.stats.hp = change.stats.hp; //try this => monster = change
 			});
 		});
@@ -206,9 +262,11 @@ const fight = () => {
 
 		const hpChanges = // améliorer le calcul
 			-(
-				(monsterSource.stats.attack * skill.degat) / // source
-				(monsterTarget.stats.def * 0.5)// target
-			) * 
+				(
+					(monsterSource.stats.attack * skill.degat) / // source
+					(monsterTarget.stats.def * 0.5)
+				) // target
+			) *
 			(typeEfficiency * isSTAB); // multiplying factor
 		monsterTarget.stats.hp += hpChanges;
 		return monsterTarget;
