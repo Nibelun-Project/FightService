@@ -158,66 +158,66 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				degat: "45",
-				equilibre: "5",
+				effects: [{effect: "damage", power:"45"},
+						  {effect: "equilibre", power:"5"}],
 				target: "single",
 			},
 			2: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				degat: "45",
-				equilibre: "5",
-				target: "single",
+				effects: [{effect: "damage", power:"45"},
+						  {effect: "equilibre", power:"5"}],
+				target: "double",
 			},
 			3: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				degat: "45",
-				equilibre: "5",
-				target: "single",
+				effects: [{effect: "damage", power:"45"},
+						  {effect: "equilibre", power:"5"}],
+				target: "allies",
 			},
 			4: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				degat: "45",
-				equilibre: "5",
-				target: "single",
+				effects: [{effect: "damage", power:"45"},
+						  {effect: "equilibre", power:"5"}],
+				target: "ennemies",
 			},
 			5: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				degat: "45",
-				equilibre: "5",
-				target: "single",
+				effects: [{effect: "damage", power:"45"},
+						  {effect: "equilibre", power:"5"}],
+				target: "self",
 			},
 			6: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				degat: "45",
-				equilibre: "5",
-				target: "single",
+				effects: [{effect: "damage", power:"45"},
+						  {effect: "equilibre", power:"5"}],
+				target: "ally",
 			},
 			7: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				degat: "45",
-				equilibre: "5",
-				target: "single",
+				effects: [{effect: "damage", power:"45"},
+						  {effect: "equilibre", power:"5"}],
+				target: "all",
 			},
 			8: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				degat: "45",
-				equilibre: "5",
+				effects: [{effect: "damage", power:"45"},
+						  {effect: "equilibre", power:"5"}],
 				target: "single",
-			},
+			}
 		};
 		return sampleAttack[actionID.toString()];
 	};
@@ -236,10 +236,85 @@ const fight = () => {
 		const monstersChanges = []; // voir la porté de cette variable (cause peut etre des probleme si plusieur combat en meme temps)
 		const action = _getActionByMonsterID(instance, monsterID);
 
-		monstersChanges.push(_doCalculChanges(instance, action));
+		const targetsAndChanges = _getTargetAndChanges(instance, monsterID, action)
+		targetsAndChanges.targets.forEach(target => {
+			action.targetID = target;
+			
+			/**
+			 * définir toutes les actions  possible
+			 */
+			const damage = () => {
+				console.log('damage from ', action.sourceID, ' to ', action.targetID);
+				monstersChanges.push(_doCalculChanges(instance, action));
+			}
+
+			const heal = () => {
+				console.log('heal from ', action.sourceID, ' to ', action.targetID);
+			}
+
+			const equilibre = () => {
+				console.log('equilibre from ', action.sourceID, ' to ', action.targetID);
+
+			}
+
+			const actionsTypes = {damage, heal, equilibre};
+
+			 _getActionByID(targetsAndChanges.action.skillID).effects.forEach((effect) => {
+				actionsTypes[_getActionByID(action.skillID).target]();
+			})
+			 
+		});
+
 		return monstersChanges;
 	};
 
+	const _getTargetAndChanges = (instance, monsterID, action) => {
+		 
+
+		const self = () => {
+			return {targets: [monsterID], action: action};
+		};
+
+		const ally = () => {
+			return {targets: [_getAllyID(instance, monsterID)], action: action};
+		};
+
+		const allies = () => {
+			return {targets: instance[_getMonsterByID(monsterID).playerID.toString()].team, action: action};
+		};
+
+		const ennemies = () => {
+			return {targets: _getEnnemies(instance, monsterID), action: action};
+		};
+
+		const single = () => {
+			
+			return {targets: [action.targetID], action: action};
+		};
+
+		const double = () => {
+			return {targets: [action.targetID, _getAllyID(instance, action.targetID)], action: action};
+		};
+
+		const all = () => {
+			return instance[_getMonsterByID(monsterID).playerID.toString()].team.concat(_getEnnemies(instance, monsterID));
+		};
+
+		const TargetTypes = {self, ally, allies, ennemies, single, double, all};
+
+		return TargetTypes[_getActionByID(action.skillID).target]();
+	}
+
+
+	const _getAllyID = (instance, monsterID) => {
+		console.log(monsterID);
+		return instance[_getMonsterByID(monsterID).playerID.toString()].team.filter(monster => monster.monsterID ==! monsterID).monsterID;
+	}
+
+	const _getEnnemies = (instance, monsterID) => {
+		return instance.filter(player => playerID !== _getMonsterByID(instance, monsterID).playerID).team;
+	}
+ 
 	const _getMonsterByID = (instance, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
 			if (value.team.some((monster) => monster.id === monsterID)) {
