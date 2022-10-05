@@ -58,7 +58,7 @@ const getTeam = (playerID) => {
 			},
 			image: "../etoal.png",
 			passifId: 2,
-			skills: [1, 6, 7, 8],
+			skills: [5, 6, 7, 8],
 			status: [],
 			buff: [],
 		},
@@ -87,13 +87,13 @@ const fight = () => {
 	};
 
 	const waitActions = (actions, playerID, fightID) => {
-		if (!mapFights[fightID]) return { status: 3 };
+		if (!mapFights[fightID]) return { status: 3, match: null };
 		mapFights[fightID][playerID].actions = actions;
 		if (_isActionsFilled(mapFights[fightID])) {
 			const modifiedInstance = _playRound(mapFights[fightID]);
 			mapFights[fightID] = modifiedInstance;
 			return { status: 2, match: mapFights[fightID] };
-		} else return { status: 1 };
+		} else return { status: 1, match: mapFights[fightID] };
 	};
 
 	const _isActionsFilled = (tempInstance) => {
@@ -156,6 +156,62 @@ const fight = () => {
 	const _getActionByID = (actionID) => {
 		const sampleAttack = {
 			1: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			2: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			3: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			4: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			5: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			6: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			7: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				degat: "45",
+				equilibre: "5",
+				target: "single",
+			},
+			8: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
