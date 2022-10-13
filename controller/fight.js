@@ -2,7 +2,7 @@ const getTeam = (playerID) => {
 	return [
 		{
 			id: ((parseInt(playerID) / 100000) * 1).toString(),
-			name: "ronkarétoal",
+			name: "ronkarétoal" + playerID,
 			typeName: {
 				firstType: "fire",
 				secondType: "mental",
@@ -34,7 +34,7 @@ const getTeam = (playerID) => {
 		},
 		{
 			id: ((parseInt(playerID) / 100000) * 2).toString(),
-			name: "étoalronkaré",
+			name: "étoalronkaré" + playerID,
 			typeName: {
 				firstType: "fire",
 				secondType: "mental",
@@ -158,65 +158,65 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: [{effect: "damage", power:"45"},
-						  {effect: "equilibre", power:"5"}],
+				effects: [{type: "damage", power:"45"},
+						  {type: "equilibre", power:"5"}],
 				target: "single",
 			},
 			2: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: [{effect: "damage", power:"45"},
-						  {effect: "equilibre", power:"5"}],
-				target: "double",
+				effects: [{type: "damage", power:"45"},
+						  {type: "equilibre", power:"5"}],
+				target: "single",
 			},
 			3: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: [{effect: "damage", power:"45"},
-						  {effect: "equilibre", power:"5"}],
-				target: "allies",
+				effects: [{type: "damage", power:"45"},
+						  {type: "equilibre", power:"5"}],
+				target: "self",
 			},
 			4: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: [{effect: "damage", power:"45"},
-						  {effect: "equilibre", power:"5"}],
-				target: "ennemies",
+				effects: [{type: "damage", power:"45"},
+						  {type: "equilibre", power:"5"}],
+				target: "self",
 			},
 			5: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: [{effect: "damage", power:"45"},
-						  {effect: "equilibre", power:"5"}],
-				target: "self",
+				effects: [{type: "damage", power:"45"},
+						  {type: "equilibre", power:"5"}],
+				target: "single",
 			},
 			6: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: [{effect: "damage", power:"45"},
-						  {effect: "equilibre", power:"5"}],
-				target: "ally",
+				effects: [{type: "damage", power:"45"},
+						  {type: "equilibre", power:"5"}],
+				target: "single",
 			},
 			7: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: [{effect: "damage", power:"45"},
-						  {effect: "equilibre", power:"5"}],
-				target: "all",
+				effects: [{type: "damage", power:"45"},
+						  {type: "equilibre", power:"5"}],
+				target: "self",
 			},
 			8: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: [{effect: "damage", power:"45"},
-						  {effect: "equilibre", power:"5"}],
-				target: "single",
+				effects: [{type: "damage", power:"45"},
+						  {type: "equilibre", power:"5"}],
+				target: "self",
 			}
 		};
 		return sampleAttack[actionID.toString()];
@@ -238,29 +238,28 @@ const fight = () => {
 
 		const targetsAndChanges = _getTargetAndChanges(instance, monsterID, action)
 		targetsAndChanges.targets.forEach(target => {
-			action.targetID = target;
 			
 			/**
 			 * définir toutes les actions  possible
 			 */
-			const damage = () => {
+			const damage = (power) => {
 				console.log('damage from ', action.sourceID, ' to ', action.targetID);
-				monstersChanges.push(_doCalculChanges(instance, action));
+				monstersChanges.push(_doCalculChanges(instance, action, power));
 			}
 
-			const heal = () => {
+			const heal = (power) => {
 				console.log('heal from ', action.sourceID, ' to ', action.targetID);
 			}
 
-			const equilibre = () => {
+			const equilibre = (power) => {
 				console.log('equilibre from ', action.sourceID, ' to ', action.targetID);
 
 			}
 
 			const actionsTypes = {damage, heal, equilibre};
 
-			 _getActionByID(targetsAndChanges.action.skillID).effects.forEach((effect) => {
-				actionsTypes[_getActionByID(action.skillID).target]();
+			_getActionByID(target.action.skillID).effects.forEach((effect) => {
+				actionsTypes[effect.type](effect.power);
 			})
 			 
 		});
@@ -269,51 +268,40 @@ const fight = () => {
 	};
 
 	const _getTargetAndChanges = (instance, monsterID, action) => {
-		 
 
 		const self = () => {
-			return {targets: [monsterID], action: action};
+			return {targets: [{targetID: monsterID, action: action}]};
 		};
 
 		const ally = () => {
-			return {targets: [_getAllyID(instance, monsterID)], action: action};
+			
 		};
 
 		const allies = () => {
-			return {targets: instance[_getMonsterByID(monsterID).playerID.toString()].team, action: action};
+			
 		};
 
 		const ennemies = () => {
-			return {targets: _getEnnemies(instance, monsterID), action: action};
+			
 		};
 
 		const single = () => {
-			
-			return {targets: [action.targetID], action: action};
+			return {targets: [{targetID: action.targetID, action: action}]};
 		};
 
 		const double = () => {
-			return {targets: [action.targetID, _getAllyID(instance, action.targetID)], action: action};
+			
 		};
 
 		const all = () => {
-			return instance[_getMonsterByID(monsterID).playerID.toString()].team.concat(_getEnnemies(instance, monsterID));
+			
 		};
 
-		const TargetTypes = {self, ally, allies, ennemies, single, double, all};
+		const TargetTypes = {self, /*ally, allies, ennemies,*/ single, /*double, all*/};
 
 		return TargetTypes[_getActionByID(action.skillID).target]();
 	}
 
-
-	const _getAllyID = (instance, monsterID) => {
-		console.log(monsterID);
-		return instance[_getMonsterByID(monsterID).playerID.toString()].team.filter(monster => monster.monsterID ==! monsterID).monsterID;
-	}
-
-	const _getEnnemies = (instance, monsterID) => {
-		return instance.filter(player => playerID !== _getMonsterByID(instance, monsterID).playerID).team;
-	}
  
 	const _getMonsterByID = (instance, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
@@ -323,7 +311,7 @@ const fight = () => {
 		}
 	};
 
-	const _doCalculChanges = (instance, action) => {
+	const _doCalculChanges = (instance, action, power) => {
 		const skill = _getActionByID(action.skillID);
 		const monsterSource = _getMonsterByID(instance, action.sourceID);
 		const monsterTarget = _getMonsterByID(instance, action.targetID);
@@ -333,14 +321,12 @@ const fight = () => {
 		);
 		const isSTAB = _isSTAB(monsterSource.type, skill.type);
 
-		// considérer d'autre changement que juste hp ( autres stats, changement de montre, attendre...)
-
 		const hpChanges = // améliorer le calcul
 			-(
 				(
-					(monsterSource.stats.attack * skill.degat) / // source
-					(monsterTarget.stats.def * 0.5)
-				) // target
+					(monsterSource.stats.attack * power) / // source
+					(monsterTarget.stats.def * 0.5) // target
+				)
 			) *
 			(typeEfficiency * isSTAB); // multiplying factor
 		monsterTarget.stats.hp += hpChanges;
