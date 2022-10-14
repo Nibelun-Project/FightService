@@ -267,7 +267,6 @@ const fight = () => {
 		const targetsAndChanges = _getTargetAndChanges(instance, monsterID, action)
 		targetsAndChanges.targets.forEach(target => {
 			
-			console.log("target", target);
 			target.action.effects.forEach((effect) => {
 				actionsTypes[effect.type](target, effect.power);
 			})
