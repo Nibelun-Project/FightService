@@ -165,7 +165,7 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage", power:"45"},
+				effects: {first: [{type: "damage",    power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
 				target: "single"
 			},
@@ -173,17 +173,21 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first:  [{type: "damage", power:"30"},
-							  	   {type: "equilibre", power:"2"}],
-						  second: [{type: "damage", power:"60"},
-						   	  	   {type: "equilibre", power:"3"}]},
-				target: "allies"
+				effects: {first:  [{type: "damage",    power:"50"},
+							  	   {type: "equilibre", power:"10"}],
+						  second: [{type: "damage",    power:"45"},
+						   	  	   {type: "equilibre", power:"5"}],
+						  third:  [{type: "damage",    power:"50"},
+								   {type: "equilibre", power:"10"}],
+						  fourth: [{type: "damage",    power:"45"},
+								   {type: "equilibre", power:"5"}]},
+				target: "all"
 			},
 			3: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage", power:"45"},
+				effects: {first: [{type: "damage",    power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
 				target: "self"
 			},
@@ -191,7 +195,7 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage", power:"45"},
+				effects: {first: [{type: "damage",    power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
 				target: "ally"
 			},
@@ -199,7 +203,7 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage", power:"45"},
+				effects: {first: [{type: "damage",    power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
 				target: "single"
 			},
@@ -207,17 +211,21 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first:  [{type: "damage", power:"50"},
+				effects: {first:  [{type: "damage",    power:"50"},
 							  	   {type: "equilibre", power:"10"}],
-						  second: [{type: "damage", power:"45"},
-						   	  	   {type: "equilibre", power:"5"}]},
-				target: "allies"
+						  second: [{type: "damage",    power:"45"},
+						   	  	   {type: "equilibre", power:"5"}],
+						  third:  [{type: "damage",    power:"50"},
+								   {type: "equilibre", power:"10"}],
+						  fourth: [{type: "damage",    power:"45"},
+								   {type: "equilibre", power:"5"}]},
+				target: "all"
 			},
 			7: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage", power:"45"},
+				effects: {first: [{type: "damage",    power:"45"},
 								  {type: "equilibre", power:"5"}]},
 				target: "self"
 			},
@@ -225,7 +233,7 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage", power:"45"},
+				effects: {first: [{type: "damage",    power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
 				target: "ally"
 			},
@@ -233,7 +241,7 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage", power:"45"},
+				effects: {first: [{type: "damage",    power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
 				target: "single"
 			},
@@ -241,9 +249,9 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first:  [{type: "damage", power:"30"},
+				effects: {first:  [{type: "damage",    power:"30"},
 							  	   {type: "equilibre", power:"2"}],
-						  second: [{type: "damage", power:"60"},
+						  second: [{type: "damage",    power:"60"},
 						   	  	   {type: "equilibre", power:"3"}]},
 				target: "double"
 			},
@@ -251,7 +259,7 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage", power:"45"},
+				effects: {first: [{type: "damage",    power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
 				target: "self"
 			},
@@ -259,19 +267,33 @@ const fight = () => {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage", power:"45"},
-							  	  {type: "equilibre", power:"5"}]},
+				effects: {first: [{type: "damage",    power:"30"},
+								  {type: "equilibre", power:"2"}]},
 				target: "ally"
 			},
 			13: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first:  [{type: "damage", power:"30"},
+				effects: {first:  [{type: "damage",    power:"30"},
 							  	   {type: "equilibre", power:"2"}],
-						  second: [{type: "damage", power:"60"},
-						   	  	   {type: "equilibre", power:"3"}]},
+						  second: [{type: "damage",    power:"30"},
+						  		   {type: "equilibre", power:"2"}]},
 				target: "allies"
+			},
+			14: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				effects: {first:  [{type: "damage",    power:"50"},
+							  	   {type: "equilibre", power:"10"}],
+						  second: [{type: "damage",    power:"45"},
+						   	  	   {type: "equilibre", power:"5"}],
+						  third:  [{type: "damage",    power:"50"},
+								   {type: "equilibre", power:"10"}],
+						  fourth: [{type: "damage",    power:"45"},
+								   {type: "equilibre", power:"5"}]},
+				target: "all"
 			}
 		};
 		return sampleAttack[actionID.toString()];
@@ -294,17 +316,20 @@ const fight = () => {
 		/**
 			 * définir toutes les actions  possible
 			 */
-		 const damage = (target, power) => {
+		const damage = (target, power) => {
 			console.log('damage from ', target.sourceID, ' to ', target.targetID);
 			monstersChanges.push(_doCalculChanges(instance, target, power));
 		}
+
 		const heal = (target, power) => {
 			console.log('heal from ', target.sourceID, ' to ', target.targetID);
 		}
+
 		const equilibre = (target, power) => {
 			console.log('equilibre from ', target.sourceID, ' to ', target.targetID);
 
 		}
+
 		const actionsTypes = {damage, heal, equilibre};
 
 
@@ -373,10 +398,31 @@ const fight = () => {
 		};
 
 		const all = () => {
-			
+			const targets = {targets: []};
+			const skill = _getActionByID(action.skillID)
+			const listEffects = skill.effects
+			let tempMonstersList = [];
+
+			for (const [key, value] of Object.entries(instance)) {
+				tempMonstersList = tempMonstersList.concat(value.team);
+			}
+
+			skill.effects = listEffects.first
+			targets.targets.push({sourceID: monsterID, targetID: tempMonstersList[0].id, action: skill})
+
+			skill.effects = listEffects.second
+			targets.targets.push({sourceID: monsterID, targetID: tempMonstersList[1].id, action: skill})
+
+			skill.effects = listEffects.third
+			targets.targets.push({sourceID: monsterID, targetID: tempMonstersList[2].id, action: skill})
+
+			skill.effects = listEffects.fourth
+			targets.targets.push({sourceID: monsterID, targetID: tempMonstersList[3].id, action: skill})
+
+			return targets
 		};
 
-		const TargetTypes = {self, ally, allies, /*ennemies,*/ single, double, /*all*/};
+		const TargetTypes = {self, ally, allies, /*ennemies,*/ single, double, all};
 
 		return TargetTypes[_getActionByID(action.skillID).target]();
 	}
