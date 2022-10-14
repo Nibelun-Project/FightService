@@ -177,7 +177,7 @@ const fight = () => {
 							  	   {type: "equilibre", power:"2"}],
 						  second: [{type: "damage", power:"60"},
 						   	  	   {type: "equilibre", power:"3"}]},
-				target: "double"
+				target: "allies"
 			},
 			3: {
 				name: "charge",
@@ -211,7 +211,7 @@ const fight = () => {
 							  	   {type: "equilibre", power:"10"}],
 						  second: [{type: "damage", power:"45"},
 						   	  	   {type: "equilibre", power:"5"}]},
-				target: "double"
+				target: "allies"
 			},
 			7: {
 				name: "charge",
@@ -228,6 +228,50 @@ const fight = () => {
 				effects: {first: [{type: "damage", power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
 				target: "ally"
+			},
+			9: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				effects: {first: [{type: "damage", power:"45"},
+							  	  {type: "equilibre", power:"5"}]},
+				target: "single"
+			},
+			10: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				effects: {first:  [{type: "damage", power:"30"},
+							  	   {type: "equilibre", power:"2"}],
+						  second: [{type: "damage", power:"60"},
+						   	  	   {type: "equilibre", power:"3"}]},
+				target: "double"
+			},
+			11: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				effects: {first: [{type: "damage", power:"45"},
+							  	  {type: "equilibre", power:"5"}]},
+				target: "self"
+			},
+			12: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				effects: {first: [{type: "damage", power:"45"},
+							  	  {type: "equilibre", power:"5"}]},
+				target: "ally"
+			},
+			13: {
+				name: "charge",
+				description: "text sample...",
+				type: "neutral",
+				effects: {first:  [{type: "damage", power:"30"},
+							  	   {type: "equilibre", power:"2"}],
+						  second: [{type: "damage", power:"60"},
+						   	  	   {type: "equilibre", power:"3"}]},
+				target: "allies"
 			}
 		};
 		return sampleAttack[actionID.toString()];
@@ -291,7 +335,17 @@ const fight = () => {
 		};
 
 		const allies = () => {
-			
+			const targets = {targets: []};
+			const skill = _getActionByID(action.skillID)
+			const listEffects = skill.effects
+
+			skill.effects = listEffects.first
+			targets.targets.push({sourceID: monsterID, targetID: monsterID, action: skill})
+
+			skill.effects = listEffects.second
+			targets.targets.push({sourceID: monsterID, targetID: _getAlly(instance, monsterID).id, action: skill})
+
+			return targets
 		};
 
 		const ennemies = () => {
@@ -322,7 +376,7 @@ const fight = () => {
 			
 		};
 
-		const TargetTypes = {self, ally, /*allies, ennemies,*/ single, double, /*all*/};
+		const TargetTypes = {self, ally, allies, /*ennemies,*/ single, double, /*all*/};
 
 		return TargetTypes[_getActionByID(action.skillID).target]();
 	}
