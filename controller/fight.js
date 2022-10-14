@@ -193,7 +193,7 @@ const fight = () => {
 				type: "neutral",
 				effects: {first: [{type: "damage", power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
-				target: "self"
+				target: "ally"
 			},
 			5: {
 				name: "charge",
@@ -227,7 +227,7 @@ const fight = () => {
 				type: "neutral",
 				effects: {first: [{type: "damage", power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
-				target: "self"
+				target: "ally"
 			}
 		};
 		return sampleAttack[actionID.toString()];
@@ -286,7 +286,9 @@ const fight = () => {
 		};
 
 		const ally = () => {
-			
+			const tempAction = _getActionByID(action.skillID)
+			tempAction.effects = tempAction.effects.first
+			return {targets: [{sourceID: monsterID, targetID: _getAlly(instance, monsterID).id, action: tempAction}]};
 		};
 
 		const allies = () => {
@@ -321,7 +323,7 @@ const fight = () => {
 			
 		};
 
-		const TargetTypes = {self, /*ally, allies, ennemies,*/ single, double, /*all*/};
+		const TargetTypes = {self, ally, /*allies, ennemies,*/ single, double, /*all*/};
 
 		return TargetTypes[_getActionByID(action.skillID).target]();
 	}
