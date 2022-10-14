@@ -240,30 +240,29 @@ const fight = () => {
 		const monstersChanges = []; // voir la porté de cette variable (cause peut etre des probleme si plusieur combat en meme temps)
 		const action = _getActionByMonsterID(instance, monsterID);
 
+		/**
+			 * définir toutes les actions  possible
+			 */
+		 const damage = (target, power) => {
+			console.log('damage from ', target.sourceID, ' to ', target.targetID);
+			monstersChanges.push(_doCalculChanges(instance, target, power));
+		}
+		const heal = (target, power) => {
+			console.log('heal from ', target.sourceID, ' to ', target.targetID);
+		}
+		const equilibre = (target, power) => {
+			console.log('equilibre from ', target.sourceID, ' to ', target.targetID);
+
+		}
+		const actionsTypes = {damage, heal, equilibre};
+
+
 		const targetsAndChanges = _getTargetAndChanges(instance, monsterID, action)
 		targetsAndChanges.targets.forEach(target => {
 			
-			/**
-			 * définir toutes les actions  possible
-			 */
-			const damage = (power) => {
-				console.log('damage from ', action.sourceID, ' to ', action.targetID);
-				monstersChanges.push(_doCalculChanges(instance, target, power));
-			}
-
-			const heal = (power) => {
-				console.log('heal from ', action.sourceID, ' to ', action.targetID);
-			}
-
-			const equilibre = (power) => {
-				console.log('equilibre from ', action.sourceID, ' to ', action.targetID);
-
-			}
-
-			const actionsTypes = {damage, heal, equilibre};
-
+			console.log("target", target);
 			target.action.effects.forEach((effect) => {
-				actionsTypes[effect.type](effect.power);
+				actionsTypes[effect.type](target, effect.power);
 			})
 			 
 		});
