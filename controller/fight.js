@@ -30,7 +30,7 @@ const getTeam = (playerID) => {
 			skills: [1, 2, 3, 4],
 			status: [],
 			buff: [],
-			playerID: playerID.toString()
+			playerID: playerID.toString(),
 		},
 		{
 			id: ((parseInt(playerID) / 100000) * 2).toString(),
@@ -62,7 +62,7 @@ const getTeam = (playerID) => {
 			skills: [5, 6, 7, 8],
 			status: [],
 			buff: [],
-			playerID: playerID.toString()
+			playerID: playerID.toString(),
 		},
 	];
 };
@@ -94,8 +94,15 @@ const fight = () => {
 		if (_isActionsFilled(mapFights[fightID])) {
 			const modifiedInstance = _playRound(mapFights[fightID]);
 			mapFights[fightID] = modifiedInstance;
-			return { status: 2, match: mapFights[fightID] };
-		} else return { status: 1, match: mapFights[fightID] };
+			return {
+				status: 2,
+				matchInfo: { fightID: fightID, match: mapFights[fightID] },
+			};
+		} else
+			return {
+				status: 1,
+				matchInfo: { fightID: fightID, match: mapFights[fightID] },
+			};
 	};
 
 	const _isActionsFilled = (tempInstance) => {

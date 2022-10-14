@@ -46,12 +46,13 @@ const comm = (io) => {
 
 	const actions = (actions, playerID, fightID) => {
 		if (playerSockets[playerID]) {
-			const { status, match } = fightModule.waitActions(
+			const { status, matchInfo } = fightModule.waitActions(
 				actions,
 				playerID,
 				fightID
 			);
-			if (status >= 2) return _socketTo(match, "action-done", match, status);
+			if (status >= 2)
+				return _socketTo(matchInfo.match, "action-done", matchInfo, status);
 			else if (status >= 1)
 				return _socketTo(playerID, "action-pending", "", status);
 			else return status;
