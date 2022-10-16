@@ -302,20 +302,19 @@ const fight = () => {
 	const _applyChanges = (instance, changes) => {
 		changes.forEach((change) => {
 			instance[change.playerID.toString()].team.forEach((monster) => {
-				// ca serait bien de pas avoir un deuxieme forEach à faire. voir si possible
-				if (monster.id === change.id) monster.stats.hp = change.stats.hp; //try this => monster = change
+				if (monster.id === change.id) monster.stats.hp = change.stats.hp;
 			});
 		});
 		return instance;
 	};
 
 	const _doAction = (instance, monsterID) => {
-		const monstersChanges = []; // voir la porté de cette variable (cause peut etre des probleme si plusieur combat en meme temps)
+		const monstersChanges = [];
 		const action = _getActionByMonsterID(instance, monsterID);
 
 		/**
-			 * définir toutes les actions  possible
-			 */
+		 * définir toutes les actions  possible
+		 */
 		const damage = (target, power) => {
 			console.log('damage from ', target.sourceID, ' to ', target.targetID);
 			monstersChanges.push(_doCalculChanges(instance, target, power));
