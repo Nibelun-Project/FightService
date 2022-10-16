@@ -3,7 +3,7 @@ const getTeam = (playerID) => {
 		{
 			id: ((parseInt(playerID) / 100000) * 1).toString(),
 			name: "ronkarétoal" + playerID,
-			typeName: {
+			type: {
 				firstType: "fire",
 				secondType: "mental",
 			},
@@ -35,7 +35,7 @@ const getTeam = (playerID) => {
 		{
 			id: ((parseInt(playerID) / 100000) * 2).toString(),
 			name: "étoalronkaré" + playerID,
-			typeName: {
+			type: {
 				firstType: "fire",
 				secondType: "mental",
 			},
@@ -219,7 +219,10 @@ const fight = () => {
 	 * return 1.25 if true else return 1
 	 */
 	const _isSTAB = (monsterType, skillType) => {
-		return 1; // A faire
+		if (monsterType.firstType === skillType || monsterType.secondType === skillType) {
+			return 1.25;
+		}
+		return 1;
 	};
 
 	const _getTypeEfficiency = (sourceType, targetType) => {
@@ -334,7 +337,6 @@ const fight = () => {
 	}
 	const _getEnnemies = (instance, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
-			console.log("team", value.team);
 			if (value.team.every((monster) => monster.id !== monsterID)) {
 				return value.team;
 			}
@@ -354,7 +356,7 @@ const fight = () => {
 			1: {
 				name: "charge",
 				description: "text sample...",
-				type: "neutral",
+				type: "fire",
 				effects: {first: [{type: "damage",    power:"45"},
 							  	  {type: "equilibre", power:"5"}]},
 				target: "single"
@@ -362,7 +364,7 @@ const fight = () => {
 			2: {
 				name: "charge",
 				description: "text sample...",
-				type: "neutral",
+				type: "mental",
 				effects: {first:  [{type: "damage",    power:"10"},
 							  	   {type: "equilibre", power:"10"}],
 						  second: [{type: "damage",    power:"20"},
