@@ -236,89 +236,89 @@ const fight = () => {
 	const _getTargetAndChanges = (instance, monsterID, action) => {
 
 		const self = () => {
-			const tempAction   = _getActionByID(action.skillID)
-			tempAction.effects = tempAction.effects.first
-			return {targets: [{sourceID: monsterID, targetID: monsterID, action: tempAction}]};
+			const skill   = _getActionByID(action.skillID)
+			skill.effects = skill.effects.first
+			return {targets: [{sourceID: monsterID, targetID: monsterID, action: skill}]};
 		};
 
 		const ally = () => {
-			const tempAction   = _getActionByID(action.skillID)
-			tempAction.effects = tempAction.effects.first
-			return {targets: [{sourceID: monsterID, targetID: _getAlly(instance, monsterID).id, action: tempAction}]};
+			const skill   = _getActionByID(action.skillID)
+			skill.effects = skill.effects.first
+			return {targets: [{sourceID: monsterID, targetID: _getAlly(instance, monsterID).id, action: skill}]};
 		};
 
 		const allies = () => {
-			const targets 	  = {targets: []};
-			const skill 	  = _getActionByID(action.skillID)
-			const listEffects = skill.effects
+			const effectsListFromSkill = skill.effects
+			const effectListByTarget   = {targets: []};
+			const skill 	  		   = _getActionByID(action.skillID)
 
-			skill.effects = listEffects.first
-			targets.targets.push({sourceID: monsterID, targetID: monsterID, action: skill})
+			all.effects = effectsListFromSkill.first
+			effectListByTarget.targets.push({sourceID: monsterID, targetID: monsterID, action: skill})
 
-			skill.effects = listEffects.second
-			targets.targets.push({sourceID: monsterID, targetID: _getAlly(instance, monsterID).id, action: skill})
+			skill.effects = effectsListFromSkill.second
+			effectListByTarget.targets.push({sourceID: monsterID, targetID: _getAlly(instance, monsterID).id, action: skill})
 
-			return targets
+			return effectListByTarget
 		};
 
 		const ennemies = () => {
-			const targets 	  = {targets: []};
-			const skill 	  = _getActionByID(action.skillID)
-			const listEffects = skill.effects
-			const ennemies 	  = _getEnnemies(instance, monsterID);
+			const effectsListFromSkill = skill.effects
+			const effectListByTarget   = {targets: []};
+			const targetsList 	  	   = _getEnnemies(instance, monsterID);
+			const skill 	  		   = _getActionByID(action.skillID)
 
-			skill.effects = listEffects.first
-			targets.targets.push({sourceID: monsterID, targetID: ennemies[0].id, action: skill})
+			skill.effects = effectsListFromSkill.first
+			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[0].id, action: skill})
 
-			skill.effects = listEffects.second
-			targets.targets.push({sourceID: monsterID, targetID: ennemies[1].id, action: skill})
+			skill.effects = effectsListFromSkill.second
+			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[1].id, action: skill})
 
-			return targets
+			return effectListByTarget
 		};
 
 		const single = () => {
-			const tempAction   = _getActionByID(action.skillID)
-			tempAction.effects = tempAction.effects.first
-			return {targets: [{sourceID: monsterID, targetID: action.targetID, action: tempAction}]};
+			const skill   = _getActionByID(action.skillID)
+			skill.effects = skill.effects.first
+			return {targets: [{sourceID: monsterID, targetID: action.targetID, action: skill}]};
 		};
 
 		const double = () => {
-			const targets 	  = {targets: []};
-			const skill 	  = _getActionByID(action.skillID)
-			const listEffects = skill.effects
+			const effectsListFromSkill = skill.effects
+			const effectListByTarget   = {targets: []};
+			const skill 	  		   = _getActionByID(action.skillID)
 
-			skill.effects = listEffects.first
-			targets.targets.push({sourceID: monsterID, targetID: action.targetID, action: skill})
+			skill.effects = effectsListFromSkill.first
+			effectListByTarget.targets.push({sourceID: monsterID, targetID: action.targetID, action: skill})
 
-			skill.effects = listEffects.second
-			targets.targets.push({sourceID: monsterID, targetID: _getAlly(instance, action.targetID).id, action: skill})
+			skill.effects = effectsListFromSkill.second
+			effectListByTarget.targets.push({sourceID: monsterID, targetID: _getAlly(instance, action.targetID).id, action: skill})
 
-			return targets
+			return effectListByTarget
 		};
 
 		const all = () => {
-			const targets 	  = {targets: []};
-			const skill 	  = _getActionByID(action.skillID)
-			const listEffects = skill.effects
-			let tempMonstersList = [];
+			const effectsListFromSkill = skill.effects
+			const effectListByTarget   = {targets: []};
+			const skill 	  		   = _getActionByID(action.skillID)
+			let targetsList 		   = [];
 
 			for (const [key, value] of Object.entries(instance)) {
-				tempMonstersList = tempMonstersList.concat(value.team);
+				targetsList = targetsList.concat(value.team);
 			}
 
-			skill.effects = listEffects.first
-			targets.targets.push({sourceID: monsterID, targetID: tempMonstersList[0].id, action: skill})
+			skill.effects = effectsListFromSkill.first
+			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[0].id, action: skill})
 
-			skill.effects = listEffects.second
-			targets.targets.push({sourceID: monsterID, targetID: tempMonstersList[1].id, action: skill})
+			skill.effects = effectsListFromSkill.second
+			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[1].id, action: skill})
 
-			skill.effects = listEffects.third
-			targets.targets.push({sourceID: monsterID, targetID: tempMonstersList[2].id, action: skill})
+			skill.effects = effectsListFromSkill.third
+			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[2].id, action: skill})
 
-			skill.effects = listEffects.fourth
-			targets.targets.push({sourceID: monsterID, targetID: tempMonstersList[3].id, action: skill})
+			skill.effects = effectsListFromSkill.fourth
+			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[3].id, action: skill})
 
-			return targets
+			return effectListByTarget
 		};
 
 		const TargetTypes = {self, ally, allies, ennemies, single, double, all};
