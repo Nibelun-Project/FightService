@@ -66,7 +66,7 @@ const fight = () => {
 
 	const ready = (match) => {
 		for (const [key, value] of Object.entries(match)) {
-			value["team"] = getTeam(key);
+			value["team"] 	 = getTeam(key);
 			value["actions"] = [];
 		}
 		return _startCombat(match);
@@ -118,22 +118,20 @@ const fight = () => {
 	};
 
 	const _speedContest = (instance) => {
-		let sortedMonsters = [];
+		let sortedMonsters 	 = [];
 		let tempMonstersList = [];
 		for (const [key, value] of Object.entries(instance)) {
 			tempMonstersList = tempMonstersList.concat(value.team);
 		}
 		tempMonstersList.forEach((tempMonster) => {
 			const count = tempMonstersList.filter((monster) => {
-				if (
-					monster.stats.speed > tempMonster.stats.speed ||
+				if ( monster.stats.speed  >  tempMonster.stats.speed ||
 					(monster.stats.speed === tempMonster.stats.speed &&
-						monster.id > tempMonster.id) // condition à changer
-				)
+					 monster.id 		  >  tempMonster.id))
 					return true;
 				return false;
 			}).length;
-			sortedMonsters[count] = tempMonster.id; // faut faire un check pour éviter un cas [ , x, , x, x, x] genre avec des champs vides
+			sortedMonsters[count] = tempMonster.id;
 		});
 
 		return sortedMonsters;
@@ -169,16 +167,13 @@ const fight = () => {
 	};
 
 	const _doCalculDamage = (instance, target, power) => {
-		const skill = target.action;
-		const monsterSource = _getMonsterByID(instance, target.sourceID);
-		const monsterTarget = _getMonsterByID(instance, target.targetID);
-		const typeEfficiency = _getTypeEfficiency(
-			skill.type,
-			monsterTarget.type
-		);
-		const isSTAB = _isSTAB(monsterSource.type, skill.type);
+		const skill 		 = target.action;
+		const monsterSource  = _getMonsterByID(instance, target.sourceID);
+		const monsterTarget  = _getMonsterByID(instance, target.targetID);
+		const typeEfficiency = _getTypeEfficiency(skill.type, monsterTarget.type);
+		const isSTAB 		 = _isSTAB(monsterSource.type, skill.type);
 
-		const hpChanges = // améliorer le calcul
+		const hpChanges =
 			-(
 				(
 					(monsterSource.stats.attack * power) / // source
@@ -212,12 +207,13 @@ const fight = () => {
 	}
 
 	const _getTypeEfficiency = (skillType, targetTypes) => {
-		let efficiency = 1;
+		let efficiency 	 = 1;
 		const affinities = _getTypeAffinities(skillType)
 
 		targetTypes.forEach((type) => {
 			efficiency *= affinities[type]
 		})
+
 		return efficiency; // A faire
 	};
 
@@ -240,20 +236,20 @@ const fight = () => {
 	const _getTargetAndChanges = (instance, monsterID, action) => {
 
 		const self = () => {
-			const tempAction = _getActionByID(action.skillID)
+			const tempAction   = _getActionByID(action.skillID)
 			tempAction.effects = tempAction.effects.first
 			return {targets: [{sourceID: monsterID, targetID: monsterID, action: tempAction}]};
 		};
 
 		const ally = () => {
-			const tempAction = _getActionByID(action.skillID)
+			const tempAction   = _getActionByID(action.skillID)
 			tempAction.effects = tempAction.effects.first
 			return {targets: [{sourceID: monsterID, targetID: _getAlly(instance, monsterID).id, action: tempAction}]};
 		};
 
 		const allies = () => {
-			const targets = {targets: []};
-			const skill = _getActionByID(action.skillID)
+			const targets 	  = {targets: []};
+			const skill 	  = _getActionByID(action.skillID)
 			const listEffects = skill.effects
 
 			skill.effects = listEffects.first
@@ -266,10 +262,10 @@ const fight = () => {
 		};
 
 		const ennemies = () => {
-			const targets = {targets: []};
-			const skill = _getActionByID(action.skillID)
+			const targets 	  = {targets: []};
+			const skill 	  = _getActionByID(action.skillID)
 			const listEffects = skill.effects
-			const ennemies = _getEnnemies(instance, monsterID);
+			const ennemies 	  = _getEnnemies(instance, monsterID);
 
 			skill.effects = listEffects.first
 			targets.targets.push({sourceID: monsterID, targetID: ennemies[0].id, action: skill})
@@ -281,14 +277,14 @@ const fight = () => {
 		};
 
 		const single = () => {
-			const tempAction = _getActionByID(action.skillID)
+			const tempAction   = _getActionByID(action.skillID)
 			tempAction.effects = tempAction.effects.first
 			return {targets: [{sourceID: monsterID, targetID: action.targetID, action: tempAction}]};
 		};
 
 		const double = () => {
-			const targets = {targets: []};
-			const skill = _getActionByID(action.skillID)
+			const targets 	  = {targets: []};
+			const skill 	  = _getActionByID(action.skillID)
 			const listEffects = skill.effects
 
 			skill.effects = listEffects.first
@@ -301,8 +297,8 @@ const fight = () => {
 		};
 
 		const all = () => {
-			const targets = {targets: []};
-			const skill = _getActionByID(action.skillID)
+			const targets 	  = {targets: []};
+			const skill 	  = _getActionByID(action.skillID)
 			const listEffects = skill.effects
 			let tempMonstersList = [];
 
