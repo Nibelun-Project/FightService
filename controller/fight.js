@@ -3,10 +3,7 @@ const getTeam = (playerID) => {
 		{
 			id: ((parseInt(playerID) / 100000) * 1).toString(),
 			name: "ronkarétoal" + playerID,
-			type: {
-				firstType: "fire",
-				secondType: "mental",
-			},
+			type: ["fire","mental"],
 			stats: {
 				hp: 300,
 				attack: 100,
@@ -35,10 +32,7 @@ const getTeam = (playerID) => {
 		{
 			id: ((parseInt(playerID) / 100000) * 2).toString(),
 			name: "étoalronkaré" + playerID,
-			type: {
-				firstType: "fire",
-				secondType: "mental",
-			},
+			type: ["fire","mental"],
 			stats: {
 				hp: 300,
 				attack: 100,
@@ -198,7 +192,7 @@ const fight = () => {
 		const monsterSource = _getMonsterByID(instance, target.sourceID);
 		const monsterTarget = _getMonsterByID(instance, target.targetID);
 		const typeEfficiency = _getTypeEfficiency(
-			monsterSource.type,
+			skill.type,
 			monsterTarget.type
 		);
 		const isSTAB = _isSTAB(monsterSource.type, skill.type);
@@ -218,15 +212,32 @@ const fight = () => {
 	/**
 	 * return 1.25 if true else return 1
 	 */
-	const _isSTAB = (monsterType, skillType) => {
-		if (monsterType.firstType === skillType || monsterType.secondType === skillType) {
-			return 1.25;
-		}
+	const _isSTAB = (monsterTypes, skillType) => {
+		monsterTypes.forEach((type) => {
+			if (type === skillType) {
+				return 1.25;
+			}
+		})
 		return 1;
 	};
 
-	const _getTypeEfficiency = (sourceType, targetType) => {
-		return 1; // A faire
+	const _getTypeAffinities = (type) => {
+		const affinities = {
+			fire: 	 {fire: 1, mental: 1, neutral: 1},
+			mental:  {fire: 1, mental: 1, neutral: 2},
+			neutral: {fire: 1, mental: 1, neutral: 0.5}
+		}
+		return affinities[type.toString()]
+	}
+
+	const _getTypeEfficiency = (skillType, targetTypes) => {
+		let efficiency = 1;
+		const affinities = _getTypeAffinities(skillType)
+
+		targetTypes.forEach((type) => {
+			efficiency *= affinities[type]
+		})
+		return efficiency; // A faire
 	};
 
 	const _getActionByMonsterID = (instance, monsterID) => {
