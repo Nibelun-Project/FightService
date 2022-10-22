@@ -121,19 +121,59 @@ const fight = () => {
 		for (const [key, value] of Object.entries(instance)) {
 			tempMonstersList = tempMonstersList.concat(value.team);
 		}
-		tempMonstersList.forEach((tempMonster) => {
-			const count = tempMonstersList.filter((monster) => {
-				if ( monster.stats.speed  >  tempMonster.stats.speed ||
-					(monster.stats.speed === tempMonster.stats.speed &&
-					 monster.id 		  >  tempMonster.id))
-					return true;
-				return false;
-			}).length;
-			sortedMonsters[count] = tempMonster.id;
-		});
+		
+		_getPlacesOnRound(_shuffleMonsters(tempMonstersList), sortedMonsters)
 
 		return sortedMonsters;
 	};
+
+	const _shuffleMonsters = (tempMonstersList) => {
+		const shuffleIndicators = [1, 2, 3, 4];
+
+		const shuffleArray = (array) => {
+			for (let i = array.length - 1; i > 0; i--) {
+				const j    = Math.floor(Math.random() * (i + 1));
+				const temp = array[i];
+				array[i]   = array[j];
+				array[j]   = temp;
+			}
+			
+			const allyPriority = (id1, id2) => {
+				if (array[id1] > array[id2]) {
+					const temp = array[id1];
+					array[id1] = array[id2];
+					array[id2] = temp;
+				}
+			}
+
+			allyPriority(0, 1)
+			allyPriority(2, 3)
+
+			return array;
+		};
+
+		shuffleArray(shuffleIndicators);
+		const monsterListWithShuffleID = [];
+
+		for (let index = 0; index < shuffleIndicators.length; index++) {
+			monsterListWithShuffleID.push({ shuffleID: shuffleIndicators[index], monster: tempMonstersList[index] });
+		}
+		
+		return monsterListWithShuffleID
+	}
+
+	const _getPlacesOnRound = (speedContestTempsList, sortedMonsters) => {
+		speedContestTempsList.forEach((tempMonster) => {
+			const count = speedContestTempsList.filter((speedContest) => {
+				if ( speedContest.monster.stats.speed  >  tempMonster.monster.stats.speed ||	// if different speed
+					(speedContest.monster.stats.speed === tempMonster.monster.stats.speed &&	// if same speed but different team
+					 speedContest.shuffleID 		   <  tempMonster.shuffleID))
+					return true;
+				return false;
+			}).length;
+			sortedMonsters[count] = tempMonster.monster.id;
+		});
+	} 
 
 	const _doAction = (instance, monsterID) => {
 
@@ -155,8 +195,8 @@ const fight = () => {
 
 		const effectsType = {damage, heal, equilibre};		
 		
-		if (_getMonsterByID(instance, monsterID).stats.hp > 0) {		
-			const actionFromMonster = _getActionByMonsterID(instance, monsterID);
+		if (_isAvailableToPlayRound(instance, monsterID)) {		
+			const actionFromMonster  = _getActionByMonsterID(instance, monsterID);
 			const effectListByTarget = _geteffectListByTarget(instance, monsterID, actionFromMonster)
 			effectListByTarget.targets.forEach(target => {
 				target.action.effects.forEach((effect) => {
@@ -164,8 +204,11 @@ const fight = () => {
 				})
 			});
 		}
-
 	};
+
+	const _isAvailableToPlayRound = (instance, monsterID) => {
+		return _getMonsterByID(instance, monsterID).stats.hp > 0
+	}
 
 	const _doCalculDamage = (instance, target, power) => {
 		const skill 		 = target.action;
@@ -326,6 +369,7 @@ const fight = () => {
 	const _getAlly = (instance, monsterID) => {
 		return instance[_getMonsterByID(instance, monsterID).playerID].team.filter((monster) => monster.id !== monsterID)[0];
 	}
+	
 	const _getEnnemies = (instance, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
 			if (value.team.every((monster) => monster.id !== monsterID)) {
