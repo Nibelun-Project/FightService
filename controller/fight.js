@@ -28,7 +28,7 @@ const getTeam = (playerID) => {
 			status: [],
 			buff: [],
 			playerID: playerID.toString(),
-		},
+		}/*,
 		{
 			id: ((parseInt(playerID) / 100000) * 2).toString(),
 			name: "étoalronkaré" + playerID,
@@ -57,7 +57,7 @@ const getTeam = (playerID) => {
 			status: [],
 			buff: [],
 			playerID: playerID.toString(),
-		},
+		}*/
 	];
 };
 
@@ -128,26 +128,33 @@ const fight = () => {
 	};
 
 	const _shuffleMonsters = (tempMonstersList) => {
-		const shuffleIndicators = [1, 2, 3, 4];
+		const shuffleIndicators = [];
+		for (let i = 1; i <= tempMonstersList.length; i++) {
+			shuffleIndicators.push(i);
+		}
 
 		const shuffleArray = (array) => {
-			for (let i = array.length - 1; i > 0; i--) {
-				const j    = Math.floor(Math.random() * (i + 1));
-				const temp = array[i];
-				array[i]   = array[j];
-				array[j]   = temp;
+
+			const _reverseItem = (list, id1, id2) => {
+				const temp = list[id1];
+				list[id1]  = list[id2];
+				list[id2]  = temp;
 			}
-			
-			const allyPriority = (id1, id2) => {
+
+			const _allyPriority = (id1, id2) => {
 				if (array[id1] > array[id2]) {
-					const temp = array[id1];
-					array[id1] = array[id2];
-					array[id2] = temp;
+					_reverseItem(array, id1, id2)
 				}
 			}
 
-			allyPriority(0, 1)
-			allyPriority(2, 3)
+			for (let i = array.length - 1; i > 0; i--) {
+				const j    = Math.floor(Math.random() * (i + 1));
+				_reverseItem(array, i, j);
+			}
+			
+			for (let l = 1; l <= array.length - 1; l++) {
+				if (tempMonstersList[l-1].playerID === tempMonstersList[l].playerID) _allyPriority(l-1, l)
+			}
 
 			return array;
 		};
@@ -158,7 +165,6 @@ const fight = () => {
 		for (let index = 0; index < shuffleIndicators.length; index++) {
 			monsterListWithShuffleID.push({ shuffleID: shuffleIndicators[index], monster: tempMonstersList[index] });
 		}
-		
 		return monsterListWithShuffleID
 	}
 
