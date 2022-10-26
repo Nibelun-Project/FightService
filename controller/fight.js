@@ -28,7 +28,7 @@ const getTeam = (playerID) => {
 			status: [],
 			buff: [],
 			playerID: playerID.toString(),
-		}/*,
+		},
 		{
 			id: ((parseInt(playerID) / 100000) * 2).toString(),
 			name: "étoalronkaré" + playerID,
@@ -57,7 +57,7 @@ const getTeam = (playerID) => {
 			status: [],
 			buff: [],
 			playerID: playerID.toString(),
-		}*/
+		}
 	];
 };
 
@@ -189,6 +189,7 @@ const fight = () => {
 		const damage = (target, power) => {
 			console.log('damage from ', target.sourceID, ' to ', target.targetID);
 			_doCalculDamage(instance, target, power);
+
 		}
 
 		const heal = (target, power) => {
@@ -203,7 +204,7 @@ const fight = () => {
 		
 		if (_isAvailableToPlayRound(instance, monsterID)) {		
 			const actionFromMonster  = _getActionByMonsterID(instance, monsterID);
-			const effectListByTarget = _geteffectListByTarget(instance, monsterID, actionFromMonster)
+			const effectListByTarget = _getEffectListByTarget(instance, monsterID, actionFromMonster)
 			effectListByTarget.targets.forEach(target => {
 				target.action.effects.forEach((effect) => {
 					effectsType[effect.type](target, effect.power);
@@ -280,90 +281,80 @@ const fight = () => {
 		}
 	};
 
-	const _geteffectListByTarget = (instance, monsterID, action) => {
+	const _getEffectListByTarget = (instance, monsterID, action) => {
 
 		const self = () => {
 			const skill   = _getActionByID(action.skillID)
-			skill.effects = skill.effects.first
+			skill.effects = skill.effects[0]
 			return {targets: [{sourceID: monsterID, targetID: monsterID, action: skill}]};
 		};
 
 		const ally = () => {
 			const skill   = _getActionByID(action.skillID)
-			skill.effects = skill.effects.first
+			skill.effects = skill.effects[0]
+			const ally = _getAlly(instance, monsterID)
+
+			if (ally === undefined) return {targets: []}
 			return {targets: [{sourceID: monsterID, targetID: _getAlly(instance, monsterID).id, action: skill}]};
 		};
 
 		const allies = () => {
-			const skill 	  		   = _getActionByID(action.skillID)
-			const effectsListFromSkill = skill.effects
-			const effectListByTarget   = {targets: []};
+			const skill 	  		 = _getActionByID(action.skillID)
+			const effectListByTarget = {targets: []};
+			skill.effects 			 = skill.effects[0]
 
-			all.effects = effectsListFromSkill.first
-			effectListByTarget.targets.push({sourceID: monsterID, targetID: monsterID, action: skill})
-
-			skill.effects = effectsListFromSkill.second
-			effectListByTarget.targets.push({sourceID: monsterID, targetID: _getAlly(instance, monsterID).id, action: skill})
+			instance[_getMonsterByID(instance, monsterID).playerID].team.forEach((monster) => {
+				effectListByTarget.targets.push({sourceID: monsterID, targetID: monster.id, action: skill})
+			})
 
 			return effectListByTarget
 		};
 
 		const ennemies = () => {
-			const skill 	  		   = _getActionByID(action.skillID)
-			const effectsListFromSkill = skill.effects
-			const effectListByTarget   = {targets: []};
-			const targetsList 	  	   = _getEnnemies(instance, monsterID);
+			const skill 	  		 = _getActionByID(action.skillID)
+			const effectListByTarget = {targets: []};
+			const targetsList 	  	 = _getEnnemies(instance, monsterID);
+			skill.effects			 = skill.effects[0]
 
-			skill.effects = effectsListFromSkill.first
-			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[0].id, action: skill})
-
-			skill.effects = effectsListFromSkill.second
-			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[1].id, action: skill})
+			targetsList.forEach((monster) => {
+				effectListByTarget.targets.push({sourceID: monsterID, targetID: monster.id, action: skill})
+			})
 
 			return effectListByTarget
 		};
 
 		const single = () => {
 			const skill   = _getActionByID(action.skillID)
-			skill.effects = skill.effects.first
+			skill.effects = skill.effects[0]
+			
 			return {targets: [{sourceID: monsterID, targetID: action.targetID, action: skill}]};
 		};
 
 		const double = () => {
-			const skill 	  		   = _getActionByID(action.skillID)
-			const effectsListFromSkill = skill.effects
-			const effectListByTarget   = {targets: []};
-
-			skill.effects = effectsListFromSkill.first
-			effectListByTarget.targets.push({sourceID: monsterID, targetID: action.targetID, action: skill})
-
-			skill.effects = effectsListFromSkill.second
-			effectListByTarget.targets.push({sourceID: monsterID, targetID: _getAlly(instance, action.targetID).id, action: skill})
+			const skill 	  		 = _getActionByID(action.skillID)
+			const effectListByTarget = {targets: []};
+			skill.effects 			 = skill.effects[0]
+			
+			instance[_getMonsterByID(instance, action.targetID).playerID].team.forEach((monster) => {
+				effectListByTarget.targets.push({sourceID: monsterID, targetID: monster.id, action: skill})
+			})
 
 			return effectListByTarget
 		};
 
 		const all = () => {
 			const skill 	  		   = _getActionByID(action.skillID)
-			const effectsListFromSkill = skill.effects
 			const effectListByTarget   = {targets: []};
 			let targetsList 		   = [];
+			skill.effects = skill.effects[0]
 
 			for (const [key, value] of Object.entries(instance)) {
 				targetsList = targetsList.concat(value.team);
 			}
 
-			skill.effects = effectsListFromSkill.first
-			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[0].id, action: skill})
-
-			skill.effects = effectsListFromSkill.second
-			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[1].id, action: skill})
-
-			skill.effects = effectsListFromSkill.third
-			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[2].id, action: skill})
-
-			skill.effects = effectsListFromSkill.fourth
-			effectListByTarget.targets.push({sourceID: monsterID, targetID: targetsList[3].id, action: skill})
+			targetsList.forEach((monster) => {
+				effectListByTarget.targets.push({sourceID: monsterID, targetID: monster.id, action: skill})
+			})
 
 			return effectListByTarget
 		};
@@ -393,141 +384,131 @@ const fight = () => {
 	};
 
 	const _getActionByID = (actionID) => {
+		//self, ally, allies, ennemies, single, double, all
 		const sampleAttack = {
 			1: {
-				name: "charge",
+				name: "single",
 				description: "text sample...",
 				type: "fire",
-				effects: {first: [{type: "damage",    power:"45"},
-							  	  {type: "equilibre", power:"5"}]},
+				effects: [[{type: "damage",    power:"45"},
+						   {type: "equilibre", power:"5"}]],
 				target: "single"
 			},
 			2: {
-				name: "charge",
+				name: "all",
 				description: "text sample...",
 				type: "fire",
-				effects: {first: [{type: "damage",    power:"45"},
-							  	  {type: "equilibre", power:"5"}]},
-				target: "single"
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
+				target: "all"
 			},
 			3: {
-				name: "charge",
+				name: "ennemies",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage",    power:"45"},
-							  	  {type: "equilibre", power:"5"}]},
-				target: "self"
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}],
+						   [{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
+				target: "ennemies"
 			},
 			4: {
-				name: "charge",
+				name: "allies",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage",    power:"45"},
-							  	  {type: "equilibre", power:"5"}]},
-				target: "ally"
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
+				target: "allies"
 			},
 			5: {
-				name: "charge",
+				name: "allies",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage",    power:"45"},
-							  	  {type: "equilibre", power:"5"}]},
-				target: "single"
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
+				target: "allies"
 			},
 			6: {
-				name: "charge",
+				name: "ennemies",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first:  [{type: "damage",    power:"60"},
-							  	   {type: "equilibre", power:"10"}],
-						  second: [{type: "damage",    power:"30"},
-						   	  	   {type: "equilibre", power:"5"}]},
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
 				target: "ennemies"
 			},
 			7: {
-				name: "charge",
+				name: "all",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage",    power:"45"},
-								  {type: "equilibre", power:"5"}]},
-				target: "self"
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
+				target: "all"
 			},
 			8: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage",    power:"45"},
-							  	  {type: "equilibre", power:"5"}]},
-				target: "ally"
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
+				target: "single"
 			},
 			9: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage",    power:"45"},
-							  	  {type: "equilibre", power:"5"}]},
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
 				target: "single"
 			},
 			10: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first:  [{type: "damage",    power:"30"},
-							  	   {type: "equilibre", power:"2"}],
-						  second: [{type: "damage",    power:"60"},
-						   	  	   {type: "equilibre", power:"3"}]},
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
 				target: "double"
 			},
 			11: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage",    power:"45"},
-							  	  {type: "equilibre", power:"5"}]},
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
 				target: "self"
 			},
 			12: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first: [{type: "damage",    power:"30"},
-								  {type: "equilibre", power:"2"}]},
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
 				target: "ally"
 			},
 			13: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first:  [{type: "damage",    power:"30"},
-							  	   {type: "equilibre", power:"2"}],
-						  second: [{type: "damage",    power:"30"},
-						  		   {type: "equilibre", power:"2"}]},
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
 				target: "allies"
 			},
 			14: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first:  [{type: "damage",    power:"50"},
-							  	   {type: "equilibre", power:"10"}],
-						  second: [{type: "damage",    power:"45"},
-						   	  	   {type: "equilibre", power:"5"}],
-						  third:  [{type: "damage",    power:"50"},
-								   {type: "equilibre", power:"10"}],
-						  fourth: [{type: "damage",    power:"45"},
-								   {type: "equilibre", power:"5"}]},
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
 				target: "all"
 			},
 			15: {
 				name: "charge",
 				description: "text sample...",
 				type: "neutral",
-				effects: {first:  [{type: "damage",    power:"10"},
-							  	   {type: "equilibre", power:"10"}],
-						  second: [{type: "damage",    power:"20"},
-						   	  	   {type: "equilibre", power:"5"}]},
+				effects: [[{type: "damage",    power:"45"}, //same effects to all targets
+						   {type: "equilibre", power:"5"}]],
 				target: "ennemies"
 			}
+
 		};
 		return sampleAttack[actionID.toString()];
 	};
