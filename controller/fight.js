@@ -180,34 +180,34 @@ const fight = () => {
 		});
 	} 
 
+
+	const effectsType = () => {
+        const damage = (instance, actionsByTarget, power) => {
+            console.log("damage from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetID);
+            _doCalculDamage(instance, actionsByTarget, power);
+        };
+
+        const heal = (instance, actionsByTarget, power) => {
+            console.log("heal from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetID);
+        };
+
+        const equilibre = (instance, actionsByTarget, power) => {
+            console.log("equilibre from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetID);
+        };
+
+        return { damage, heal, equilibre };
+    }
+
 	const _doAction = (instance, monsterID) => {
+		if (_isAvailableToPlayRound(instance, monsterID)) {	
 
-		/**
-		 * définir toutes les actions  possible
-		 */
-		const damage = (target, power) => {
-			console.log('damage from ', target.sourceID, ' to ', target.targetID);
-			_doCalculDamage(instance, target, power);
-
-		}
-
-		const heal = (target, power) => {
-			console.log('heal from ', target.sourceID, ' to ', target.targetID);
-		}
-
-		const equilibre = (target, power) => {
-			console.log('equilibre from ', target.sourceID, ' to ', target.targetID);
-		}
-
-		const effectsType = {damage, heal, equilibre};		
-		
-		if (_isAvailableToPlayRound(instance, monsterID)) {		
 			const actionFromMonster  = _getActionByMonsterID(instance, monsterID);
 			actionFromMonster.action = _getActionByID(actionFromMonster.skillID)
 			const effectListByTarget = _getEffectListByTarget(instance, actionFromMonster)
-			effectListByTarget.targets.forEach(target => {
-				target.action.effects.forEach((effect) => {
-					effectsType[effect.type](target, effect.power);
+
+			effectListByTarget.targets.forEach(actionsByTarget => {
+				actionsByTarget.action.effects.forEach((effect) => {
+					effectsType()[effect.type](instance, actionsByTarget, effect.power);
 				})
 			});
 		}
@@ -344,7 +344,6 @@ const fight = () => {
 			for (const [key, value] of Object.entries(instance)) {
 				targetsList = targetsList.concat(value.team);
 			}
-
 			targetsList.forEach((monster) => {
 				effectListByTarget.targets.push({sourceID: actionFromMonster.sourceID, targetID: monster.id, action: actionFromMonster.action})
 			})
