@@ -1,8 +1,11 @@
 const getTeam = (playerID) => {
+	const idP = (indice) => {
+		return ((parseInt(playerID) / 100000) * indice).toString();
+	};
 	return [
 		{
-			id: ((parseInt(playerID) / 100000) * 1).toString(),
-			name: "ronkarétoal" + playerID,
+			id: idP(1),
+			name: "ronkarétoal" + idP(1),
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -29,12 +32,7 @@ const getTeam = (playerID) => {
 				from: "ennemies",
 				to: "self",
 				target: "ally",
-				effects: [
-					[
-						{ type: "damage", power: "45" }, //same effects to all targets
-						{ type: "equilibre", power: "5" },
-					],
-				],
+				effects: [[{ type: "heal", power: "45" }]],
 			},
 			skills: [1, 2, 3, 4],
 			status: [],
@@ -42,8 +40,8 @@ const getTeam = (playerID) => {
 			playerID: playerID.toString(),
 		},
 		{
-			id: ((parseInt(playerID) / 100000) * 2).toString(),
-			name: "étoalronkaré" + playerID,
+			id: idP(2),
+			name: "étoalronkaré" + idP(2),
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -68,7 +66,7 @@ const getTeam = (playerID) => {
 				when: "before",
 				trigger: "damage",
 				from: "ennemies",
-				to: "ally",
+				to: "allies",
 				target: "self",
 				effects: [
 					[
@@ -244,7 +242,7 @@ const fight = () => {
 						{ target, effect: effect.power },
 						effect.type,
 						monsterID,
-						target,
+						target.targetID,
 						instance
 					);
 				});
@@ -271,24 +269,22 @@ const fight = () => {
 			if (owner.passif.trigger !== actionType) return false;
 			const ownerFrom = fromType[owner.passif.from](owner);
 			const ownerTo = fromType[owner.passif.to](owner);
-			// console.log(ownerTo);
 			if (
-				ownerFrom.some((monster) => {
-					monster.id !== from;
+				!ownerFrom.some((monster) => {
+					return monster.id === from.id;
 				})
 			)
 				return false;
 			if (
-				ownerTo.some((monster) => {
-					monster.id !== to;
+				!ownerTo.some((monster) => {
+					return monster.id === to;
 				})
 			)
 				return false;
 			return true;
 		};
 
-		const before = (from, to, owner, action) => {
-			console.log("hello");
+		const before = (from, to, owner) => {
 			if (!checkPassif(from, to, owner)) return false;
 			// _getEffectListByTarget(
 			// 	instance,
@@ -296,12 +292,12 @@ const fight = () => {
 			// 	owner.passif.effects,
 			// 	owner.passif.target
 			// );
-			console.log("before triggered");
-			action(param.target, param.effect);
+			console.log("before triggered by :" + owner.name);
 			return true;
 		};
 
 		const prevent = (from, to, owner) => {
+			console.log("try to prevent :" + owner.id);
 			if (!checkPassif(from, to, owner)) return false;
 			// _getEffectListByTarget(
 			// 	instance,
@@ -309,13 +305,12 @@ const fight = () => {
 			// 	owner.passif.effects,
 			// 	owner.passif.target
 			// );
-			console.log("prevent triggered");
+			console.log("prevent triggered by :" + owner.name);
 			return true;
 		};
 
-		const after = (from, to, owner, action) => {
-			console.log("hello");
-			action(param.target, param.effect);
+		const after = (from, to, owner) => {
+			// console.log("check passif :" + checkPassif(from, to, owner));
 			if (!checkPassif(from, to, owner)) return false;
 			// _getEffectListByTarget(
 			// 	instance,
@@ -323,31 +318,53 @@ const fight = () => {
 			// 	owner.passif.effects,
 			// 	owner.passif.target
 			// );
-			console.log("after triggered");
+			console.log("after triggered by :" + owner.name);
 			return true;
 		};
 
 		const eventWhen = { before, after, prevent };
 
-		let contenders = 0;
-		let notTriggered = 0;
+		let passifBefore = [];
+		let passifPrevent = [];
+		let passifAfter = [];
+
 		for (const value of Object.values(instance)) {
 			value.team.forEach((monster) => {
-				contenders++;
-				if (
-					!eventWhen[monster.passif.when](
-						_getMonsterByID(instance, monsterID),
-						target,
-						monster,
-						action
-					)
-				)
-					notTriggered++;
+				switch (monster.passif.when) {
+					case "before":
+						passifBefore.push(monster);
+						break;
+					case "prevent":
+						passifPrevent.push(monster);
+						break;
+					case "after":
+						passifAfter.push(monster);
+						break;
+				}
 			});
 		}
-		if (contenders && notTriggered) {
-			console.log("Do action");
-		}
+
+		const loopThroughPassif = (whenArray) => {
+			if (whenArray.length <= 0) return false;
+			let prevented = false;
+			for (let i = 0; i < whenArray.length; i++) {
+				const monster = whenArray[i];
+				if (
+					eventWhen[monster.passif.when](
+						_getMonsterByID(instance, monsterID),
+						target,
+						monster
+					) &&
+					monster.passif.when === "prevent"
+				)
+					prevented = true;
+			}
+			return prevented;
+		};
+
+		loopThroughPassif(passifBefore);
+		if (!loopThroughPassif(passifPrevent)) action(param.target, param.effect);
+		loopThroughPassif(passifAfter);
 	};
 
 	const _isAvailableToPlayRound = (instance, monsterID) => {
