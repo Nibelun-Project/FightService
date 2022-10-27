@@ -27,12 +27,24 @@ const getTeam = (playerID) => {
 			},
 			image: "../ronk.png",
 			passif: {
-				when: "after",
-				trigger: "damage",
-				from: "ennemies",
-				to: "self",
-				target: "ally",
-				effects: [[{ type: "heal", power: "45" }]],
+				trigger: {
+					when: "before",
+					actionType: "damage",
+					from: "ennemies",
+					to: "ally",
+					type: "fire",
+					target: "single",
+				},
+				event: {
+					target: "self",
+					effects: [
+						[
+							{ type: "heal", power: "15" }, //same effects to all targets
+						],
+					],
+				},
+				name: "Preventive Heal",
+				description: "you heal yourself or your ally before damage",
 			},
 			skills: [1, 2, 3, 4],
 			status: [],
@@ -63,17 +75,24 @@ const getTeam = (playerID) => {
 			},
 			image: "../etoal.png",
 			passif: {
-				when: "before",
-				trigger: "damage",
-				from: "ennemies",
-				to: "allies",
-				target: "self",
-				effects: [
-					[
-						{ type: "damage", power: "45" }, //same effects to all targets
-						{ type: "equilibre", power: "5" },
+				trigger: {
+					when: "before",
+					actionType: "damage",
+					from: "ennemies",
+					to: "allies",
+					type: "fire",
+					target: "double",
+				},
+				event: {
+					target: "self",
+					effects: [
+						[
+							{ type: "heal", power: "15" }, //same effects to all targets
+						],
 					],
-				],
+				},
+				name: "Preventive Heal",
+				description: "you heal yourself or your ally before damage",
 			},
 			skills: [5, 6, 7, 8],
 			status: [],
@@ -239,10 +258,9 @@ const fight = () => {
 				target.action.effects.forEach((effect) => {
 					passif(
 						effectsType[effect.type],
-						{ target, effect: effect.power },
+						target,
+						effect.power,
 						effect.type,
-						monsterID,
-						target.targetID,
 						instance
 					);
 				});
@@ -250,7 +268,7 @@ const fight = () => {
 		}
 	};
 
-	const passif = (action, param, actionType, monsterID, target, instance) => {
+	const passif = (action, target, power, actionType, instance) => {
 		const ennemies = (owner) => {
 			return _getEnnemies(instance, owner.id);
 		};
@@ -263,12 +281,13 @@ const fight = () => {
 		const self = (owner) => {
 			return [owner];
 		};
+
 		const fromType = { ennemies, ally, allies, self };
 
 		const checkPassif = (from, to, owner) => {
-			if (owner.passif.trigger !== actionType) return false;
-			const ownerFrom = fromType[owner.passif.from](owner);
-			const ownerTo = fromType[owner.passif.to](owner);
+			if (owner.passif.trigger.actionType !== actionType) return false;
+			const ownerFrom = fromType[owner.passif.trigger.from](owner);
+			const ownerTo = fromType[owner.passif.trigger.to](owner);
 			if (
 				!ownerFrom.some((monster) => {
 					return monster.id === from.id;
@@ -281,30 +300,50 @@ const fight = () => {
 				})
 			)
 				return false;
+			if (owner.passif.trigger.type) {
+				console.log(owner.passif.trigger.type, target.action.type);
+				if (owner.passif.trigger.type !== target.action.type) return false;
+			}
+			if (owner.passif.trigger.target) {
+				console.log(owner.passif.trigger.target, target.action.target);
+				if (owner.passif.trigger.target !== target.action.target) return false;
+			}
 			return true;
+		};
+
+		const applyEffects = (owner, from) => {
+			const effectsListbyTarget = _getEffectListByTarget({
+				sourceID: owner.id,
+				targetID: from,
+				action: {
+					effects: owner.passif.event.effects,
+					targetType: owner.passif.event.target,
+					name: owner.passif.name,
+					description: owner.passif.description,
+					type: "passive",
+				},
+			});
+			if (effectsListbyTarget <= 0) return false;
+			effectsListbyTarget.targets.forEach((target) => {
+				target.action.effects.forEach((effect) => {
+					effectsType[effect.type](target, effect.power);
+				});
+			});
 		};
 
 		const before = (from, to, owner) => {
 			if (!checkPassif(from, to, owner)) return false;
-			// _getEffectListByTarget(
-			// 	instance,
-			// 	owner.id,
-			// 	owner.passif.effects,
-			// 	owner.passif.target
-			// );
 			console.log("before triggered by :" + owner.name);
+			applyEffects(owner, from);
+
 			return true;
 		};
 
 		const prevent = (from, to, owner) => {
 			console.log("try to prevent :" + owner.id);
 			if (!checkPassif(from, to, owner)) return false;
-			// _getEffectListByTarget(
-			// 	instance,
-			// 	owner.id,
-			// 	owner.passif.effects,
-			// 	owner.passif.target
-			// );
+			applyEffects(owner, from);
+
 			console.log("prevent triggered by :" + owner.name);
 			return true;
 		};
@@ -312,13 +351,9 @@ const fight = () => {
 		const after = (from, to, owner) => {
 			// console.log("check passif :" + checkPassif(from, to, owner));
 			if (!checkPassif(from, to, owner)) return false;
-			// _getEffectListByTarget(
-			// 	instance,
-			// 	owner.id,
-			// 	owner.passif.effects,
-			// 	owner.passif.target
-			// );
 			console.log("after triggered by :" + owner.name);
+			applyEffects(owner, from);
+
 			return true;
 		};
 
@@ -330,7 +365,7 @@ const fight = () => {
 
 		for (const value of Object.values(instance)) {
 			value.team.forEach((monster) => {
-				switch (monster.passif.when) {
+				switch (monster.passif.trigger.when) {
 					case "before":
 						passifBefore.push(monster);
 						break;
@@ -350,9 +385,9 @@ const fight = () => {
 			for (let i = 0; i < whenArray.length; i++) {
 				const monster = whenArray[i];
 				if (
-					eventWhen[monster.passif.when](
-						_getMonsterByID(instance, monsterID),
-						target,
+					eventWhen[monster.passif.trigger.when](
+						_getMonsterByID(instance, target.sourceID),
+						target.targetID,
 						monster
 					) &&
 					monster.passif.when === "prevent"
@@ -363,7 +398,7 @@ const fight = () => {
 		};
 
 		loopThroughPassif(passifBefore);
-		if (!loopThroughPassif(passifPrevent)) action(param.target, param.effect);
+		if (!loopThroughPassif(passifPrevent)) action(target, power);
 		loopThroughPassif(passifAfter);
 	};
 
@@ -436,6 +471,7 @@ const fight = () => {
 	};
 
 	const _getEffectListByTarget = (instance, monsterID, action) => {
+		//sourceID, targetID, skill
 		const self = () => {
 			const skill = _getActionByID(action.skillID);
 			skill.effects = skill.effects[0];
