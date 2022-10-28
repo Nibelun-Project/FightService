@@ -31,15 +31,14 @@ const getTeam = (playerID) => {
 					when: "before",
 					actionType: "damage",
 					from: "ennemies",
+					type: "neutral",
 					to: "ally",
-					type: "fire",
-					target: "single",
 				},
 				event: {
-					target: "self",
+					target: "single",
 					effects: [
 						[
-							{ type: "heal", power: "15" }, //same effects to all targets
+							{ type: "damage", power: "15" }, //same effects to all targets
 						],
 					],
 				},
@@ -267,7 +266,6 @@ const fight = () => {
 				instance,
 				actionFromMonster
 			);
-
 			effectListByTarget.targets.forEach((actionsByTarget) => {
 				actionsByTarget.action.effects.forEach((effect) => {
 					effectsType()[effect.type](instance, actionsByTarget, effect.power);
@@ -316,11 +314,9 @@ const fight = () => {
 			)
 				return false;
 			if (owner.passif.trigger.type) {
-				console.log(owner.passif.trigger.type, target.action.type);
 				if (owner.passif.trigger.type !== target.action.type) return false;
 			}
 			if (owner.passif.trigger.target) {
-				console.log(owner.passif.trigger.target, target.action.target);
 				if (owner.passif.trigger.target !== target.action.target) return false;
 			}
 			return true;
@@ -329,19 +325,19 @@ const fight = () => {
 		const applyEffects = (owner, from) => {
 			const effectsListbyTarget = _getEffectListByTarget(instance, {
 				sourceID: owner.id,
-				targetID: from,
+				targetID: from.id,
 				action: {
 					effects: owner.passif.event.effects,
 					target: owner.passif.event.target,
 					name: owner.passif.name,
 					description: owner.passif.description,
-					type: "passive",
+					type: "neutral",
 				},
 			});
 			if (effectsListbyTarget <= 0) return false;
+			console.log(effectsListbyTarget);
 			effectsListbyTarget.targets.forEach((target) => {
 				target.action.effects.forEach((effect) => {
-					console.log(effect.type);
 					effectsType()[effect.type](instance, target, effect.power);
 				});
 			});
@@ -599,7 +595,6 @@ const fight = () => {
 		};
 
 		const TargetTypes = { self, ally, allies, ennemies, single, double, all };
-		console.log(actionFromMonster);
 		return TargetTypes[actionFromMonster.action.target]();
 	};
 
@@ -727,10 +722,9 @@ const fight = () => {
 				effects: [
 					[
 						{ type: "damage", power: "45" }, //same effects to all targets
-						{ type: "equilibre", power: "5" },
 					],
 				],
-				target: "all",
+				target: "single",
 			},
 			9: {
 				name: "charge",
