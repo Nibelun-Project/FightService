@@ -5,7 +5,7 @@ const getTeam = (playerID) => {
 	return [
 		{
 			id: idP(1),
-			name: "ronkarétoal" + idP(1),
+			name: "ronkarétoal",
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -45,14 +45,68 @@ const getTeam = (playerID) => {
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
 			},
-			skills: [1, 2, 3, 4],
+			skills: [
+				{
+					name: "brasero",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "fire",
+					cost: { type: "stamina", value: 40 },
+					effects: [
+						[
+							{ type: "damage", power: "45" },
+						],
+					],
+					target: "single",
+				},
+				{
+					name: "volcano",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "neutral",
+					cost: { type: "stamina", value: 40 },
+					effects: [
+						[
+							{ type: "damage", power: "45" },
+						],
+					],
+					target: "double",
+				},
+				{
+					name: "howling",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "neutral",
+					cost: { type: "balance", value: 25 },
+					effects: [
+						[
+							{ type: "damage", power: "45" },
+						]
+					],
+					target: "ennemies",
+				},
+				{
+					name: "cup of tea",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "neutral",
+					cost: { type: "hp", value: 10 },
+					effects: [
+						[
+							{ type: "damage", power: "45" }, //same effects to all targets
+							
+						],
+					],
+					target: "allies",
+				},
+			],
 			status: [],
 			buff: [],
 			playerID: playerID.toString(),
 		},
 		{
 			id: idP(2),
-			name: "étoalronkaré" + idP(2),
+			name: "étoalronkaré",
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -93,7 +147,60 @@ const getTeam = (playerID) => {
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
 			},
-			skills: [5, 6, 7, 8],
+			skills: [
+				{
+					name: "telluric force",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "neutral",
+					cost: { type: "stamina", value: 40 },
+					effects: [
+						[
+							{ type: "damage", power: "45" },
+						],
+					],
+					target: "single",
+				},
+				{
+					name: "spirit touch",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "neutral",
+					cost: { type: "stamina", value: 40 },
+					effects: [
+						[
+							{ type: "damage", power: "45" }, 
+						],
+					],
+					target: "double",
+				},
+				{
+					name: "destiny wings",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "mental",
+					cost: { type: "balance", value: 25 },
+					effects: [
+						[
+							{ type: "damage", power: "45" }, 
+						]
+					],
+					target: "ennemies",
+				},
+				{
+					name: "grass cut",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ...",
+					type: "neutral",
+					cost: { type: "hp", value: 10 },
+					effects: [
+						[
+							{ type: "damage", power: "45" },
+						],
+					],
+					target: "allies",
+				},
+			],
 			status: [],
 			buff: [],
 			playerID: playerID.toString(),
@@ -261,21 +368,11 @@ const fight = () => {
 	const _doAction = (instance, monsterID) => {
 		if (_isAvailableToPlayRound(instance, monsterID)) {
 			const actionFromMonster = _getActionByMonsterID(instance, monsterID);
-			actionFromMonster.action = _getActionByID(actionFromMonster.skillID);
-			const effectListByTarget = _getEffectListByTarget(
-				instance,
-				actionFromMonster
-			);
+			const effectListByTarget = _getEffectListByTarget(instance, actionFromMonster );
 			effectListByTarget.targets.forEach((actionsByTarget) => {
-				actionsByTarget.action.effects.forEach((effect) => {
-					effectsType()[effect.type](instance, actionsByTarget, effect.power);
-					passif(
-						effectsType()[effect.type],
-						actionsByTarget,
-						effect.power,
-						effect.type,
-						instance
-					);
+				actionsByTarget.skill.effects.forEach((effect) => {
+					//effectsType()[effect.type](instance, actionsByTarget, effect.power);
+					passif(effectsType()[effect.type], actionsByTarget, effect.power, effect.type, instance);
 				});
 			});
 		}
@@ -314,10 +411,10 @@ const fight = () => {
 			)
 				return false;
 			if (owner.passif.trigger.type) {
-				if (owner.passif.trigger.type !== target.action.type) return false;
+				if (owner.passif.trigger.type !== target.skill.type) return false;
 			}
 			if (owner.passif.trigger.target) {
-				if (owner.passif.trigger.target !== target.action.target) return false;
+				if (owner.passif.trigger.target !== target.skill.target) return false;
 			}
 			return true;
 		};
@@ -326,7 +423,7 @@ const fight = () => {
 			const effectsListbyTarget = _getEffectListByTarget(instance, {
 				sourceID: owner.id,
 				targetID: from.id,
-				action: {
+				skill: {
 					effects: owner.passif.event.effects,
 					target: owner.passif.event.target,
 					name: owner.passif.name,
@@ -335,9 +432,8 @@ const fight = () => {
 				},
 			});
 			if (effectsListbyTarget <= 0) return false;
-			console.log(effectsListbyTarget);
 			effectsListbyTarget.targets.forEach((target) => {
-				target.action.effects.forEach((effect) => {
+				target.skill.effects.forEach((effect) => {
 					effectsType()[effect.type](instance, target, effect.power);
 				});
 			});
@@ -419,7 +515,7 @@ const fight = () => {
 	};
 
 	const _doCalculDamage = (instance, target, power) => {
-		const skill = target.action;
+		const skill = target.skill;
 		const monsterSource = _getMonsterByID(instance, target.sourceID);
 		const monsterTarget = _getMonsterByID(instance, target.targetID);
 		const typeEfficiency = _getTypeEfficiency(skill.type, monsterTarget.type);
@@ -484,20 +580,20 @@ const fight = () => {
 
 	const _getEffectListByTarget = (instance, actionFromMonster) => {
 		const self = () => {
-			actionFromMonster.action.effects = actionFromMonster.action.effects[0];
+			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 			return {
 				targets: [
 					{
 						sourceID: actionFromMonster.sourceID,
 						targetID: actionFromMonster.sourceID,
-						action: actionFromMonster.action,
+						skill: actionFromMonster.skill,
 					},
 				],
 			};
 		};
 
 		const ally = () => {
-			actionFromMonster.action.effects = actionFromMonster.action.effects[0];
+			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 			const ally = _getAlly(instance, actionFromMonster.sourceID);
 
 			if (ally === undefined) return { targets: [] };
@@ -506,7 +602,7 @@ const fight = () => {
 					{
 						sourceID: actionFromMonster.sourceID,
 						targetID: ally.id,
-						action: actionFromMonster.action,
+						skill: actionFromMonster.skill,
 					},
 				],
 			};
@@ -514,7 +610,7 @@ const fight = () => {
 
 		const allies = () => {
 			const effectListByTarget = { targets: [] };
-			actionFromMonster.action.effects = actionFromMonster.action.effects[0];
+			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 
 			instance[
 				_getMonsterByID(instance, actionFromMonster.sourceID).playerID
@@ -522,7 +618,7 @@ const fight = () => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
 					targetID: monster.id,
-					action: actionFromMonster.action,
+					skill: actionFromMonster.skill,
 				});
 			});
 
@@ -532,13 +628,13 @@ const fight = () => {
 		const ennemies = () => {
 			const effectListByTarget = { targets: [] };
 			const targetsList = _getEnnemies(instance, actionFromMonster.sourceID);
-			actionFromMonster.action.effects = actionFromMonster.action.effects[0];
+			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 
 			targetsList.forEach((monster) => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
 					targetID: monster.id,
-					action: actionFromMonster.action,
+					skill: actionFromMonster.skill,
 				});
 			});
 
@@ -546,13 +642,13 @@ const fight = () => {
 		};
 
 		const single = () => {
-			actionFromMonster.action.effects = actionFromMonster.action.effects[0];
+			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 			return {
 				targets: [
 					{
 						sourceID: actionFromMonster.sourceID,
 						targetID: actionFromMonster.targetID,
-						action: actionFromMonster.action,
+						skill: actionFromMonster.skill,
 					},
 				],
 			};
@@ -560,7 +656,7 @@ const fight = () => {
 
 		const double = () => {
 			const effectListByTarget = { targets: [] };
-			actionFromMonster.action.effects = actionFromMonster.action.effects[0];
+			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 
 			instance[
 				_getMonsterByID(instance, actionFromMonster.targetID).playerID
@@ -568,7 +664,7 @@ const fight = () => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
 					targetID: monster.id,
-					action: actionFromMonster.action,
+					skill: actionFromMonster.skill,
 				});
 			});
 
@@ -578,7 +674,7 @@ const fight = () => {
 		const all = () => {
 			const effectListByTarget = { targets: [] };
 			let targetsList = [];
-			actionFromMonster.action.effects = actionFromMonster.action.effects[0];
+			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 
 			for (const [key, value] of Object.entries(instance)) {
 				targetsList = targetsList.concat(value.team);
@@ -587,7 +683,7 @@ const fight = () => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
 					targetID: monster.id,
-					action: actionFromMonster.action,
+					skill: actionFromMonster.skill,
 				});
 			});
 
@@ -595,7 +691,7 @@ const fight = () => {
 		};
 
 		const TargetTypes = { self, ally, allies, ennemies, single, double, all };
-		return TargetTypes[actionFromMonster.action.target]();
+		return TargetTypes[actionFromMonster.skill.target]();
 	};
 
 	const _getAlly = (instance, monsterID) => {
