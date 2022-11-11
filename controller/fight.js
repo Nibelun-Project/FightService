@@ -214,6 +214,7 @@ const fight = () => {
 	const ready = (match) => {
 		for (const [key, value] of Object.entries(match)) {
 			value["team"] = getTeam(key);
+			value["onBoard"] = [getTeam(key)[0], getTeam(key)[1]]
 			value["actions"] = [];
 		}
 		return _startCombat(match);
@@ -257,6 +258,7 @@ const fight = () => {
 		sortedListOfMonstersID.forEach((monsterID) => {
 			_doAction(instance, monsterID);
 		});
+		_applyChanges(instance)
 		_clearActions(instance);
 		return instance;
 	};
@@ -265,7 +267,7 @@ const fight = () => {
 		let sortedMonsters = [];
 		let tempMonstersList = [];
 		for (const [key, value] of Object.entries(instance)) {
-			tempMonstersList = tempMonstersList.concat(value.team);
+			tempMonstersList = tempMonstersList.concat(value.onBoard);
 		}
 
 		_getPlacesOnRound(_shuffleMonsters(tempMonstersList), sortedMonsters);
@@ -378,6 +380,15 @@ const fight = () => {
 		}
 	};
 
+	const _applyChanges = (instance) => {
+		for (const [key, player] of Object.entries(instance)) {
+			player.onBoard.forEach((onBoardMonster) => {
+				const teamMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === onBoardMonster.id)
+				player.team[teamMonsterIndex] = onBoardMonster
+			})
+		}
+	}
+
 	const passif = (action, target, power, actionType, instance) => {
 		const ennemies = (owner) => {
 			return _getEnnemies(instance, owner.id);
@@ -386,7 +397,7 @@ const fight = () => {
 			return [_getAlly(instance, owner.id)];
 		};
 		const allies = (owner) => {
-			return instance[owner.playerID].team;
+			return instance[owner.playerID].onBoard;
 		};
 		const self = (owner) => {
 			return [owner];
@@ -472,7 +483,7 @@ const fight = () => {
 		let passifAfter = [];
 
 		for (const value of Object.values(instance)) {
-			value.team.forEach((monster) => {
+			value.onBoard.forEach((monster) => {
 				switch (monster.passif.trigger.when) {
 					case "before":
 						passifBefore.push(monster);
@@ -614,7 +625,7 @@ const fight = () => {
 
 			instance[
 				_getMonsterByID(instance, actionFromMonster.sourceID).playerID
-			].team.forEach((monster) => {
+			].onBoard.forEach((monster) => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
 					targetID: monster.id,
@@ -660,7 +671,7 @@ const fight = () => {
 
 			instance[
 				_getMonsterByID(instance, actionFromMonster.targetID).playerID
-			].team.forEach((monster) => {
+			].onBoard.forEach((monster) => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
 					targetID: monster.id,
@@ -677,7 +688,7 @@ const fight = () => {
 			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 
 			for (const [key, value] of Object.entries(instance)) {
-				targetsList = targetsList.concat(value.team);
+				targetsList = targetsList.concat(value.onBoard);
 			}
 			targetsList.forEach((monster) => {
 				effectListByTarget.targets.push({
@@ -695,10 +706,10 @@ const fight = () => {
 	};
 
 	const _getAlly = (instance, monsterID) => {
-		return instance[_getMonsterByID(instance, monsterID).playerID].team.filter(
+		return instance[_getMonsterByID(instance, monsterID).playerID].onBoard.filter(
 			(monster) => monster.id !== monsterID
 		)[0] !== undefined
-			? instance[_getMonsterByID(instance, monsterID).playerID].team.filter(
+			? instance[_getMonsterByID(instance, monsterID).playerID].onBoard.filter(
 					(monster) => monster.id !== monsterID
 			  )[0]
 			: [];
@@ -706,16 +717,16 @@ const fight = () => {
 
 	const _getEnnemies = (instance, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
-			if (value.team.every((monster) => monster.id !== monsterID)) {
-				return value.team;
+			if (value.onBoard.every((monster) => monster.id !== monsterID)) {
+				return value.onBoard;
 			}
 		}
 	};
 
 	const _getMonsterByID = (instance, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
-			if (value.team.some((monster) => monster.id === monsterID)) {
-				return value.team.filter((monster) => monster.id === monsterID)[0]; // voir si améliorable
+			if (value.onBoard.some((monster) => monster.id === monsterID)) {
+				return value.onBoard.filter((monster) => monster.id === monsterID)[0]; // voir si améliorable
 			}
 		}
 	};
