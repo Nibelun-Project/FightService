@@ -22,11 +22,12 @@ const communication = comm(io);
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-const corsOptions = {
-	origin: "*",
+var corsOptions = {
+	origin: true,
 	credentials: true,
 	optionsSuccessStatus: 200,
 };
+
 app.use(cors(corsOptions));
 
 app.use("/fight", fightRouter(communication));
