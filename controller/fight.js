@@ -1,10 +1,11 @@
 const getTeam = (playerID) => {
 	const idP = (indice) => {
-		return ((parseInt(playerID) / 100000) * indice).toString();
+		console.log(playerID);
+		return (parseInt(playerID) * indice).toString();
 	};
 	return [
 		{
-			id: idP(1),
+			id: 1+playerID,
 			name: "ronkarétoal1",
 			type: ["fire", "mental"],
 			stats: {
@@ -30,7 +31,7 @@ const getTeam = (playerID) => {
 				trigger: {
 					when: "before",
 					actionType: "damage",
-					from: "ennemies",
+					from: "ally",
 					type: "neutral",
 					to: "ally",
 				},
@@ -54,7 +55,7 @@ const getTeam = (playerID) => {
 					cost: { type: "stamina", value: 40 },
 					effects: [
 						[
-							{ type: "swap", power: "45" },
+							{ type: "damage", power: "45" }
 						],
 					],
 					target: "single",
@@ -67,7 +68,7 @@ const getTeam = (playerID) => {
 					cost: { type: "stamina", value: 40 },
 					effects: [
 						[
-							{ type: "damage", power: "45" },
+							{ type: "damage", power: "45" }
 						],
 					],
 					target: "double",
@@ -80,10 +81,10 @@ const getTeam = (playerID) => {
 					cost: { type: "balance", value: 25 },
 					effects: [
 						[
-							{ type: "damage", power: "45" },
+							{ type: "damage", power: "45" }
 						]
 					],
-					target: "ennemies",
+					target: "self",
 				},
 				{
 					name: "cup of tea",
@@ -93,11 +94,11 @@ const getTeam = (playerID) => {
 					cost: { type: "hp", value: 10 },
 					effects: [
 						[
-							{ type: "damage", power: "45" }, //same effects to all targets
+							{ type: "damage", power: "45" }
 							
 						],
 					],
-					target: "allies",
+					target: "ally",
 				},
 			],
 			status: [],
@@ -105,7 +106,7 @@ const getTeam = (playerID) => {
 			playerID: playerID.toString(),
 		},
 		{
-			id: idP(2),
+			id: 2+playerID,
 			name: "étoalronkaré2",
 			type: ["fire", "mental"],
 			stats: {
@@ -131,16 +132,16 @@ const getTeam = (playerID) => {
 				trigger: {
 					when: "before",
 					actionType: "damage",
-					from: "ennemies",
+					from: "ally",
 					to: "allies",
 					type: "fire",
 					target: "double",
 				},
 				event: {
-					target: "self",
+					target: "single",
 					effects: [
 						[
-							{ type: "heal", power: "15" }, //same effects to all targets
+							{ type: "heal", power: "15" }
 						],
 					],
 				},
@@ -156,7 +157,7 @@ const getTeam = (playerID) => {
 					cost: { type: "stamina", value: 40 },
 					effects: [
 						[
-							{ type: "damage", power: "45" },
+							{ type: "damage", power: "45" }
 						],
 					],
 					target: "single",
@@ -169,10 +170,10 @@ const getTeam = (playerID) => {
 					cost: { type: "stamina", value: 40 },
 					effects: [
 						[
-							{ type: "damage", power: "45" }, 
+							{ type: "damage", power: "45" },
 						],
 					],
-					target: "double",
+					target: "ennemies",
 				},
 				{
 					name: "destiny wings",
@@ -182,10 +183,10 @@ const getTeam = (playerID) => {
 					cost: { type: "balance", value: 25 },
 					effects: [
 						[
-							{ type: "damage", power: "45" }, 
+							{ type: "damage", power: "45" }
 						]
 					],
-					target: "ennemies",
+					target: "all",
 				},
 				{
 					name: "grass cut",
@@ -195,7 +196,7 @@ const getTeam = (playerID) => {
 					cost: { type: "hp", value: 10 },
 					effects: [
 						[
-							{ type: "damage", power: "45" },
+							{ type: "damage", power: "45" }
 						],
 					],
 					target: "allies",
@@ -206,7 +207,7 @@ const getTeam = (playerID) => {
 			playerID: playerID.toString(),
 		},
 		{
-			id: idP(3),
+			id: 3+playerID,
 			name: "ronkarétoal3",
 			type: ["fire", "mental"],
 			stats: {
@@ -232,7 +233,7 @@ const getTeam = (playerID) => {
 				trigger: {
 					when: "before",
 					actionType: "damage",
-					from: "ennemies",
+					from: "ally",
 					type: "neutral",
 					to: "ally",
 				},
@@ -272,7 +273,7 @@ const getTeam = (playerID) => {
 							{ type: "damage", power: "45" },
 						],
 					],
-					target: "double",
+					target: "single",
 				},
 				{
 					name: "howling",
@@ -285,7 +286,7 @@ const getTeam = (playerID) => {
 							{ type: "damage", power: "45" },
 						]
 					],
-					target: "ennemies",
+					target: "single",
 				},
 				{
 					name: "cup of tea",
@@ -299,7 +300,7 @@ const getTeam = (playerID) => {
 							
 						],
 					],
-					target: "allies",
+					target: "single",
 				},
 			],
 			status: [],
@@ -307,7 +308,7 @@ const getTeam = (playerID) => {
 			playerID: playerID.toString(),
 		},
 		{
-			id: idP(4),
+			id: 4+playerID,
 			name: "ronkarétoal4",
 			type: ["fire", "mental"],
 			stats: {
@@ -333,7 +334,7 @@ const getTeam = (playerID) => {
 				trigger: {
 					when: "before",
 					actionType: "damage",
-					from: "ennemies",
+					from: "ally",
 					type: "neutral",
 					to: "ally",
 				},
@@ -373,7 +374,7 @@ const getTeam = (playerID) => {
 							{ type: "damage", power: "45" },
 						],
 					],
-					target: "double",
+					target: "single",
 				},
 				{
 					name: "howling",
@@ -386,7 +387,7 @@ const getTeam = (playerID) => {
 							{ type: "damage", power: "45" },
 						]
 					],
-					target: "ennemies",
+					target: "single",
 				},
 				{
 					name: "cup of tea",
@@ -400,7 +401,7 @@ const getTeam = (playerID) => {
 							
 						],
 					],
-					target: "allies",
+					target: "single",
 				},
 			],
 			status: [],
@@ -539,31 +540,16 @@ const fight = () => {
 
 	const effectsType = () => {
 		const damage = (instance, actionsByTarget, power) => {
-			console.log(
-				"damage from ",
-				actionsByTarget.sourceID,
-				" to ",
-				actionsByTarget.targetID
-			);
+			console.log("damage from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetID);
 			_doCalculDamage(instance, actionsByTarget, power);
 		};
 
 		const equilibre = (instance, actionsByTarget, power) => {
-			console.log(
-				"equilibre from ",
-				actionsByTarget.sourceID,
-				" to ",
-				actionsByTarget.targetID
-			);
+			console.log("equilibre from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetID);
 		};
 
 		const heal = (instance, actionsByTarget, power) => {
-			console.log(
-				"heal from ",
-				actionsByTarget.sourceID,
-				" to ",
-				actionsByTarget.targetID
-			);
+			console.log("heal from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetID);
 		};
 
 		const swap = (instance, actionsByTarget) => {
@@ -889,9 +875,8 @@ const fight = () => {
 			const effectListByTarget = { targets: [] };
 			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 
-			instance[
-				_getOnBoardMonsterByID(instance, actionFromMonster.targetID).playerID
-			].onBoard.forEach((monster) => {
+			instance[_getOnBoardMonsterByID(instance, actionFromMonster.targetID)
+					.playerID].onBoard.forEach((monster) => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
 					targetID: monster.id,
