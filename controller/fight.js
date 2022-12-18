@@ -1,8 +1,4 @@
 const getTeam = (playerID) => {
-	const idP = (indice) => {
-		console.log(playerID);
-		return (parseInt(playerID) * indice).toString();
-	};
 	return [
 		{
 			id: 1+playerID,
@@ -540,20 +536,20 @@ const fight = () => {
 
 	const effectsType = () => {
 		const damage = (instance, actionsByTarget, power) => {
-			console.log("damage from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetID);
+			console.log("damage from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
 			_doCalculDamage(instance, actionsByTarget, power);
 		};
 
 		const equilibre = (instance, actionsByTarget, power) => {
-			console.log("equilibre from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetID);
+			console.log("equilibre from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
 		};
 
 		const heal = (instance, actionsByTarget, power) => {
-			console.log("heal from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetID);
+			console.log("heal from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
 		};
 
 		const swap = (instance, actionsByTarget) => {
-			console.log("swap on", actionsByTarget.sourceID, " with ", actionsByTarget.targetID);
+			console.log("swap on", actionsByTarget.sourceID, " with ", actionsByTarget.targetInfo);
 			_swapOnBoard(instance, actionsByTarget)
 		}
 
@@ -567,8 +563,8 @@ const fight = () => {
 			const effectListByTarget = _getEffectListByTarget(instance, actionFromMonster );
 			effectListByTarget.targets.forEach((actionsByTarget) => {
 				actionsByTarget.skill.effects.forEach((effect) => {
-					//effectsType()[effect.type](instance, actionsByTarget, effect.power);
-					passif(effectsType()[effect.type], actionsByTarget, effect.power, effect.type, instance);
+					effectsType()[effect.type](instance, actionsByTarget, effect.power);
+					//passif(effectsType()[effect.type], actionsByTarget, effect.power, effect.type, instance);
 				});
 			});
 		}
@@ -627,7 +623,7 @@ const fight = () => {
 		const applyEffects = (owner, from) => {
 			const effectsListbyTarget = _getEffectListByTarget(instance, {
 				sourceID: owner.id,
-				targetID: from.id,
+				targetInfo: from.id,
 				skill: {
 					effects: owner.passif.event.effects,
 					target: owner.passif.event.target,
@@ -700,7 +696,7 @@ const fight = () => {
 				if (
 					eventWhen[monster.passif.trigger.when](
 						_getOnBoardMonsterByID(instance, target.sourceID),
-						target.targetID,
+						target.targetInfo,
 						monster
 					) &&
 					monster.passif.when === "prevent"
@@ -725,7 +721,7 @@ const fight = () => {
 		const teamSourceMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.sourceID)
 		player.team[teamSourceMonsterIndex] = sourceMonster
 
-		const teamTargetMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === ((parseInt(sourceMonster.playerID) / 100000) * 4).toString()) // actionsByTarget.targetID
+		const teamTargetMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.targetInfo.id)
 		const onBoardSourceMonsterIndex = player.onBoard.findIndex((onBoardMonster) => onBoardMonster.id === actionsByTarget.sourceID)
 		player.onBoard[onBoardSourceMonsterIndex] = player.team[teamTargetMonsterIndex]
 
@@ -734,7 +730,7 @@ const fight = () => {
 	const _doCalculDamage = (instance, target, power) => {
 		const skill = target.skill;
 		const monsterSource = _getOnBoardMonsterByID(instance, target.sourceID);
-		const monsterTarget = _getOnBoardMonsterByID(instance, target.targetID);
+		const monsterTarget = instance[target.targetInfo.targetedPlayerID].onBoard[target.targetInfo.spot];
 		const typeEfficiency = _getTypeEfficiency(skill.type, monsterTarget.type);
 		const isSTAB = _isSTAB(monsterSource.type, skill.type);
 
@@ -802,7 +798,8 @@ const fight = () => {
 				targets: [
 					{
 						sourceID: actionFromMonster.sourceID,
-						targetID: actionFromMonster.sourceID,
+						targetInfo: {targetedPlayerID: _getOnBoardMonsterByID(instance, actionFromMonster.sourceID).playerID, 
+									 spot: _getSpotByMonsterID(instance, actionFromMonster.sourceID)},
 						skill: actionFromMonster.skill,
 					},
 				],
@@ -818,7 +815,8 @@ const fight = () => {
 				targets: [
 					{
 						sourceID: actionFromMonster.sourceID,
-						targetID: ally.id,
+						targetInfo: {targetedPlayerID: ally.playerID, 
+									 spot: _getSpotByMonsterID(instance, ally.id)},
 						skill: actionFromMonster.skill,
 					},
 				],
@@ -828,13 +826,13 @@ const fight = () => {
 		const allies = () => {
 			const effectListByTarget = { targets: [] };
 			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
-
-			instance[
-				_getOnBoardMonsterByID(instance, actionFromMonster.sourceID).playerID
-			].onBoard.forEach((monster) => {
+			const sourceMonster = _getOnBoardMonsterByID(instance, actionFromMonster.sourceID)
+			
+			instance[sourceMonster.playerID].onBoard.forEach((monster) => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
-					targetID: monster.id,
+					targetInfo: {targetedPlayerID: sourceMonster.playerID, 
+								 spot: _getSpotByMonsterID(instance, monster.id)},
 					skill: actionFromMonster.skill,
 				});
 			});
@@ -850,7 +848,8 @@ const fight = () => {
 			targetsList.forEach((monster) => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
-					targetID: monster.id,
+					targetInfo: {targetedPlayerID: monster.playerID, 
+								 spot: _getSpotByMonsterID(instance, monster.id)},
 					skill: actionFromMonster.skill,
 				});
 			});
@@ -864,7 +863,7 @@ const fight = () => {
 				targets: [
 					{
 						sourceID: actionFromMonster.sourceID,
-						targetID: actionFromMonster.targetID,
+						targetInfo: actionFromMonster.targetInfo,
 						skill: actionFromMonster.skill,
 					},
 				],
@@ -875,11 +874,10 @@ const fight = () => {
 			const effectListByTarget = { targets: [] };
 			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 
-			instance[_getOnBoardMonsterByID(instance, actionFromMonster.targetID)
-					.playerID].onBoard.forEach((monster) => {
+			instance[actionFromMonster.targetInfo.targetedPlayerID].onBoard.forEach((monster) => { 
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
-					targetID: monster.id,
+					targetInfo: {targetedPlayerID: monster.playerID, spot: _getSpotByMonsterID(instance, monster.id)},
 					skill: actionFromMonster.skill,
 				});
 			});
@@ -898,7 +896,7 @@ const fight = () => {
 			targetsList.forEach((monster) => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
-					targetID: monster.id,
+					targetInfo: {targetedPlayerID: monster.playerID, spot: _getSpotByMonsterID(instance, monster.id)},
 					skill: actionFromMonster.skill,
 				});
 			});
@@ -935,6 +933,16 @@ const fight = () => {
 			}
 		}
 	};
+
+	/**
+	 * 
+	 * @param {*} instance 
+	 * @param {*} monsterID 
+	 * @returns -1 for false
+	 */
+	const _getSpotByMonsterID = (instance, monsterID) => {
+		return instance[_getOnBoardMonsterByID(instance, monsterID).playerID].onBoard.findIndex((onBoardMonster) => monsterID === onBoardMonster.id);
+	}
 
 	return { ready, waitActions };
 };
