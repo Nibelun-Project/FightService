@@ -412,7 +412,7 @@ const fight = () => {
 
 	const ready = (match) => {
 		for (const [key, value] of Object.entries(match)) {
-			value["team"] = getTeam(key);
+			value["team"] 	 = getTeam(key);
 			value["onBoard"] = [getTeam(key)[0], getTeam(key)[1]]
 			value["actions"] = [];
 		}
@@ -462,19 +462,22 @@ const fight = () => {
 		return instance;
 	};
 
-	const _speedContest = (instance) => {
-		let sortedMonsters = [];
+	const _speedContest = (instance) => {		
 		let tempMonstersList = [];
+		//1 - set an array with all the monsters on the board
 		for (const [key, value] of Object.entries(instance)) {
 			tempMonstersList = tempMonstersList.concat(value.onBoard);
 		}
-
-		_getPlacesOnRound(_shuffleMonsters(tempMonstersList), sortedMonsters);
-
-		return sortedMonsters;
+		//
+		return _getPlacesOnRound(_shuffleMonsters(tempMonstersList));
 	};
 
+	/**
+	 * @param {*} tempMonstersList array of all monsters on the board
+	 * @returns array of monster and random id, look like: [{monster, contestID}, {...}]
+	 */
 	const _shuffleMonsters = (tempMonstersList) => {
+		//1 - create array of "n°", look like: [1, 2, 3, 4]
 		const shuffleIndicators = [];
 		for (let i = 1; i <= tempMonstersList.length; i++) {
 			shuffleIndicators.push(i);
@@ -483,21 +486,24 @@ const fight = () => {
 		const shuffleArray = (array) => {
 			const _reverseItem = (list, id1, id2) => {
 				const temp = list[id1];
-				list[id1] = list[id2];
-				list[id2] = temp;
+				list[id1]  = list[id2];
+				list[id2]  = temp;
 			};
 
+			//if the ally on the left get a lower priority switch with the ally
 			const _allyPriority = (id1, id2) => {
 				if (array[id1] > array[id2]) {
 					_reverseItem(array, id1, id2);
 				}
 			};
 
+			// 3 - for each n° switch it's possition with one other in the list
 			for (let i = array.length - 1; i > 0; i--) {
 				const j = Math.floor(Math.random() * (i + 1));
 				_reverseItem(array, i, j);
 			}
 
+			//4 - give the action priority to the ally on the left
 			for (let l = 1; l <= array.length - 1; l++) {
 				if (tempMonstersList[l - 1].playerID === tempMonstersList[l].playerID)
 					_allyPriority(l - 1, l);
@@ -506,9 +512,14 @@ const fight = () => {
 			return array;
 		};
 
+		//2 - shuffle the list of "n°"
 		shuffleArray(shuffleIndicators);
 		const monsterListWithShuffleID = [];
 
+		/**
+		 * set an array of monster and an id used to randomize the speed contest when to monster get the same speed,
+		 * look like: [{monster, contestID}, {...}]
+		 */
 		for (let index = 0; index < shuffleIndicators.length; index++) {
 			monsterListWithShuffleID.push({
 				shuffleID: shuffleIndicators[index],
@@ -518,20 +529,36 @@ const fight = () => {
 		return monsterListWithShuffleID;
 	};
 
-	const _getPlacesOnRound = (speedContestTempsList, sortedMonsters) => {
+	/**
+	 * @param {*} speedContestTempsList array of monster and random id, look like: [{monster, contestID}, {...}]
+	 * @returns array of monster in the order they will play there turn.
+	 */
+	const _getPlacesOnRound = (speedContestTempsList) => {
+		let sortedMonsters = [];
+		//1 - For each monster
 		speedContestTempsList.forEach((tempMonster) => {
+			//2 - Get the number of monster wich will play before, following conditions:
 			const count = speedContestTempsList.filter((speedContest) => {
 				if (
-					speedContest.monster.stats.speed > tempMonster.monster.stats.speed || // if different speed
-					(speedContest.monster.stats.speed ===
-						tempMonster.monster.stats.speed && // if same speed but different team
-						speedContest.shuffleID < tempMonster.shuffleID)
+					 speedContest.monster.stats.speed  >  tempMonster.monster.stats.speed || //2.1   - the speed stat is different
+					(speedContest.monster.stats.speed === tempMonster.monster.stats.speed && //2.2.1 - the speed stat is equal,
+					 speedContest.shuffleID 		   <  tempMonster.shuffleID) 		     //2.2.2 - use the a random id to difine priority
 				)
 					return true;
 				return false;
+			/**
+			 * return number monsters which validate all conditions and play before "tempMonster",
+			 * can't return the same number for two different monster
+			 */
 			}).length;
+
+			/**
+			 * 3 - put the monster at his place:
+			 * if there is 3 monsters which is playing before put the monster to the index 3.
+			 */
 			sortedMonsters[count] = tempMonster.monster.id;
 		});
+		return sortedMonsters
 	};
 
 	const effectsType = () => {
