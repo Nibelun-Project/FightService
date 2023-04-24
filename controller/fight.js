@@ -55,6 +55,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "single",
+					priority: 100
 				},
 				{
 					name: "volcano",
@@ -68,6 +69,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "double",
+					priority: 100
 				},
 				{
 					name: "howling",
@@ -81,6 +83,7 @@ const getTeam = (playerID) => {
 						]
 					],
 					target: "self",
+					priority: 100
 				},
 				{
 					name: "cup of tea",
@@ -95,6 +98,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "ally",
+					priority: 100
 				},
 			],
 			status: [],
@@ -157,6 +161,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "single",
+					priority: 100
 				},
 				{
 					name: "spirit touch",
@@ -170,6 +175,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "ennemies",
+					priority: 100
 				},
 				{
 					name: "destiny wings",
@@ -183,6 +189,7 @@ const getTeam = (playerID) => {
 						]
 					],
 					target: "all",
+					priority: 100
 				},
 				{
 					name: "grass cut",
@@ -196,6 +203,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "allies",
+					priority: 100
 				},
 			],
 			status: [],
@@ -257,6 +265,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "single",
+					priority: 100
 				},
 				{
 					name: "volcano",
@@ -270,6 +279,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "single",
+					priority: 100
 				},
 				{
 					name: "howling",
@@ -283,6 +293,7 @@ const getTeam = (playerID) => {
 						]
 					],
 					target: "single",
+					priority: 100
 				},
 				{
 					name: "cup of tea",
@@ -297,6 +308,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "single",
+					priority: 100
 				},
 			],
 			status: [],
@@ -358,6 +370,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "single",
+					priority: 100
 				},
 				{
 					name: "volcano",
@@ -371,6 +384,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "single",
+					priority: 100
 				},
 				{
 					name: "howling",
@@ -384,6 +398,7 @@ const getTeam = (playerID) => {
 						]
 					],
 					target: "single",
+					priority: 100
 				},
 				{
 					name: "cup of tea",
@@ -398,6 +413,7 @@ const getTeam = (playerID) => {
 						],
 					],
 					target: "single",
+					priority: 100
 				},
 			],
 			status: [],
@@ -464,17 +480,42 @@ const fight = () => {
 
 	const _speedContest = (instance) => {		
 		let tempMonstersList = [];
+		//1 - Prepare array of monster to proceed the speed constest with all needly informations
+		tempMonstersList = _prepareMonstersToSpeedContest(instance)
+		
+		return _getPlacesOnRound(tempMonstersList);
+	};
+
+	/**
+	 * 
+	 * @param {*} instance 
+	 * @returns [{shuffleID: 1,
+	 * 			  monster:   {...}, 
+	 * 			  action:    {...}
+	 * 			 }, 
+	 * 			 {...}]
+	 */
+	const _prepareMonstersToSpeedContest = (instance) => {
+		let tempMonstersList = [];
 		//1 - set an array with all the monsters on the board
 		for (const [key, value] of Object.entries(instance)) {
 			tempMonstersList = tempMonstersList.concat(value.onBoard);
 		}
-		//
-		return _getPlacesOnRound(_shuffleMonsters(tempMonstersList));
-	};
+
+		//2 - add for each monster a random id
+		tempMonstersList = _shuffleMonsters(tempMonstersList)
+		
+		//3 - add for each monster the action he's playing
+		tempMonstersList.forEach(customMonster => {
+			customMonster.action = _getActionByMonsterID(instance, customMonster.monster.id).skill
+		});
+
+		return tempMonstersList;
+	}
 
 	/**
 	 * @param {*} tempMonstersList array of all monsters on the board
-	 * @returns array of monster and random id, look like: [{monster, contestID}, {...}]
+	 * @returns array of monster and random id, look like: [{monster, shuffleID}, {...}]
 	 */
 	const _shuffleMonsters = (tempMonstersList) => {
 		//1 - create array of "n°", look like: [1, 2, 3, 4]
@@ -540,9 +581,14 @@ const fight = () => {
 			//2 - Get the number of monster wich will play before, following conditions:
 			const count = speedContestTempsList.filter((speedContest) => {
 				if (
-					 speedContest.monster.stats.speed  >  tempMonster.monster.stats.speed || //2.1   - the speed stat is different
-					(speedContest.monster.stats.speed === tempMonster.monster.stats.speed && //2.2.1 - the speed stat is equal,
-					 speedContest.shuffleID 		   <  tempMonster.shuffleID) 		     //2.2.2 - use the a random id to difine priority
+					 speedContest.action.priority	   <  tempMonster.action.priority	   || //2.1   - the action have a higher priority
+
+					(tempMonster.action.priority	  === speedContest.action.priority     && //2.2.1 - the action priotity is equal
+					 speedContest.monster.stats.speed  >  tempMonster.monster.stats.speed) || //2.2.1 - the speed stat is different
+
+					(tempMonster.action.priority	  === speedContest.action.priority     && //2.3.1 - the action priotity is equal
+					 speedContest.monster.stats.speed === tempMonster.monster.stats.speed  && //2.3.2 - the speed stat is equal,
+					 speedContest.shuffleID 		   <  tempMonster.shuffleID) 		      //2.3.3 - use the a random id to difine priority
 				)
 					return true;
 				return false;
