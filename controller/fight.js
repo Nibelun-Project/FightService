@@ -27,9 +27,9 @@ const getTeam = (playerID) => {
 				trigger: {
 					when: "before",
 					actionType: "damage",
-					from: "ally",
-					type: "neutral",
-					to: "ally",
+					from: "allies",
+					type: "fire",
+					to: "ennemies",
 				},
 				event: {
 					target: "single",
@@ -636,8 +636,7 @@ const fight = () => {
 			const effectListByTarget = _getEffectListByTarget(instance, actionFromMonster );
 			effectListByTarget.targets.forEach((actionsByTarget) => {
 				actionsByTarget.skill.effects.forEach((effect) => {
-					effectsType()[effect.type](instance, actionsByTarget, effect.power);
-					//passif(effectsType()[effect.type], actionsByTarget, effect.power, effect.type, instance);
+					passif(effectsType()[effect.type], actionsByTarget, effect.power, effect.type, instance);
 				});
 			});
 		}
@@ -651,6 +650,10 @@ const fight = () => {
 			})
 		}
 	}
+
+	const _getMonsterBySpot = (instance, spotInfo) => {
+        return instance[spotInfo.targetedPlayerID].onBoard[spotInfo.spot]
+    }
 
 	const passif = (action, target, power, actionType, instance) => {
 		const ennemies = (owner) => {
@@ -672,6 +675,7 @@ const fight = () => {
 			if (owner.passif.trigger.actionType !== actionType) return false;
 			const ownerFrom = fromType[owner.passif.trigger.from](owner);
 			const ownerTo = fromType[owner.passif.trigger.to](owner);
+			const toMonster = _getMonsterBySpot(instance, to)
 			if (
 				!ownerFrom.some((monster) => {
 					return monster.id === from.id;
@@ -680,7 +684,7 @@ const fight = () => {
 				return false;
 			if (
 				!ownerTo.some((monster) => {
-					return monster.id === to;
+					return monster.id === toMonster.id;
 				})
 			)
 				return false;
@@ -696,7 +700,8 @@ const fight = () => {
 		const applyEffects = (owner, from) => {
 			const effectsListbyTarget = _getEffectListByTarget(instance, {
 				sourceID: owner.id,
-				targetInfo: from.id,
+				targetInfo: {targetedPlayerID: _getOnBoardMonsterByID(instance, owner.id).playerID, 
+					spot: _getSpotByMonsterID(instance, owner.id)},
 				skill: {
 					effects: owner.passif.event.effects,
 					target: owner.passif.event.target,
