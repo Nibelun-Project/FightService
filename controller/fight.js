@@ -2,7 +2,7 @@ const getTeam = (playerID) => {
 	return [
 		{
 			id: 1+playerID,
-			name: "ronkarétoal1",
+			name: "ronkarétoal1"+ (parseInt(playerID) / 100000) * 50,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -26,16 +26,16 @@ const getTeam = (playerID) => {
 			passif: {
 				trigger: {
 					when: "before",
-					actionType: "damage",
+					actionType: "heal",
 					from: "allies",
-					type: "fire",
 					to: "ennemies",
 				},
 				event: {
-					target: "single",
+					targetType: "single",
+					target: "to",
 					effects: [
 						[
-							{ type: "damage", power: "15" }, //same effects to all targets
+							{ type: "damage", power: "15" }, 
 						],
 					],
 				},
@@ -132,21 +132,18 @@ const getTeam = (playerID) => {
 				trigger: {
 					when: "before",
 					actionType: "damage",
-					from: "ally",
-					to: "allies",
-					type: "fire",
-					target: "double",
+					from: "ennemies",
+					to: "ally",
 				},
 				event: {
-					target: "single",
+					targetType: "single",
+					target: "from",
 					effects: [
 						[
-							{ type: "heal", power: "15" }
+							{ type: "damage", power: "10000" },
 						],
 					],
-				},
-				name: "Preventive Heal",
-				description: "you heal yourself or your ally before damage",
+				}
 			},
 			skills: [
 				{
@@ -697,14 +694,16 @@ const fight = () => {
 			return true;
 		};
 
-		const applyEffects = (owner, from) => {
+		const applyEffects = (owner, from, to) => {
+			console.log(to)
+			// const passifTarget = owner.passif.event.target === "from" ? from.id : to.id
 			const effectsListbyTarget = _getEffectListByTarget(instance, {
 				sourceID: owner.id,
-				targetInfo: {targetedPlayerID: _getOnBoardMonsterByID(instance, owner.id).playerID, 
-					spot: _getSpotByMonsterID(instance, owner.id)},
+				targetInfo: owner.passif.event.target === "from" ? {targetedPlayerID: _getOnBoardMonsterByID(instance, from.id).playerID, 
+					spot: _getSpotByMonsterID(instance, from.id)} : to,
 				skill: {
 					effects: owner.passif.event.effects,
-					target: owner.passif.event.target,
+					target: owner.passif.event.targetType,
 					name: owner.passif.name,
 					description: owner.passif.description,
 					type: "neutral",
@@ -721,7 +720,7 @@ const fight = () => {
 		const before = (from, to, owner) => {
 			if (!checkPassif(from, to, owner)) return false;
 			console.log("before triggered by :" + owner.name);
-			applyEffects(owner, from);
+			applyEffects(owner, from, to);
 
 			return true;
 		};
@@ -729,17 +728,16 @@ const fight = () => {
 		const prevent = (from, to, owner) => {
 			console.log("try to prevent :" + owner.id);
 			if (!checkPassif(from, to, owner)) return false;
-			applyEffects(owner, from);
+			applyEffects(owner, from, to);
 
 			console.log("prevent triggered by :" + owner.name);
 			return true;
 		};
 
 		const after = (from, to, owner) => {
-			// console.log("check passif :" + checkPassif(from, to, owner));
 			if (!checkPassif(from, to, owner)) return false;
 			console.log("after triggered by :" + owner.name);
-			applyEffects(owner, from);
+			applyEffects(owner, from, to);
 
 			return true;
 		};
