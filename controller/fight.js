@@ -9,8 +9,6 @@ const getTeam = (playerID) => {
 				attack: 100,
 				def: 80,
 				speed: (parseInt(playerID) / 100000) * 50,
-				// precision: 100,
-				// statusRes: 100,
 				stamina: 120,
 				balance: 100,
 			},
@@ -23,22 +21,22 @@ const getTeam = (playerID) => {
 				balance: 100,
 			},
 			image: "../ronk.png",
-			passif: {
+			passive: {
 				trigger: {
 					when: "before",
 					actionType: "heal",
 					from: "allies",
 					to: "ennemies",
 				},
-				event: {
+				events: [{
 					targetType: "single",
 					target: "to",
 					effects: [
 						[
-							{ type: "damage", power: "15" }, 
+							{ type: "damage", power: 15 }, 
 						],
 					],
-				},
+				}],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
 			},
@@ -51,7 +49,7 @@ const getTeam = (playerID) => {
 					cost: { type: "stamina", value: 40 },
 					effects: [
 						[
-							{ type: "damage", power: "45" }
+							{ type: "damage", power: 45 }
 						],
 					],
 					target: "single",
@@ -65,7 +63,7 @@ const getTeam = (playerID) => {
 					cost: { type: "stamina", value: 40 },
 					effects: [
 						[
-							{ type: "damage", power: "45" }
+							{ type: "damage", power: 4 }
 						],
 					],
 					target: "double",
@@ -79,7 +77,7 @@ const getTeam = (playerID) => {
 					cost: { type: "balance", value: 25 },
 					effects: [
 						[
-							{ type: "damage", power: "45" }
+							{ type: "damage", power: 45 }
 						]
 					],
 					target: "self",
@@ -93,7 +91,7 @@ const getTeam = (playerID) => {
 					cost: { type: "hp", value: 10 },
 					effects: [
 						[
-							{ type: "damage", power: "45" }
+							{ type: "damage", power: 45 }
 							
 						],
 					],
@@ -114,8 +112,6 @@ const getTeam = (playerID) => {
 				attack: 100,
 				def: 100,
 				speed: 100, //(parseInt(playerID)/100000)*100,
-				// precision: 100,
-				// statusRes: 100,
 				stamina: 100,
 				balance: 100,
 			},
@@ -128,22 +124,31 @@ const getTeam = (playerID) => {
 				balance: 100,
 			},
 			image: "../etoal.png",
-			passif: {
+			passive: {
 				trigger: {
 					when: "before",
 					actionType: "damage",
 					from: "ennemies",
 					to: "ally",
 				},
-				event: {
-					targetType: "single",
+				events: [{
+					targetType: "double",
 					target: "from",
 					effects: [
 						[
 							{ type: "damage", power: "10000" },
 						],
 					],
-				}
+				},
+				{
+					targetType: "single",
+					target: "to",
+					effects: [
+						[
+							{ type: "damage", power: "10000" },
+						],
+					],
+				}]
 			},
 			skills: [
 				{
@@ -230,7 +235,7 @@ const getTeam = (playerID) => {
 				balance: 100,
 			},
 			image: "../ronk.png",
-			passif: {
+			passive: {
 				trigger: {
 					when: "before",
 					actionType: "damage",
@@ -238,14 +243,15 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					to: "ally",
 				},
-				event: {
-					target: "single",
+				events: [{
+					targetType: "single",
+					target: "to",
 					effects: [
 						[
 							{ type: "damage", power: "15" }, //same effects to all targets
 						],
 					],
-				},
+				}],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
 			},
@@ -335,7 +341,7 @@ const getTeam = (playerID) => {
 				balance: 100,
 			},
 			image: "../ronk.png",
-			passif: {
+			passive: {
 				trigger: {
 					when: "before",
 					actionType: "damage",
@@ -343,14 +349,15 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					to: "ally",
 				},
-				event: {
-					target: "single",
+				events: [{
+					targetType: "single",
+					target: "to",
 					effects: [
 						[
 							{ type: "damage", power: "15" }, //same effects to all targets
 						],
 					],
-				},
+				}],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
 			},
@@ -669,9 +676,9 @@ const fight = () => {
 		const fromType = { ennemies, ally, allies, self };
 
 		const checkPassif = (from, to, owner) => {
-			if (owner.passif.trigger.actionType !== actionType) return false;
-			const ownerFrom = fromType[owner.passif.trigger.from](owner);
-			const ownerTo = fromType[owner.passif.trigger.to](owner);
+			if (owner.passive.trigger.actionType !== actionType) return false;
+			const ownerFrom = fromType[owner.passive.trigger.from](owner);
+			const ownerTo = fromType[owner.passive.trigger.to](owner);
 			const toMonster = _getMonsterBySpot(instance, to)
 			if (
 				!ownerFrom.some((monster) => {
@@ -685,36 +692,38 @@ const fight = () => {
 				})
 			)
 				return false;
-			if (owner.passif.trigger.type) {
-				if (owner.passif.trigger.type !== target.skill.type) return false;
+			if (owner.passive.trigger.type) {
+				if (owner.passive.trigger.type !== target.skill.type) return false;
 			}
-			if (owner.passif.trigger.target) {
-				if (owner.passif.trigger.target !== target.skill.target) return false;
+			if (owner.passive.trigger.target) {
+				if (owner.passive.trigger.target !== target.skill.target) return false;
 			}
 			return true;
 		};
 
 		const applyEffects = (owner, from, to) => {
-			console.log(to)
-			// const passifTarget = owner.passif.event.target === "from" ? from.id : to.id
-			const effectsListbyTarget = _getEffectListByTarget(instance, {
-				sourceID: owner.id,
-				targetInfo: owner.passif.event.target === "from" ? {targetedPlayerID: _getOnBoardMonsterByID(instance, from.id).playerID, 
-					spot: _getSpotByMonsterID(instance, from.id)} : to,
-				skill: {
-					effects: owner.passif.event.effects,
-					target: owner.passif.event.targetType,
-					name: owner.passif.name,
-					description: owner.passif.description,
-					type: "neutral",
-				},
-			});
-			if (effectsListbyTarget <= 0) return false;
-			effectsListbyTarget.targets.forEach((target) => {
-				target.skill.effects.forEach((effect) => {
-					effectsType()[effect.type](instance, target, effect.power);
+			owner.passive.events.forEach((event) => {
+				const effectsListbyTarget = _getEffectListByTarget(instance, {
+					sourceID: owner.id,
+					targetInfo: event.target === "from" ? {targetedPlayerID: _getOnBoardMonsterByID(instance, from.id).playerID, 
+						spot: _getSpotByMonsterID(instance, from.id)} : to,
+					skill: {
+						effects: event.effects,
+						target: event.targetType,
+						name: owner.passive.name,
+						description: owner.passive.description,
+						type: "neutral",
+					},
 				});
-			});
+
+				if (effectsListbyTarget <= 0) return false;
+				effectsListbyTarget.targets.forEach((target) => {
+					target.skill.effects.forEach((effect) => {
+						effectsType()[effect.type](instance, target, effect.power);
+					});
+				});
+			})
+
 		};
 
 		const before = (from, to, owner) => {
@@ -750,7 +759,7 @@ const fight = () => {
 
 		for (const value of Object.values(instance)) {
 			value.onBoard.forEach((monster) => {
-				switch (monster.passif.trigger.when) {
+				switch (monster.passive.trigger.when) {
 					case "before":
 						passifBefore.push(monster);
 						break;
@@ -770,12 +779,12 @@ const fight = () => {
 			for (let i = 0; i < whenArray.length; i++) {
 				const monster = whenArray[i];
 				if (
-					eventWhen[monster.passif.trigger.when](
+					eventWhen[monster.passive.trigger.when](
 						_getOnBoardMonsterByID(instance, target.sourceID),
 						target.targetInfo,
 						monster
 					) &&
-					monster.passif.when === "prevent"
+					monster.passive.when === "prevent"
 				)
 					prevented = true;
 			}
