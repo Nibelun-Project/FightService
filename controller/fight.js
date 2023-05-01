@@ -635,13 +635,31 @@ const fight = () => {
 			const actionFromMonster = _getActionByMonsterID(instance, monsterID);
 			const effectListByTarget = _getEffectListByTarget(instance, actionFromMonster );
 			effectListByTarget.targets.forEach((actionsByTarget) => {
-				actionsByTarget.skill.effects.forEach((effect) => {
+				actionsByTarget.skill.effects.every((effect) => {
 					effectsType()[effect.type](instance, actionsByTarget, effect.power);
+					return !_deathCheck(instance, actionsByTarget)
 					//passif(effectsType()[effect.type], actionsByTarget, effect.power, effect.type, instance);
 				});
 			});
 		}
 	};
+
+	const _deathCheck = (instance, actionsByTarget) => {
+		const monster = instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot]
+
+		if (monster.stats.hp <= 0) {
+			console.log("kill from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
+			_kill(instance, actionsByTarget)
+			return true
+		}
+
+		return false
+	}
+	const _kill = (instance, actionsByTarget) => {
+		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot].stats.hp = 0
+		_applyOneMonsterChanges(instance, actionsByTarget)
+		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot] = {}
+	}
 
 	const _applyChanges = (instance) => {
 		for (const [key, player] of Object.entries(instance)) {
@@ -650,6 +668,13 @@ const fight = () => {
 				player.team[teamMonsterIndex] = onBoardMonster
 			})
 		}
+	}
+
+	const _applyOneMonsterChanges = (instance, actionsByTarget) => {
+		const onBoardMonster = _getOnBoardMonsterByID(instance, actionsByTarget.sourceID)
+		const player = instance[onBoardMonster.playerID]
+		const teamMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.sourceID)
+		player.team[teamMonsterIndex] = onBoardMonster
 	}
 
 	const passif = (action, target, power, actionType, instance) => {
@@ -936,12 +961,12 @@ const fight = () => {
 
 		const single = () => {
 			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
-			const target = _getMonsterBySpot(instance, actionFromMonster.targetInfo)
+			let target = _getMonsterBySpot(instance, actionFromMonster.targetInfo)
 			
-			if (target === undefined) { // if spot is empty
+			if (target === undefined || !Object.keys(target).length) { // if spot is empty
 				actionFromMonster.targetInfo.spot = _getOtherSpot(actionFromMonster.targetInfo.spot) // get the other spot
 				target = _getMonsterBySpot(instance, actionFromMonster.targetInfo)
-				if (target === undefined) return { targets: [] }; // if empty too return [] 
+				if (target === undefined || !Object.keys(target).length) return { targets: [] }; // if empty too return [] 
 
 				return {
 					targets: [
