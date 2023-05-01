@@ -2,7 +2,7 @@ const getTeam = (playerID) => {
 	return [
 		{
 			id: 1+playerID,
-			name: "ronkarétoal1"+ (parseInt(playerID) / 100000) * 50,
+			name: "ronkarétoal1",
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -27,75 +27,69 @@ const getTeam = (playerID) => {
 					actionType: "heal",
 					from: "allies",
 					to: "ennemies",
+					type: "mental"
 				},
-				events: [{
-					targetType: "single",
-					target: "to",
-					effects: [
-						[
-							{ type: "damage", power: 15 }, 
-						],
-					],
-				}],
+				effects: [
+					{
+						targetType: "single",
+						target: "to",
+						type: "damage",
+						power: 15,
+					}
+				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
 			},
 			skills: [
 				{
-					name: "brasero",
+					name: "watero",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "fire",
+					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: 45 }
-						],
+						{ targetType : "double", type: "damage", power: "45" }
 					],
-					target: "single",
+					targetType: "double",
 					priority: 100
 				},
 				{
 					name: "volcano",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "fire",
+					cost: { type: "stamina", value: 40 },
+					effects: [
+						{ targetType : "single", type: "damage", power: "45" }
+					],
+					targetType: "single",
+					priority: 100
+				},
+				{
+					name: "pewpew",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: 4 }
-						],
+						{ targetType : "single", type: "damage", power: "10" },
+						{ targetType : "single", type: "damage", power: "10" },
+						{ targetType : "single", type: "damage", power: "10" },
 					],
-					target: "double",
+					targetType: "single",
 					priority: 100
 				},
 				{
-					name: "howling",
+					name: "volcano",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "neutral",
-					cost: { type: "balance", value: 25 },
+					type: "fire",
+					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: 45 }
-						]
+						{ targetType : "self", type: "damage", power: "15" },
+						{ targetType : "single", type: "damage", power: "85" }
 					],
-					target: "self",
-					priority: 100
-				},
-				{
-					name: "cup of tea",
-					description:
-						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "neutral",
-					cost: { type: "hp", value: 10 },
-					effects: [
-						[
-							{ type: "damage", power: 45 }
-							
-						],
-					],
-					target: "ally",
+					targetType: "single",
 					priority: 100
 				},
 			],
@@ -130,81 +124,67 @@ const getTeam = (playerID) => {
 					actionType: "damage",
 					from: "ennemies",
 					to: "ally",
+					type: "mental"
 				},
-				events: [{
-					targetType: "double",
-					target: "from",
-					effects: [
-						[
-							{ type: "damage", power: "10000" },
-						],
-					],
-				},
-				{
-					targetType: "single",
-					target: "to",
-					effects: [
-						[
-							{ type: "damage", power: "10000" },
-						],
-					],
-				}]
+				effects: [
+					{
+						targetType: "single",
+						target: "from",
+						type: "damage",
+						power: 15,
+					}
+				]
 			},
 			skills: [
 				{
-					name: "telluric force",
+					name: "watero",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "water",
+					cost: { type: "stamina", value: 40 },
+					effects: [
+						{ targetType : "double", type: "damage", power: "45" }
+					],
+					targetType: "double",
+					priority: 100
+				},
+				{
+					name: "volcano",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" }
-						],
+						{ targetType : "single", type: "damage", power: "45" }
 					],
-					target: "single",
+					targetType: "single",
 					priority: 100
 				},
 				{
-					name: "spirit touch",
+					name: "pewpew",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" },
-						],
+						{ targetType : "single", type: "damage", power: "10" },
+						{ targetType : "single", type: "damage", power: "10" },
+						{ targetType : "single", type: "damage", power: "10" },
 					],
-					target: "ennemies",
+					targetType: "single",
 					priority: 100
 				},
 				{
-					name: "destiny wings",
+					name: "volcano",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "mental",
-					cost: { type: "balance", value: 25 },
-					effects: [
-						[
-							{ type: "damage", power: "45" }
-						]
-					],
-					target: "all",
-					priority: 100
-				},
-				{
-					name: "grass cut",
-					description:
-						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ...",
 					type: "neutral",
-					cost: { type: "hp", value: 10 },
+					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" }
-						],
+						{ targetType : "self", type: "damage", power: "15" },
+						{ targetType : "single", type: "damage", power: "85" }
 					],
-					target: "allies",
+					targetType: "single",
 					priority: 100
 				},
 			],
@@ -243,31 +223,28 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					to: "ally",
 				},
-				events: [{
-					targetType: "single",
-					target: "to",
-					effects: [
-						[
-							{ type: "damage", power: "15" }, //same effects to all targets
-						],
-					],
-				}],
+				effects: [
+					{
+						targetType: "single",
+						target: "to",
+						type: "damage",
+						power: 15,
+					}
+				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
 			},
 			skills: [
 				{
-					name: "brasero",
+					name: "watero",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "fire",
+					type: "water",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" },
-						],
+						{ targetType : "double", type: "damage", power: "45" }
 					],
-					target: "single",
+					targetType: "double",
 					priority: 100
 				},
 				{
@@ -277,40 +254,37 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" },
-						],
+						// { targetType : "self", type: "+attack", power: "45" },
+						{ targetType : "single", type: "damage", power: "45" }
 					],
-					target: "single",
+					targetType: "single",
 					priority: 100
 				},
 				{
-					name: "howling",
+					name: "pewpew",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
-					cost: { type: "balance", value: 25 },
+					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" },
-						]
+						{ targetType : "single", type: "damage", power: "10" },
+						{ targetType : "single", type: "damage", power: "10" },
+						{ targetType : "single", type: "damage", power: "10" },
 					],
-					target: "single",
+					targetType: "single",
 					priority: 100
 				},
 				{
-					name: "cup of tea",
+					name: "volcano",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
-					cost: { type: "hp", value: 10 },
+					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" }, //same effects to all targets
-							
-						],
+						{ targetType : "self", type: "damage", power: "15" },
+						{ targetType : "single", type: "damage", power: "85" }
 					],
-					target: "single",
+					targetType: "single",
 					priority: 100
 				},
 			],
@@ -349,31 +323,29 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					to: "ally",
 				},
-				events: [{
-					targetType: "single",
-					target: "to",
-					effects: [
-						[
-							{ type: "damage", power: "15" }, //same effects to all targets
-						],
-					],
-				}],
+				effects: [
+					{
+						targetType: "single",
+						target: "to",
+						type: "damage",
+						power: 15,
+					}
+				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
 			},
 			skills: [
 				{
-					name: "brasero",
+					name: "volcano",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "fire",
+					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" },
-						],
+						{ targetType : "self", type: "+attack", power: "45" },
+						{ targetType : "single", type: "damage", power: "45" }
 					],
-					target: "single",
+					targetType: "single",
 					priority: 100
 				},
 				{
@@ -383,40 +355,36 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" },
-						],
+						{ targetType : "self", type: "+attack", power: "45" },
+						{ targetType : "single", type: "damage", power: "45" }
 					],
-					target: "single",
+					targetType: "single",
 					priority: 100
 				},
 				{
-					name: "howling",
+					name: "volcano",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
-					cost: { type: "balance", value: 25 },
+					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" },
-						]
+						{ targetType : "self", type: "+attack", power: "45" },
+						{ targetType : "single", type: "damage", power: "45" }
 					],
-					target: "single",
+					targetType: "single",
 					priority: 100
 				},
 				{
-					name: "cup of tea",
+					name: "volcano",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
-					cost: { type: "hp", value: 10 },
+					cost: { type: "stamina", value: 40 },
 					effects: [
-						[
-							{ type: "damage", power: "45" }, //same effects to all targets
-							
-						],
+						{ targetType : "self", type: "+attack", power: "45" },
+						{ targetType : "single", type: "damage", power: "45" }
 					],
-					target: "single",
+					targetType: "single",
 					priority: 100
 				},
 			],
@@ -617,8 +585,8 @@ const fight = () => {
 			_doCalculDamage(instance, actionsByTarget, power);
 		};
 
-		const equilibre = (instance, actionsByTarget, power) => {
-			console.log("equilibre from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
+		const balance = (instance, actionsByTarget, power) => {
+			console.log("balance from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
 		};
 
 		const heal = (instance, actionsByTarget, power) => {
@@ -631,18 +599,21 @@ const fight = () => {
 		}
 
 
-		return { damage, equilibre, heal, swap };
+		return { damage, balance, heal, swap };
 	};
 
 	const _doAction = (instance, monsterID) => {
 		if (_isAvailableToPlayRound(instance, monsterID)) {
 			const actionFromMonster = _getActionByMonsterID(instance, monsterID);
-			const effectListByTarget = _getEffectListByTarget(instance, actionFromMonster );
-			effectListByTarget.targets.forEach((actionsByTarget) => {
-				actionsByTarget.skill.effects.forEach((effect) => {
-					passif(effectsType()[effect.type], actionsByTarget, effect.power, effect.type, instance);
+			actionFromMonster.skill.effects.forEach((effect) => {
+				actionFromMonster.skill.target = effect.targetType
+				const effectListByTarget = _getEffectListByTarget(instance, actionFromMonster);
+				effectListByTarget.targets.forEach((actionsByTarget) => {
+					actionsByTarget.skill.effects.forEach((effect) => {
+						passif(effectsType()[effect.type], actionsByTarget, effect.power, effect.type, instance);
+					});
 				});
-			});
+			})
 		}
 	};
 
@@ -702,28 +673,26 @@ const fight = () => {
 		};
 
 		const applyEffects = (owner, from, to) => {
-			owner.passive.events.forEach((event) => {
+			owner.passive.effects.forEach((effect) => {
 				const effectsListbyTarget = _getEffectListByTarget(instance, {
 					sourceID: owner.id,
-					targetInfo: event.target === "from" ? {targetedPlayerID: _getOnBoardMonsterByID(instance, from.id).playerID, 
+					targetInfo: effect.target === "from" ? {targetedPlayerID: _getOnBoardMonsterByID(instance, from.id).playerID, 
 						spot: _getSpotByMonsterID(instance, from.id)} : to,
 					skill: {
-						effects: event.effects,
-						target: event.targetType,
+						target: effect.targetType,
 						name: owner.passive.name,
 						description: owner.passive.description,
-						type: "neutral",
+						effectType: effect.type,
+						type: 'neutral',
+						power: effect.power
 					},
 				});
 
 				if (effectsListbyTarget <= 0) return false;
 				effectsListbyTarget.targets.forEach((target) => {
-					target.skill.effects.forEach((effect) => {
-						effectsType()[effect.type](instance, target, effect.power);
-					});
+					effectsType()[target.skill.effectType](instance, target, target.skill.power);
 				});
 			})
-
 		};
 
 		const before = (from, to, owner) => {
@@ -878,7 +847,6 @@ const fight = () => {
 
 	const _getEffectListByTarget = (instance, actionFromMonster) => {
 		const self = () => {
-			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 			return {
 				targets: [
 					{
@@ -892,7 +860,6 @@ const fight = () => {
 		};
 
 		const ally = () => {
-			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 			const ally = _getAlly(instance, actionFromMonster.sourceID);
 
 			if (ally === undefined) return { targets: [] };
@@ -910,7 +877,6 @@ const fight = () => {
 
 		const allies = () => {
 			const effectListByTarget = { targets: [] };
-			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 			const sourceMonster = _getOnBoardMonsterByID(instance, actionFromMonster.sourceID)
 			
 			instance[sourceMonster.playerID].onBoard.forEach((monster) => {
@@ -928,7 +894,6 @@ const fight = () => {
 		const ennemies = () => {
 			const effectListByTarget = { targets: [] };
 			const targetsList = _getEnnemies(instance, actionFromMonster.sourceID);
-			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 
 			targetsList.forEach((monster) => {
 				effectListByTarget.targets.push({
@@ -943,7 +908,6 @@ const fight = () => {
 		};
 
 		const single = () => {
-			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 			return {
 				targets: [
 					{
@@ -957,7 +921,6 @@ const fight = () => {
 
 		const double = () => {
 			const effectListByTarget = { targets: [] };
-			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 
 			instance[actionFromMonster.targetInfo.targetedPlayerID].onBoard.forEach((monster) => { 
 				effectListByTarget.targets.push({
@@ -973,7 +936,6 @@ const fight = () => {
 		const all = () => {
 			const effectListByTarget = { targets: [] };
 			let targetsList = [];
-			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 
 			for (const [key, value] of Object.entries(instance)) {
 				targetsList = targetsList.concat(value.onBoard);
