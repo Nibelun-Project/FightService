@@ -3,6 +3,7 @@ const getTeam = (playerID) => {
 		{
 			id: 1+playerID,
 			name: "ronkarétoal1",
+			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -100,6 +101,7 @@ const getTeam = (playerID) => {
 		{
 			id: 2+playerID,
 			name: "étoalronkaré2",
+			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -195,6 +197,7 @@ const getTeam = (playerID) => {
 		{
 			id: 3+playerID,
 			name: "ronkarétoal3",
+			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -295,6 +298,7 @@ const getTeam = (playerID) => {
 		{
 			id: 4+playerID,
 			name: "ronkarétoal4",
+			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -611,11 +615,35 @@ const fight = () => {
 				effectListByTarget.targets.forEach((actionsByTarget) => {
 					actionsByTarget.skill.effects.forEach((effect) => {
 						passif(effectsType()[effect.type], actionsByTarget, effect.power, effect.type, instance);
+            return !_deathCheck(instance, actionsByTarget)
 					});
 				});
 			})
 		}
 	};
+
+	const _deathCheck = (instance, actionsByTarget) => {
+		if (_isNeededToCheckDeath(actionsByTarget)) {
+			const monster = instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot]
+
+			if (monster.stats.hp <= 0) {
+				console.log("kill from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
+				_kill(instance, actionsByTarget)
+				return true
+			}
+		}
+
+		return false
+	}
+
+	const _isNeededToCheckDeath = (actionsByTarget) => {
+		return !actionsByTarget.targetInfo.targetedPlayerID === undefined
+	}
+
+	const _kill = (instance, actionsByTarget) => {
+		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot].stats.hp = 0
+		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot].isAlive = false
+	}
 
 	const _applyChanges = (instance) => {
 		for (const [key, player] of Object.entries(instance)) {
@@ -626,9 +654,18 @@ const fight = () => {
 		}
 	}
 
+
+	const _applyOneMonsterChanges = (instance, actionsByTarget) => {
+		const onBoardMonster = _getOnBoardMonsterByID(instance, actionsByTarget.sourceID)
+		const player = instance[onBoardMonster.playerID]
+		const teamMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.sourceID)
+		player.team[teamMonsterIndex] = onBoardMonster
+	}
+
 	const _getMonsterBySpot = (instance, spotInfo) => {
         return instance[spotInfo.targetedPlayerID].onBoard[spotInfo.spot]
     }
+
 
 	const passif = (action, target, power, actionType, instance) => {
 		const ennemies = (owner) => {
@@ -766,7 +803,11 @@ const fight = () => {
 	};
 
 	const _isAvailableToPlayRound = (instance, monsterID) => {
-		return _getOnBoardMonsterByID(instance, monsterID).stats.hp > 0;
+		//the monster can play his turn if:
+		if (_getOnBoardMonsterByID(instance, monsterID).stats.hp < 0 || // the monster is alive
+			!_isOnBoard(instance, monsterID)							// the monster is on the board
+		){return false}
+		return true
 	};
 
 	const _swapOnBoard = (instance, actionsByTarget) => {
@@ -868,7 +909,7 @@ const fight = () => {
 					{
 						sourceID: actionFromMonster.sourceID,
 						targetInfo: {targetedPlayerID: ally.playerID, 
-									 spot: _getSpotByMonsterID(instance, ally.id)},
+									 spot: actionFromMonster.targetInfo.spot},
 						skill: actionFromMonster.skill,
 					},
 				],
@@ -908,6 +949,25 @@ const fight = () => {
 		};
 
 		const single = () => {
+			let target = _getMonsterBySpot(instance, actionFromMonster.targetInfo)
+			
+			if (target === undefined || !target.isAlive) { // if spot is empty
+				actionFromMonster.targetInfo.spot = _getOtherSpot(actionFromMonster.targetInfo.spot) // get the other spot
+				target = _getMonsterBySpot(instance, actionFromMonster.targetInfo)
+				if (target === undefined || !target.isAlive) return { targets: [] }; // if empty too return [] 
+
+				return {
+					targets: [
+						{
+							sourceID: actionFromMonster.sourceID,
+							targetInfo: {targetedPlayerID: target.playerID, 
+										 spot: actionFromMonster.targetInfo.spot},
+							skill: actionFromMonster.skill,
+						},
+					],
+				};
+			}
+
 			return {
 				targets: [
 					{
@@ -918,6 +978,18 @@ const fight = () => {
 				],
 			};
 		};
+
+		const singleBackstage = () => {
+			return {
+				targets: [
+					{
+						sourceID: actionFromMonster.sourceID,
+						targetInfo: actionFromMonster.targetInfo,
+						skill: actionFromMonster.skill,
+					},
+				],
+			};
+		}
 
 		const double = () => {
 			const effectListByTarget = { targets: [] };
@@ -951,18 +1023,34 @@ const fight = () => {
 			return effectListByTarget;
 		};
 
-		const TargetTypes = { self, ally, allies, ennemies, single, double, all };
+		const TargetTypes = { self, ally, allies, ennemies, single, singleBackstage, double, all };
 		return TargetTypes[actionFromMonster.skill.target]();
 	};
 
+	const _getMonsterBySpot = (instance, spotInfo) => {
+		return instance[spotInfo.targetedPlayerID].onBoard[spotInfo.spot]
+	}
+
+	/**
+	 * 
+	 * @param {*} spot = to 1 or 0 only
+	 * @returns change spot 0 to 1, and 1 to 0
+	 */
+	const _getOtherSpot = (spot) => {
+		return (spot+1)%2
+	}
+
+	/**
+	 * 
+	 * @param {*} instance 
+	 * @param {*} monsterID 
+	 * @returns empty array if no ally on board: []
+	 */
 	const _getAlly = (instance, monsterID) => {
-		return instance[_getOnBoardMonsterByID(instance, monsterID).playerID].onBoard.filter(
-			(monster) => monster.id !== monsterID
-		)[0] !== undefined
-			? instance[_getOnBoardMonsterByID(instance, monsterID).playerID].onBoard.filter(
-					(monster) => monster.id !== monsterID
-			  )[0]
-			: [];
+		return ( instance[_getOnBoardMonsterByID(instance, monsterID).playerID].onBoard.filter((monster) => monster.id !== monsterID)[0]) 
+			   !== undefined
+			   ? instance[_getOnBoardMonsterByID(instance, monsterID).playerID].onBoard.filter((monster) => monster.id !== monsterID)[0]
+			   : [];
 	};
 
 	const _getEnnemies = (instance, monsterID) => {
@@ -979,7 +1067,15 @@ const fight = () => {
 				return value.onBoard.filter((monster) => monster.id === monsterID)[0]; // voir si améliorable
 			}
 		}
+		return {}
 	};
+
+	const _isOnBoard = (instance, monsterID) => {
+		for (const [key, value] of Object.entries(instance)) {
+			if (value.onBoard.some((monster) => monster.id === monsterID)) {return true}
+		}
+		return false
+	}
 
 	/**
 	 * 
