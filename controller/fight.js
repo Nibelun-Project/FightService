@@ -3,6 +3,7 @@ const getTeam = (playerID) => {
 		{
 			id: 1+playerID,
 			name: "ronkarétoal1",
+			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -108,6 +109,7 @@ const getTeam = (playerID) => {
 		{
 			id: 2+playerID,
 			name: "étoalronkaré2",
+			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -213,6 +215,7 @@ const getTeam = (playerID) => {
 		{
 			id: 3+playerID,
 			name: "ronkarétoal3",
+			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -318,6 +321,7 @@ const getTeam = (playerID) => {
 		{
 			id: 4+playerID,
 			name: "ronkarétoal4",
+			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -645,20 +649,26 @@ const fight = () => {
 	};
 
 	const _deathCheck = (instance, actionsByTarget) => {
-		const monster = instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot]
+		if (_isNeededToCheckDeath(actionsByTarget)) {
+			const monster = instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot]
 
-		if (monster.stats.hp <= 0) {
-			console.log("kill from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
-			_kill(instance, actionsByTarget)
-			return true
+			if (monster.stats.hp <= 0) {
+				console.log("kill from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
+				_kill(instance, actionsByTarget)
+				return true
+			}
 		}
 
 		return false
 	}
+
+	const _isNeededToCheckDeath = (actionsByTarget) => {
+		return !actionsByTarget.targetInfo.targetedPlayerID === undefined
+	}
+
 	const _kill = (instance, actionsByTarget) => {
 		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot].stats.hp = 0
-		_applyOneMonsterChanges(instance, actionsByTarget)
-		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot] = {}
+		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot].isAlive = false
 	}
 
 	const _applyChanges = (instance) => {
@@ -963,10 +973,10 @@ const fight = () => {
 			actionFromMonster.skill.effects = actionFromMonster.skill.effects[0];
 			let target = _getMonsterBySpot(instance, actionFromMonster.targetInfo)
 			
-			if (target === undefined || !Object.keys(target).length) { // if spot is empty
+			if (target === undefined || !target.isAlive) { // if spot is empty
 				actionFromMonster.targetInfo.spot = _getOtherSpot(actionFromMonster.targetInfo.spot) // get the other spot
 				target = _getMonsterBySpot(instance, actionFromMonster.targetInfo)
-				if (target === undefined || !Object.keys(target).length) return { targets: [] }; // if empty too return [] 
+				if (target === undefined || !target.isAlive) return { targets: [] }; // if empty too return [] 
 
 				return {
 					targets: [
@@ -990,6 +1000,18 @@ const fight = () => {
 				],
 			};
 		};
+
+		const singleBackstage = () => {
+			return {
+				targets: [
+					{
+						sourceID: actionFromMonster.sourceID,
+						targetInfo: actionFromMonster.targetInfo,
+						skill: actionFromMonster.skill,
+					},
+				],
+			};
+		}
 
 		const double = () => {
 			const effectListByTarget = { targets: [] };
@@ -1025,7 +1047,7 @@ const fight = () => {
 			return effectListByTarget;
 		};
 
-		const TargetTypes = { self, ally, allies, ennemies, single, double, all };
+		const TargetTypes = { self, ally, allies, ennemies, single, singleBackstage, double, all };
 		return TargetTypes[actionFromMonster.skill.target]();
 	};
 
