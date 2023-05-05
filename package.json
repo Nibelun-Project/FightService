@@ -28,5 +28,8 @@
 		"nodemon": "^2.0.15",
 		"socket.io": "^4.5.1"
 	},
-	"type": "module"
+	"type": "module",
+	"devDependencies": {
+		"@types/node": "^18.16.3"
+	}
 }

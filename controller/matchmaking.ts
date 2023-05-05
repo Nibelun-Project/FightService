@@ -1,3 +1,5 @@
+import { playerFightingInterface } from "../interfaces/fight";
+
 const matchmaking = () => {
 	let waitingPlayers = [];
 
@@ -9,9 +11,10 @@ const matchmaking = () => {
 	};
 
 	const createMatch = () => {
-		const match = {};
-		match[waitingPlayers[0].toString()] = {};
-		match[waitingPlayers[1].toString()] = {};
+		let match: [playerFightingInterface];
+		waitingPlayers.forEach((idPlayer) => {
+			match.push({ id: idPlayer });
+		});
 
 		waitingPlayers = [];
 		return match;

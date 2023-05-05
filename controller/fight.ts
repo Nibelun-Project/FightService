@@ -1,9 +1,14 @@
-const getTeam = (playerID) => {
+import {
+	instanceInterface,
+	playerFightingInterface,
+} from "../interfaces/fight";
+import { MonsterFightingInterface, monsterType } from "../interfaces/monster";
+
+const getTeam = (playerID): MonsterFightingInterface[] => {
 	return [
 		{
-			id: 1+playerID,
+			id: 1 + playerID,
 			name: "ronkarétoal1",
-			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -28,7 +33,7 @@ const getTeam = (playerID) => {
 					actionType: "heal",
 					from: "allies",
 					to: "ennemies",
-					type: "mental"
+					type: "mental",
 				},
 				effects: [
 					{
@@ -36,23 +41,21 @@ const getTeam = (playerID) => {
 						target: "to",
 						type: "damage",
 						power: 15,
-					}
+					},
 				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
 			},
 			skills: [
 				{
-					name: "watero",
+					name: "neutralo",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType : "double", type: "damage", power: "45" }
-					],
+					effects: [{ targetType: "double", type: "damage", power: 45 }],
 					targetType: "double",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "volcano",
@@ -60,11 +63,9 @@ const getTeam = (playerID) => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "fire",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType : "single", type: "damage", power: "45" }
-					],
+					effects: [{ targetType: "single", type: "damage", power: 45 }],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "pewpew",
@@ -73,12 +74,12 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType : "single", type: "damage", power: "10" },
-						{ targetType : "single", type: "damage", power: "10" },
-						{ targetType : "single", type: "damage", power: "10" },
+						{ targetType: "single", type: "damage", power: 10 },
+						{ targetType: "single", type: "damage", power: 10 },
+						{ targetType: "single", type: "damage", power: 10 },
 					],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "volcano",
@@ -87,19 +88,18 @@ const getTeam = (playerID) => {
 					type: "fire",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType : "self", type: "damage", power: "15" },
-						{ targetType : "single", type: "damage", power: "85" }
+						{ targetType: "self", type: "damage", power: 15 },
+						{ targetType: "single", type: "damage", power: 85 },
 					],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 			],
-			status: [],
-			buff: [],
 			playerID: playerID.toString(),
+			isAlive: true,
 		},
 		{
-			id: 2+playerID,
+			id: 2 + playerID,
 			name: "étoalronkaré2",
 			isAlive: true,
 			type: ["fire", "mental"],
@@ -126,7 +126,7 @@ const getTeam = (playerID) => {
 					actionType: "damage",
 					from: "ennemies",
 					to: "ally",
-					type: "mental"
+					type: "mental",
 				},
 				effects: [
 					{
@@ -134,21 +134,19 @@ const getTeam = (playerID) => {
 						target: "from",
 						type: "damage",
 						power: 15,
-					}
-				]
+					},
+				],
 			},
 			skills: [
 				{
-					name: "watero",
+					name: "neutralo",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "water",
+					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType : "double", type: "damage", power: "45" }
-					],
+					effects: [{ targetType: "double", type: "damage", power: 45 }],
 					targetType: "double",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "volcano",
@@ -156,11 +154,9 @@ const getTeam = (playerID) => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType : "single", type: "damage", power: "45" }
-					],
+					effects: [{ targetType: "single", type: "damage", power: 45 }],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "pewpew",
@@ -169,12 +165,12 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType : "single", type: "damage", power: "10" },
-						{ targetType : "single", type: "damage", power: "10" },
-						{ targetType : "single", type: "damage", power: "10" },
+						{ targetType: "single", type: "damage", power: 10 },
+						{ targetType: "single", type: "damage", power: 10 },
+						{ targetType: "single", type: "damage", power: 10 },
 					],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "volcano",
@@ -183,19 +179,17 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType : "self", type: "damage", power: "15" },
-						{ targetType : "single", type: "damage", power: "85" }
+						{ targetType: "self", type: "damage", power: 15 },
+						{ targetType: "single", type: "damage", power: 85 },
 					],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 			],
-			status: [],
-			buff: [],
 			playerID: playerID.toString(),
 		},
 		{
-			id: 3+playerID,
+			id: 3 + playerID,
 			name: "ronkarétoal3",
 			isAlive: true,
 			type: ["fire", "mental"],
@@ -232,23 +226,21 @@ const getTeam = (playerID) => {
 						target: "to",
 						type: "damage",
 						power: 15,
-					}
+					},
 				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
 			},
 			skills: [
 				{
-					name: "watero",
+					name: "neutralo",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "water",
+					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType : "double", type: "damage", power: "45" }
-					],
+					effects: [{ targetType: "double", type: "damage", power: 45 }],
 					targetType: "double",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "volcano",
@@ -256,12 +248,9 @@ const getTeam = (playerID) => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						// { targetType : "self", type: "+attack", power: "45" },
-						{ targetType : "single", type: "damage", power: "45" }
-					],
+					effects: [{ targetType: "single", type: "damage", power: 45 }],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "pewpew",
@@ -270,12 +259,12 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType : "single", type: "damage", power: "10" },
-						{ targetType : "single", type: "damage", power: "10" },
-						{ targetType : "single", type: "damage", power: "10" },
+						{ targetType: "single", type: "damage", power: 10 },
+						{ targetType: "single", type: "damage", power: 10 },
+						{ targetType: "single", type: "damage", power: 10 },
 					],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "volcano",
@@ -284,19 +273,17 @@ const getTeam = (playerID) => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType : "self", type: "damage", power: "15" },
-						{ targetType : "single", type: "damage", power: "85" }
+						{ targetType: "self", type: "damage", power: 15 },
+						{ targetType: "single", type: "damage", power: 85 },
 					],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 			],
-			status: [],
-			buff: [],
 			playerID: playerID.toString(),
 		},
 		{
-			id: 4+playerID,
+			id: 4 + playerID,
 			name: "ronkarétoal4",
 			isAlive: true,
 			type: ["fire", "mental"],
@@ -333,7 +320,7 @@ const getTeam = (playerID) => {
 						target: "to",
 						type: "damage",
 						power: 15,
-					}
+					},
 				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
@@ -345,12 +332,9 @@ const getTeam = (playerID) => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType : "self", type: "+attack", power: "45" },
-						{ targetType : "single", type: "damage", power: "45" }
-					],
+					effects: [{ targetType: "single", type: "damage", power: 45 }],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "volcano",
@@ -358,12 +342,9 @@ const getTeam = (playerID) => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType : "self", type: "+attack", power: "45" },
-						{ targetType : "single", type: "damage", power: "45" }
-					],
+					effects: [{ targetType: "single", type: "damage", power: 45 }],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "volcano",
@@ -371,12 +352,9 @@ const getTeam = (playerID) => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType : "self", type: "+attack", power: "45" },
-						{ targetType : "single", type: "damage", power: "45" }
-					],
+					effects: [{ targetType: "single", type: "damage", power: 45 }],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 				{
 					name: "volcano",
@@ -384,110 +362,120 @@ const getTeam = (playerID) => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType : "self", type: "+attack", power: "45" },
-						{ targetType : "single", type: "damage", power: "45" }
-					],
+					effects: [{ targetType: "single", type: "damage", power: 45 }],
 					targetType: "single",
-					priority: 100
+					priority: 100,
 				},
 			],
-			status: [],
-			buff: [],
 			playerID: playerID.toString(),
-		}
+		},
 	];
 };
 
 const fight = () => {
-	let mapFights = {};
+	let mapFights: instanceInterface[];
 
-	const ready = (match) => {
-		for (const [key, value] of Object.entries(match)) {
-			value["team"] 	 = getTeam(key);
-			value["onBoard"] = [getTeam(key)[0], getTeam(key)[1]]
-			value["actions"] = [];
-		}
-		return _startCombat(match);
+	const ready = (matchs: [playerFightingInterface]) => {
+		matchs.forEach((match) => {
+			match["team"] = getTeam(match.id);
+			match["onBoard"] = [getTeam(match.id)[0], getTeam(match.id)[1]];
+			match["actions"] = [];
+		});
+		const fightId = _getNewFightId();
+		const instance: instanceInterface = {
+			id: fightId,
+			players: matchs,
+			history: [],
+		};
+		return [instance, fightId];
 	};
 
 	const _getNewFightId = () => {
 		return "fid_" + Date.now().toString();
 	};
 
-	const _startCombat = (match) => {
-		const fightId = _getNewFightId();
-		mapFights[fightId.toString()] = match;
-		return [match, fightId];
-	};
-
 	const waitActions = (actions, playerID, fightID) => {
 		if (!mapFights[fightID]) return { status: 3, match: null };
-		mapFights[fightID][playerID].actions = actions;
-		if (_isActionsFilled(mapFights[fightID])) {
-			mapFights[fightID] = _playRound(mapFights[fightID]);
+		const currInstance = _getInstanceByID(fightID);
+		_getPlayerByID(playerID, currInstance).actions = actions;
+		if (_isActionsFilled(currInstance)) {
+			mapFights[fightID] = _playRound(currInstance);
 			return {
 				status: 2,
-				matchInfo: { fightID: fightID, match: mapFights[fightID] },
+				matchInfo: { fightID: fightID, match: currInstance },
 			};
 		} else
 			return {
 				status: 1,
-				matchInfo: { fightID: fightID, match: mapFights[fightID] },
+				matchInfo: { fightID: fightID, match: currInstance },
 			};
 	};
 
-	const _isActionsFilled = (tempInstance) => {
-		for (const [key, value] of Object.entries(tempInstance)) {
-			if (value.actions.length === 0) return false;
-		}
-		return true;
+	const _getPlayerByID = (
+		playerID: string,
+		currInstance: instanceInterface
+	) => {
+		return currInstance.players.find((player) => player.id === playerID);
 	};
 
-	const _playRound = (instance) => {
+	const _getInstanceByID = (fightID: string) => {
+		return mapFights.find((instance) => instance.id === fightID);
+	};
+
+	const _isActionsFilled = (currInstance: instanceInterface): boolean => {
+		return currInstance.players.every((player) => {
+			if (player.actions.length <= 0) return false;
+		});
+	};
+
+	const _playRound = (instance: instanceInterface) => {
 		const sortedListOfMonstersID = _speedContest(instance);
 		sortedListOfMonstersID.forEach((monsterID) => {
 			_doAction(instance, monsterID);
 		});
-		_applyChanges(instance)
+		_applyChanges(instance);
 		_clearActions(instance);
 		return instance;
 	};
 
-	const _speedContest = (instance) => {		
+	const _speedContest = (instance: instanceInterface) => {
 		let tempMonstersList = [];
 		//1 - Prepare array of monster to proceed the speed constest with all needly informations
-		tempMonstersList = _prepareMonstersToSpeedContest(instance)
-		
+		tempMonstersList = _prepareMonstersToSpeedContest(instance);
+
 		return _getPlacesOnRound(tempMonstersList);
 	};
 
 	/**
-	 * 
-	 * @param {*} instance 
+	 *
+	 * @param {*} instance
 	 * @returns [{shuffleID: 1,
-	 * 			  monster:   {...}, 
+	 * 			  monster:   {...},
 	 * 			  action:    {...}
-	 * 			 }, 
+	 * 			 },
 	 * 			 {...}]
 	 */
-	const _prepareMonstersToSpeedContest = (instance) => {
+	const _prepareMonstersToSpeedContest = (instance: instanceInterface) => {
 		let tempMonstersList = [];
 		//1 - set an array with all the monsters on the board
 		for (const [key, value] of Object.entries(instance)) {
 			tempMonstersList = tempMonstersList.concat(value.onBoard);
 		}
+		instance.players.map((player) => player.onBoard);
 
 		//2 - add for each monster a random id
-		tempMonstersList = _shuffleMonsters(tempMonstersList)
-		
+		tempMonstersList = _shuffleMonsters(tempMonstersList);
+
 		//3 - add for each monster the action he's playing
-		tempMonstersList.forEach(customMonster => {
-			customMonster.action = _getActionByMonsterID(instance, customMonster.monster.id).skill
+		tempMonstersList.forEach((customMonster) => {
+			customMonster.action = _getActionByMonsterID(
+				instance,
+				customMonster.monster.id
+			).skill;
 		});
 
 		return tempMonstersList;
-	}
+	};
 
 	/**
 	 * @param {*} tempMonstersList array of all monsters on the board
@@ -503,8 +491,8 @@ const fight = () => {
 		const shuffleArray = (array) => {
 			const _reverseItem = (list, id1, id2) => {
 				const temp = list[id1];
-				list[id1]  = list[id2];
-				list[id2]  = temp;
+				list[id1] = list[id2];
+				list[id2] = temp;
 			};
 
 			//if the ally on the left get a lower priority switch with the ally
@@ -557,21 +545,21 @@ const fight = () => {
 			//2 - Get the number of monster wich will play before, following conditions:
 			const count = speedContestTempsList.filter((speedContest) => {
 				if (
-					 speedContest.action.priority	   <  tempMonster.action.priority	   || //2.1   - the action have a higher priority
-
-					(tempMonster.action.priority	  === speedContest.action.priority     && //2.2.1 - the action priotity is equal
-					 speedContest.monster.stats.speed  >  tempMonster.monster.stats.speed) || //2.2.1 - the speed stat is different
-
-					(tempMonster.action.priority	  === speedContest.action.priority     && //2.3.1 - the action priotity is equal
-					 speedContest.monster.stats.speed === tempMonster.monster.stats.speed  && //2.3.2 - the speed stat is equal,
-					 speedContest.shuffleID 		   <  tempMonster.shuffleID) 		      //2.3.3 - use the a random id to difine priority
+					speedContest.action.priority < tempMonster.action.priority || //2.1   - the action have a higher priority
+					(tempMonster.action.priority === speedContest.action.priority && //2.2.1 - the action priotity is equal
+						speedContest.monster.stats.speed >
+							tempMonster.monster.stats.speed) || //2.2.1 - the speed stat is different
+					(tempMonster.action.priority === speedContest.action.priority && //2.3.1 - the action priotity is equal
+						speedContest.monster.stats.speed ===
+							tempMonster.monster.stats.speed && //2.3.2 - the speed stat is equal,
+						speedContest.shuffleID < tempMonster.shuffleID) //2.3.3 - use the a random id to difine priority
 				)
 					return true;
 				return false;
-			/**
-			 * return number monsters which validate all conditions and play before "tempMonster",
-			 * can't return the same number for two different monster
-			 */
+				/**
+				 * return number monsters which validate all conditions and play before "tempMonster",
+				 * can't return the same number for two different monster
+				 */
 			}).length;
 
 			/**
@@ -580,28 +568,47 @@ const fight = () => {
 			 */
 			sortedMonsters[count] = tempMonster.monster.id;
 		});
-		return sortedMonsters
+		return sortedMonsters;
 	};
 
 	const effectsType = () => {
 		const damage = (instance, actionsByTarget, power) => {
-			console.log("damage from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
+			console.log(
+				"damage from ",
+				actionsByTarget.sourceID,
+				" to ",
+				actionsByTarget.targetInfo
+			);
 			_doCalculDamage(instance, actionsByTarget, power);
 		};
 
 		const balance = (instance, actionsByTarget, power) => {
-			console.log("balance from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
+			console.log(
+				"balance from ",
+				actionsByTarget.sourceID,
+				" to ",
+				actionsByTarget.targetInfo
+			);
 		};
 
 		const heal = (instance, actionsByTarget, power) => {
-			console.log("heal from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
+			console.log(
+				"heal from ",
+				actionsByTarget.sourceID,
+				" to ",
+				actionsByTarget.targetInfo
+			);
 		};
 
 		const swap = (instance, actionsByTarget) => {
-			console.log("swap on", actionsByTarget.sourceID, " with ", actionsByTarget.targetInfo);
-			_swapOnBoard(instance, actionsByTarget)
-		}
-
+			console.log(
+				"swap on",
+				actionsByTarget.sourceID,
+				" with ",
+				actionsByTarget.targetInfo
+			);
+			_swapOnBoard(instance, actionsByTarget);
+		};
 
 		return { damage, balance, heal, swap };
 	};
@@ -610,64 +617,81 @@ const fight = () => {
 		if (_isAvailableToPlayRound(instance, monsterID)) {
 			const actionFromMonster = _getActionByMonsterID(instance, monsterID);
 			actionFromMonster.skill.effects.forEach((effect) => {
-				actionFromMonster.skill.target = effect.targetType
-				const effectListByTarget = _getEffectListByTarget(instance, actionFromMonster);
+				actionFromMonster.skill.target = effect.targetType;
+				const effectListByTarget = _getEffectListByTarget(
+					instance,
+					actionFromMonster
+				);
 				effectListByTarget.targets.forEach((actionsByTarget) => {
 					actionsByTarget.skill.effects.forEach((effect) => {
-						passif(effectsType()[effect.type], actionsByTarget, effect.power, effect.type, instance);
-            return !_deathCheck(instance, actionsByTarget)
+						console.log(effect.type);
+						passif(
+							effectsType()[effect.type],
+							actionsByTarget,
+							effect.power,
+							effect.type,
+							instance
+						);
+						return !_deathCheck(instance, actionsByTarget);
 					});
 				});
-			})
+			});
 		}
 	};
 
 	const _deathCheck = (instance, actionsByTarget) => {
 		if (_isNeededToCheckDeath(actionsByTarget)) {
-			const monster = instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot]
+			const monster =
+				instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[
+					actionsByTarget.targetInfo.spot
+				];
 
 			if (monster.stats.hp <= 0) {
-				console.log("kill from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
-				_kill(instance, actionsByTarget)
-				return true
+				console.log(
+					"kill from ",
+					actionsByTarget.sourceID,
+					" to ",
+					actionsByTarget.targetInfo
+				);
+				_kill(instance, actionsByTarget);
+				return true;
 			}
 		}
 
-		return false
-	}
+		return false;
+	};
 
 	const _isNeededToCheckDeath = (actionsByTarget) => {
-		return !actionsByTarget.targetInfo.targetedPlayerID === undefined
-	}
+		return !actionsByTarget.targetInfo.targetedPlayerID === undefined;
+	};
 
 	const _kill = (instance, actionsByTarget) => {
-		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot].stats.hp = 0
-		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[actionsByTarget.targetInfo.spot].isAlive = false
-	}
+		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[
+			actionsByTarget.targetInfo.spot
+		].stats.hp = 0;
+		instance[actionsByTarget.targetInfo.targetedPlayerID].onBoard[
+			actionsByTarget.targetInfo.spot
+		].isAlive = false;
+	};
 
-	const _applyChanges = (instance) => {
+	const _applyChanges = (instance: instanceInterface) => {
 		for (const [key, player] of Object.entries(instance)) {
 			player.onBoard.forEach((onBoardMonster) => {
-				const teamMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === onBoardMonster.id)
-				player.team[teamMonsterIndex] = onBoardMonster
-			})
+				const teamMonsterIndex = player.team.findIndex(
+					(teamMonster) => teamMonster.id === onBoardMonster.id
+				);
+				player.team[teamMonsterIndex] = onBoardMonster;
+			});
 		}
-	}
+	};
 
-
-	const _applyOneMonsterChanges = (instance, actionsByTarget) => {
-		const onBoardMonster = _getOnBoardMonsterByID(instance, actionsByTarget.sourceID)
-		const player = instance[onBoardMonster.playerID]
-		const teamMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.sourceID)
-		player.team[teamMonsterIndex] = onBoardMonster
-	}
-
-	const _getMonsterBySpot = (instance, spotInfo) => {
-        return instance[spotInfo.targetedPlayerID].onBoard[spotInfo.spot]
-    }
-
-
-	const passif = (action, target, power, actionType, instance) => {
+	const passif = (
+		action,
+		target,
+		power,
+		actionType,
+		instance: instanceInterface
+	) => {
 		const ennemies = (owner) => {
 			return _getEnnemies(instance, owner.id);
 		};
@@ -687,7 +711,7 @@ const fight = () => {
 			if (owner.passive.trigger.actionType !== actionType) return false;
 			const ownerFrom = fromType[owner.passive.trigger.from](owner);
 			const ownerTo = fromType[owner.passive.trigger.to](owner);
-			const toMonster = _getMonsterBySpot(instance, to)
+			const toMonster = _getMonsterBySpot(instance, to);
 			if (
 				!ownerFrom.some((monster) => {
 					return monster.id === from.id;
@@ -713,23 +737,33 @@ const fight = () => {
 			owner.passive.effects.forEach((effect) => {
 				const effectsListbyTarget = _getEffectListByTarget(instance, {
 					sourceID: owner.id,
-					targetInfo: effect.target === "from" ? {targetedPlayerID: _getOnBoardMonsterByID(instance, from.id).playerID, 
-						spot: _getSpotByMonsterID(instance, from.id)} : to,
+					targetInfo:
+						effect.target === "from"
+							? {
+									targetedPlayerID: _getOnBoardMonsterByID(instance, from.id)
+										.playerID,
+									spot: _getSpotByMonsterID(instance, from.id),
+							  }
+							: to,
 					skill: {
 						target: effect.targetType,
 						name: owner.passive.name,
 						description: owner.passive.description,
 						effectType: effect.type,
-						type: 'neutral',
-						power: effect.power
+						type: "neutral",
+						power: effect.power,
 					},
 				});
 
 				if (effectsListbyTarget <= 0) return false;
 				effectsListbyTarget.targets.forEach((target) => {
-					effectsType()[target.skill.effectType](instance, target, target.skill.power);
+					effectsType()[target.skill.effectType](
+						instance,
+						target,
+						target.skill.power
+					);
 				});
-			})
+			});
 		};
 
 		const before = (from, to, owner) => {
@@ -796,7 +830,7 @@ const fight = () => {
 			}
 			return prevented;
 		};
-
+		console.log(action);
 		loopThroughPassif(passifBefore);
 		if (!loopThroughPassif(passifPrevent)) action(instance, target, power);
 		loopThroughPassif(passifAfter);
@@ -804,28 +838,43 @@ const fight = () => {
 
 	const _isAvailableToPlayRound = (instance, monsterID) => {
 		//the monster can play his turn if:
-		if (_getOnBoardMonsterByID(instance, monsterID).stats.hp < 0 || // the monster is alive
-			!_isOnBoard(instance, monsterID)							// the monster is on the board
-		){return false}
-		return true
+		if (
+			_getOnBoardMonsterByID(instance, monsterID).stats.hp < 0 || // the monster is alive
+			!_isOnBoard(instance, monsterID) // the monster is on the board
+		) {
+			return false;
+		}
+		return true;
 	};
 
 	const _swapOnBoard = (instance, actionsByTarget) => {
-		const sourceMonster = _getOnBoardMonsterByID(instance, actionsByTarget.sourceID)
-		const player = instance[sourceMonster.playerID]
-		const teamSourceMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.sourceID)
-		player.team[teamSourceMonsterIndex] = sourceMonster
+		const sourceMonster = _getOnBoardMonsterByID(
+			instance,
+			actionsByTarget.sourceID
+		);
+		const player = instance[sourceMonster.playerID];
+		const teamSourceMonsterIndex = player.team.findIndex(
+			(teamMonster) => teamMonster.id === actionsByTarget.sourceID
+		);
+		player.team[teamSourceMonsterIndex] = sourceMonster;
 
-		const teamTargetMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.targetInfo.id)
-		const onBoardSourceMonsterIndex = player.onBoard.findIndex((onBoardMonster) => onBoardMonster.id === actionsByTarget.sourceID)
-		player.onBoard[onBoardSourceMonsterIndex] = player.team[teamTargetMonsterIndex]
-
-	}
+		const teamTargetMonsterIndex = player.team.findIndex(
+			(teamMonster) => teamMonster.id === actionsByTarget.targetInfo.id
+		);
+		const onBoardSourceMonsterIndex = player.onBoard.findIndex(
+			(onBoardMonster) => onBoardMonster.id === actionsByTarget.sourceID
+		);
+		player.onBoard[onBoardSourceMonsterIndex] =
+			player.team[teamTargetMonsterIndex];
+	};
 
 	const _doCalculDamage = (instance, target, power) => {
 		const skill = target.skill;
 		const monsterSource = _getOnBoardMonsterByID(instance, target.sourceID);
-		const monsterTarget = instance[target.targetInfo.targetedPlayerID].onBoard[target.targetInfo.spot];
+		const monsterTarget =
+			instance[target.targetInfo.targetedPlayerID].onBoard[
+				target.targetInfo.spot
+			];
 		const typeEfficiency = _getTypeEfficiency(skill.type, monsterTarget.type);
 		const isSTAB = _isSTAB(monsterSource.type, skill.type);
 
@@ -870,13 +919,13 @@ const fight = () => {
 		return efficiency;
 	};
 
-	const _clearActions = (instance) => {
+	const _clearActions = (instance: instanceInterface) => {
 		for (const [key, value] of Object.entries(instance)) {
 			value.actions = [];
 		}
 	};
 
-	const _getActionByMonsterID = (instance, monsterID) => {
+	const _getActionByMonsterID = (instance: instanceInterface, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
 			if (value.actions.some((action) => action.sourceID === monsterID)) {
 				return value.actions.filter(
@@ -886,14 +935,22 @@ const fight = () => {
 		}
 	};
 
-	const _getEffectListByTarget = (instance, actionFromMonster) => {
+	const _getEffectListByTarget = (
+		instance: instanceInterface,
+		actionFromMonster
+	) => {
 		const self = () => {
 			return {
 				targets: [
 					{
 						sourceID: actionFromMonster.sourceID,
-						targetInfo: {targetedPlayerID: _getOnBoardMonsterByID(instance, actionFromMonster.sourceID).playerID, 
-									 spot: _getSpotByMonsterID(instance, actionFromMonster.sourceID)},
+						targetInfo: {
+							targetedPlayerID: _getOnBoardMonsterByID(
+								instance,
+								actionFromMonster.sourceID
+							).playerID,
+							spot: _getSpotByMonsterID(instance, actionFromMonster.sourceID),
+						},
 						skill: actionFromMonster.skill,
 					},
 				],
@@ -908,8 +965,10 @@ const fight = () => {
 				targets: [
 					{
 						sourceID: actionFromMonster.sourceID,
-						targetInfo: {targetedPlayerID: ally.playerID, 
-									 spot: actionFromMonster.targetInfo.spot},
+						targetInfo: {
+							targetedPlayerID: ally.playerID,
+							spot: actionFromMonster.targetInfo.spot,
+						},
 						skill: actionFromMonster.skill,
 					},
 				],
@@ -918,13 +977,18 @@ const fight = () => {
 
 		const allies = () => {
 			const effectListByTarget = { targets: [] };
-			const sourceMonster = _getOnBoardMonsterByID(instance, actionFromMonster.sourceID)
-			
+			const sourceMonster = _getOnBoardMonsterByID(
+				instance,
+				actionFromMonster.sourceID
+			);
+
 			instance[sourceMonster.playerID].onBoard.forEach((monster) => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
-					targetInfo: {targetedPlayerID: sourceMonster.playerID, 
-								 spot: _getSpotByMonsterID(instance, monster.id)},
+					targetInfo: {
+						targetedPlayerID: sourceMonster.playerID,
+						spot: _getSpotByMonsterID(instance, monster.id),
+					},
 					skill: actionFromMonster.skill,
 				});
 			});
@@ -939,8 +1003,10 @@ const fight = () => {
 			targetsList.forEach((monster) => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
-					targetInfo: {targetedPlayerID: monster.playerID, 
-								 spot: _getSpotByMonsterID(instance, monster.id)},
+					targetInfo: {
+						targetedPlayerID: monster.playerID,
+						spot: _getSpotByMonsterID(instance, monster.id),
+					},
 					skill: actionFromMonster.skill,
 				});
 			});
@@ -949,19 +1015,24 @@ const fight = () => {
 		};
 
 		const single = () => {
-			let target = _getMonsterBySpot(instance, actionFromMonster.targetInfo)
-			
-			if (target === undefined || !target.isAlive) { // if spot is empty
-				actionFromMonster.targetInfo.spot = _getOtherSpot(actionFromMonster.targetInfo.spot) // get the other spot
-				target = _getMonsterBySpot(instance, actionFromMonster.targetInfo)
-				if (target === undefined || !target.isAlive) return { targets: [] }; // if empty too return [] 
+			let target = _getMonsterBySpot(instance, actionFromMonster.targetInfo);
+
+			if (target === undefined || !target.isAlive) {
+				// if spot is empty
+				actionFromMonster.targetInfo.spot = _getOtherSpot(
+					actionFromMonster.targetInfo.spot
+				); // get the other spot
+				target = _getMonsterBySpot(instance, actionFromMonster.targetInfo);
+				if (target === undefined || !target.isAlive) return { targets: [] }; // if empty too return []
 
 				return {
 					targets: [
 						{
 							sourceID: actionFromMonster.sourceID,
-							targetInfo: {targetedPlayerID: target.playerID, 
-										 spot: actionFromMonster.targetInfo.spot},
+							targetInfo: {
+								targetedPlayerID: target.playerID,
+								spot: actionFromMonster.targetInfo.spot,
+							},
 							skill: actionFromMonster.skill,
 						},
 					],
@@ -989,18 +1060,23 @@ const fight = () => {
 					},
 				],
 			};
-		}
+		};
 
 		const double = () => {
 			const effectListByTarget = { targets: [] };
 
-			instance[actionFromMonster.targetInfo.targetedPlayerID].onBoard.forEach((monster) => { 
-				effectListByTarget.targets.push({
-					sourceID: actionFromMonster.sourceID,
-					targetInfo: {targetedPlayerID: monster.playerID, spot: _getSpotByMonsterID(instance, monster.id)},
-					skill: actionFromMonster.skill,
-				});
-			});
+			instance[actionFromMonster.targetInfo.targetedPlayerID].onBoard.forEach(
+				(monster) => {
+					effectListByTarget.targets.push({
+						sourceID: actionFromMonster.sourceID,
+						targetInfo: {
+							targetedPlayerID: monster.playerID,
+							spot: _getSpotByMonsterID(instance, monster.id),
+						},
+						skill: actionFromMonster.skill,
+					});
+				}
+			);
 
 			return effectListByTarget;
 		};
@@ -1015,7 +1091,10 @@ const fight = () => {
 			targetsList.forEach((monster) => {
 				effectListByTarget.targets.push({
 					sourceID: actionFromMonster.sourceID,
-					targetInfo: {targetedPlayerID: monster.playerID, spot: _getSpotByMonsterID(instance, monster.id)},
+					targetInfo: {
+						targetedPlayerID: monster.playerID,
+						spot: _getSpotByMonsterID(instance, monster.id),
+					},
 					skill: actionFromMonster.skill,
 				});
 			});
@@ -1023,37 +1102,49 @@ const fight = () => {
 			return effectListByTarget;
 		};
 
-		const TargetTypes = { self, ally, allies, ennemies, single, singleBackstage, double, all };
+		const TargetTypes = {
+			self,
+			ally,
+			allies,
+			ennemies,
+			single,
+			singleBackstage,
+			double,
+			all,
+		};
 		return TargetTypes[actionFromMonster.skill.target]();
 	};
 
 	const _getMonsterBySpot = (instance, spotInfo) => {
-		return instance[spotInfo.targetedPlayerID].onBoard[spotInfo.spot]
-	}
+		return instance[spotInfo.targetedPlayerID].onBoard[spotInfo.spot];
+	};
 
 	/**
-	 * 
+	 *
 	 * @param {*} spot = to 1 or 0 only
 	 * @returns change spot 0 to 1, and 1 to 0
 	 */
 	const _getOtherSpot = (spot) => {
-		return (spot+1)%2
-	}
+		return (spot + 1) % 2;
+	};
 
 	/**
-	 * 
-	 * @param {*} instance 
-	 * @param {*} monsterID 
+	 *
+	 * @param {*} instance
+	 * @param {*} monsterID
 	 * @returns empty array if no ally on board: []
 	 */
 	const _getAlly = (instance, monsterID) => {
-		return ( instance[_getOnBoardMonsterByID(instance, monsterID).playerID].onBoard.filter((monster) => monster.id !== monsterID)[0]) 
-			   !== undefined
-			   ? instance[_getOnBoardMonsterByID(instance, monsterID).playerID].onBoard.filter((monster) => monster.id !== monsterID)[0]
-			   : [];
+		return instance[
+			_getOnBoardMonsterByID(instance, monsterID).playerID
+		].onBoard.filter((monster) => monster.id !== monsterID)[0] !== undefined
+			? instance[
+					_getOnBoardMonsterByID(instance, monsterID).playerID
+			  ].onBoard.filter((monster) => monster.id !== monsterID)[0]
+			: [];
 	};
 
-	const _getEnnemies = (instance, monsterID) => {
+	const _getEnnemies = (instance: instanceInterface, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
 			if (value.onBoard.every((monster) => monster.id !== monsterID)) {
 				return value.onBoard;
@@ -1061,31 +1152,35 @@ const fight = () => {
 		}
 	};
 
-	const _getOnBoardMonsterByID = (instance, monsterID) => {
+	const _getOnBoardMonsterByID = (instance: instanceInterface, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
 			if (value.onBoard.some((monster) => monster.id === monsterID)) {
 				return value.onBoard.filter((monster) => monster.id === monsterID)[0]; // voir si améliorable
 			}
 		}
-		return {}
+		return {};
 	};
 
-	const _isOnBoard = (instance, monsterID) => {
+	const _isOnBoard = (instance: instanceInterface, monsterID) => {
 		for (const [key, value] of Object.entries(instance)) {
-			if (value.onBoard.some((monster) => monster.id === monsterID)) {return true}
+			if (value.onBoard.some((monster) => monster.id === monsterID)) {
+				return true;
+			}
 		}
-		return false
-	}
+		return false;
+	};
 
 	/**
-	 * 
-	 * @param {*} instance 
-	 * @param {*} monsterID 
+	 *
+	 * @param {*} instance
+	 * @param {*} monsterID
 	 * @returns -1 for false
 	 */
 	const _getSpotByMonsterID = (instance, monsterID) => {
-		return instance[_getOnBoardMonsterByID(instance, monsterID).playerID].onBoard.findIndex((onBoardMonster) => monsterID === onBoardMonster.id);
-	}
+		return instance[
+			_getOnBoardMonsterByID(instance, monsterID).playerID
+		].onBoard.findIndex((onBoardMonster) => monsterID === onBoardMonster.id);
+	};
 
 	return { ready, waitActions };
 };
