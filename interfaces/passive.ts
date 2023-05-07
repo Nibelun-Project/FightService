@@ -1,5 +1,6 @@
 import { effectTypeEnum, targetTypeEnum } from "./fight";
 import { monsterType } from "./monster";
+import { effectInterface } from "./skill";
 
 enum targetEnum {
 	TO = "to",
@@ -19,16 +20,11 @@ interface PassiveInterface {
 		when: `${triggerWhenEnum}`;
 		actionType: `${effectTypeEnum}`;
 		from: string;
-		to: string;
-		type: `${monsterType}`;
-		target: string;
+		to?: string;
+		type?: `${monsterType}`;
+		target?: string;
 	};
-	effects: {
-		targetType: `${targetTypeEnum}`;
-		target: `${targetEnum}`;
-		type: `${effectTypeEnum}`;
-		power: number;
-	}[];
+	effects: effectInterface[];
 }
 
 export { PassiveInterface, targetEnum };

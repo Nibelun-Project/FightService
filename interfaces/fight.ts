@@ -7,9 +7,23 @@ import { SkillInterface } from "./skill";
 
 interface actionInterface {
 	sourceID: string;
-	targetInfo: { id: string } | { targetedPlayedID: string; spot: number };
+	targetInfo: targetInfoType
 	skill: SkillInterface;
 }
+
+interface targetInfo { }
+interface targetInfoPlayerID extends targetInfo {
+	targetedPlayerID: string;
+	spot: number;
+	id?: never;
+}
+interface targetInfoID extends targetInfo {
+	targetedPlayerID?: never;
+	spot?: never;
+	id: string;
+}
+
+type targetInfoType = targetInfoPlayerID | targetInfoID;
 
 interface playerFightingInterface {
 	id: string;
@@ -23,6 +37,7 @@ interface instanceInterface {
 	players: playerFightingInterface[];
 	history: [];
 }
+
 
 enum targetTypeEnum {
 	SINGLE = "single",
@@ -49,4 +64,5 @@ export {
 	actionInterface,
 	playerFightingInterface,
 	instanceInterface,
+	targetInfoType
 };

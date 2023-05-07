@@ -1,3 +1,4 @@
+import { instanceInterface, playerFightingInterface } from "../interfaces/fight.js";
 import fight from "./fight.js";
 import matchmaking from "./matchmaking.js";
 
@@ -12,7 +13,6 @@ const comm = (io) => {
 
 	io.on("connection", (socket) => {
 		console.log("user connected!");
-
 		socket.on("disconnect", () => {
 			//send the disconnected player to "fight" to inform the other player that he won and that the opponent has disconnected
 			//remove the match from matchFight
@@ -29,8 +29,8 @@ const comm = (io) => {
 		if (initialized) {
 			const { status, matchIDs } = matchmakingModule.addPlayer(playerID);
 			if (status >= 2) {
-				const [match, fightID] = fightModule.ready(matchIDs);
-				return _socketTo(match, "combat-started", { match, fightID }, status);
+				const instance: instanceInterface = fightModule.ready(matchIDs);
+				return _socketTo(instance, "combat-started", instance, status);
 			} else if (status >= 1)
 				return _socketTo(playerID, "combat-pending", "", status);
 			else return status;
@@ -52,7 +52,7 @@ const comm = (io) => {
 				fightID
 			);
 			if (status >= 2)
-				return _socketTo(matchInfo.match, "action-done", matchInfo, status);
+				return _socketTo(matchInfo, "action-done", matchInfo, status);
 			else if (status >= 1)
 				return _socketTo(playerID, "action-pending", "", status);
 			else return status;
@@ -63,9 +63,9 @@ const comm = (io) => {
 		if (typeof target !== "object" && typeof target === "string")
 			io.to(playerSockets[target], emit, data);
 		else {
-			for (const [key, value] of Object.entries(target)) {
-				io.to(playerSockets[key]).emit(emit, data);
-			}
+			target.players.forEach((player: playerFightingInterface) => {
+				io.to(playerSockets[player.id]).emit(emit, data);
+			})
 		}
 		return status;
 	};

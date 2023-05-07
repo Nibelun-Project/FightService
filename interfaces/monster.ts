@@ -1,3 +1,4 @@
+import { PassiveInterface } from "./passive";
 import { SkillInterface } from "./skill";
 
 enum monsterType {
@@ -71,7 +72,7 @@ interface MonsterFightingInterface {
 		balance: number;
 	};
 	image: string;
-	passive: {};
+	passive: PassiveInterface;
 	skills: SkillInterface[];
 	playerID: string;
 }

@@ -1,5 +1,6 @@
 import { effectTypeEnum, targetTypeEnum } from "./fight";
 import { monsterType } from "./monster";
+import { targetEnum } from "./passive";
 
 enum skillCostEnum {
 	STAMINA = "stamina",
@@ -12,13 +13,16 @@ interface SkillInterface {
 	description: string;
 	type: `${monsterType}`;
 	cost: { type: `${skillCostEnum}`; value: number };
-	effects: {
-		targetType: `${targetTypeEnum}`;
-		type: `${effectTypeEnum}`;
-		power: number;
-	}[];
+	effects: effectInterface[];
 	targetType: `${targetTypeEnum}`;
 	priority: number;
 }
 
-export { SkillInterface };
+interface effectInterface {
+	targetType: `${targetTypeEnum}`;
+	target?: `${targetEnum}`;
+	type: `${effectTypeEnum}`;
+	power: number;
+}
+
+export { SkillInterface, effectInterface };
