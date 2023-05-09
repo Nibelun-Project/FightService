@@ -1,5 +1,6 @@
 import {
 	actionInterface,
+	effectType,
 	instanceInterface,
 	playerFightingInterface,
 	targetInfoType,
@@ -31,18 +32,16 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			image: "../ronk.png",
 			passive: {
 				trigger: {
-					when: "before",
-					actionType: "heal",
-					from: "allies",
-					to: "ennemies",
-					type: "mental",
+					when: "after",
+					from: "self",
+					type: "fire",
 				},
 				effects: [
 					{
 						targetType: "single",
-						target: "to",
+						side: "to",
 						type: "damage",
-						power: 15,
+						power: 10000000,
 					},
 				],
 				name: "Preventive Heal",
@@ -130,14 +129,13 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					actionType: "damage",
 					from: "ennemies",
 					to: "ally",
-					type: "mental",
 				},
 				effects: [
 					{
 						targetType: "single",
-						target: "from",
+						side: "from",
 						type: "damage",
-						power: 15,
+						power: 1000,
 					},
 				],
 			},
@@ -148,7 +146,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "double", type: "damage", power: 45 }],
+					effects: [{ targetType: "double", type: "damage", power: 45 }, { targetType: "ally", type: "damage", power: 15 }],
 					targetType: "double",
 					priority: 100,
 				},
@@ -227,7 +225,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				effects: [
 					{
 						targetType: "single",
-						target: "to",
+						side: "to",
 						type: "damage",
 						power: 15,
 					},
@@ -321,7 +319,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				effects: [
 					{
 						targetType: "single",
-						target: "to",
+						side: "to",
 						type: "damage",
 						power: 15,
 					},
@@ -691,57 +689,47 @@ const fight = () => {
 	const passif = (
 		action,
 		target,
-		power,
-		actionType,
+		power: number,
+		actionType: effectType,
 		instance: instanceInterface
 	) => {
-		const ennemies = (owner) => {
+		const ennemies = (owner: MonsterFightingInterface) => {
 			return _getEnnemies(instance, owner.id);
 		};
-		const ally = (owner) => {
-			return [_getAlly(instance, owner.id)];
+		const ally = (owner: MonsterFightingInterface) => {
+			return [_getAlly(instance, owner.id)]
 		};
-		const allies = (owner) => {
-			return instance[owner.playerID].onBoard;
+		const allies = (owner: MonsterFightingInterface) => {
+			return [_getPlayerByID(owner.playerID, instance).onBoard];
 		};
-		const self = (owner) => {
+		const self = (owner: MonsterFightingInterface) => {
 			return [owner];
 		};
 
 		const fromType = { ennemies, ally, allies, self };
 
-		const checkPassif = (from, to, owner) => {
-			if (owner.passive.trigger.actionType !== actionType) return false;
+		const checkPassif = (from, to, owner: MonsterFightingInterface) => {
+			if (owner.passive.trigger.actionType && owner.passive.trigger.actionType !== actionType) return false;
 			const ownerFrom = fromType[owner.passive.trigger.from](owner);
-			const ownerTo = fromType[owner.passive.trigger.to](owner);
-			const toMonster = _getMonsterBySpot(instance, to);
-			if (
-				!ownerFrom.some((monster) => {
-					return monster.id === from.id;
-				})
-			)
-				return false;
-			if (
-				!ownerTo.some((monster) => {
-					return monster.id === toMonster.id;
-				})
-			)
-				return false;
-			if (owner.passive.trigger.type) {
-				if (owner.passive.trigger.type !== target.skill.type) return false;
-			}
-			if (owner.passive.trigger.target) {
-				if (owner.passive.trigger.target !== target.skill.target) return false;
-			}
+			if (!ownerFrom.find((monster: MonsterFightingInterface) => {
+				return monster.id === from.id
+			})) return false;
+			if (owner.passive.trigger.to && !fromType[owner.passive.trigger.to](owner).find((monster: MonsterFightingInterface) => {
+				return monster.id === _getMonsterBySpot(instance, to).id
+			})) return false;
+
+			if (owner.passive.trigger.type && owner.passive.trigger.type !== target.skill.type) return false;
+			if (owner.passive.trigger.targetType && owner.passive.trigger.targetType !== target.skill.targetType) return false;
+
 			return true;
 		};
 
-		const applyEffects = (owner, from, to) => {
+		const applyEffects = (owner: MonsterFightingInterface, from, to) => {
 			owner.passive.effects.forEach((effect) => {
 				const effectTargets = _getTargeting(instance, {
 					sourceID: owner.id,
 					targetInfo:
-						effect.target === "from"
+						effect.side === "from"
 							? {
 								targetedPlayerID: _getOnBoardMonsterByID(instance, from.id)
 									.playerID,
@@ -779,7 +767,7 @@ const fight = () => {
 		};
 
 		const prevent = (from, to, owner) => {
-			console.log("try to prevent :" + owner.id);
+			console.log("try to prevent :" + owner.name);
 			if (!checkPassif(from, to, owner)) return false;
 			applyEffects(owner, from, to);
 
@@ -849,12 +837,12 @@ const fight = () => {
 		return true;
 	};
 
-	const _swapOnBoard = (instance, actionsByTarget) => {
+	const _swapOnBoard = (instance: instanceInterface, actionsByTarget: actionInterface) => {
 		const sourceMonster = _getOnBoardMonsterByID(
 			instance,
 			actionsByTarget.sourceID
 		);
-		const player = instance[sourceMonster.playerID];
+		const player = _getPlayerByID(sourceMonster.playerID, instance)
 		const teamSourceMonsterIndex = player.team.findIndex(
 			(teamMonster) => teamMonster.id === actionsByTarget.sourceID
 		);
@@ -870,7 +858,7 @@ const fight = () => {
 			player.team[teamTargetMonsterIndex];
 	};
 
-	const _doCalculDamage = (instance: instanceInterface, target, power) => {
+	const _doCalculDamage = (instance: instanceInterface, target: actionInterface, power: number) => {
 		const skill = target.skill;
 		const monsterSource = _getOnBoardMonsterByID(instance, target.sourceID);
 		const monsterTarget =
@@ -963,7 +951,7 @@ const fight = () => {
 		const ally = () => {
 			const ally = _getAlly(instance, actionFromMonster.sourceID);
 
-			if (ally === undefined || ally.length <= 0) return [];
+			if (ally === undefined) return [];
 			return [
 				{
 					sourceID: actionFromMonster.sourceID,
@@ -1132,11 +1120,10 @@ const fight = () => {
 	 * @returns empty array if no ally on board: []
 	 */
 	const _getAlly = (instance: instanceInterface, monsterID: string) => {
-		let ally
-		instance.players.forEach((player) => {
-			if (player.id === _getOnBoardMonsterByID(instance, monsterID).playerID) ally = player.onBoard.filter((monster) => monster.id !== monsterID)
-		})
-		return ally
+		for (let index = 0; index < instance.players.length; index++) {
+			const player = instance.players[index];
+			if (player.id === _getOnBoardMonsterByID(instance, monsterID).playerID) return player.onBoard.find((monster) => monster.id !== monsterID)
+		}
 	};
 
 	const _getEnnemies = (instance: instanceInterface, monsterID: string) => {

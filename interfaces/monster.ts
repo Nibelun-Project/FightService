@@ -1,7 +1,7 @@
 import { PassiveInterface } from "./passive";
 import { SkillInterface } from "./skill";
 
-enum monsterType {
+enum monsterTypeEnum {
 	FIRE = "fire",
 	PLANT = "plant",
 	WATER = "water",
@@ -18,7 +18,7 @@ enum monsterType {
 
 interface MonsterInfoInterface {
 	name: string;
-	type: `${monsterType}`[];
+	type: monsterType[];
 	stats: {
 		hp: number;
 		attack: number;
@@ -35,7 +35,7 @@ interface MonsterInfoInterface {
 
 interface MonsterInterface {
 	name: string;
-	type: `${monsterType}`[];
+	type: monsterType[];
 	stats: {
 		hp: number;
 		attack: number;
@@ -53,7 +53,7 @@ interface MonsterInterface {
 interface MonsterFightingInterface {
 	id: string;
 	name: string;
-	type: string[];
+	type: monsterType[];
 	isAlive: boolean;
 	stats: {
 		hp: number;
@@ -77,9 +77,12 @@ interface MonsterFightingInterface {
 	playerID: string;
 }
 
+type monsterType = `${monsterTypeEnum}`;
+
 export {
 	MonsterInfoInterface,
 	MonsterInterface,
 	MonsterFightingInterface,
 	monsterType,
+	monsterTypeEnum,
 };
