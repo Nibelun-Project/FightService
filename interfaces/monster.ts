@@ -1,3 +1,4 @@
+import { actionInterface } from "./fight";
 import { PassiveInterface } from "./passive";
 import { SkillInterface } from "./skill";
 
@@ -14,6 +15,15 @@ enum monsterTypeEnum {
 	ROCK = "rock",
 	GHOST = "ghost",
 	SPATIAL = "spatial",
+}
+
+enum monsterStatsEnum {
+	HP = "hp",
+	DEF = "def",
+	ATK = "attack",
+	SPEED = "speed",
+	STAMINA = "stamina",
+	BALANCE = "balance"
 }
 
 interface MonsterInfoInterface {
@@ -50,6 +60,12 @@ interface MonsterInterface {
 	skills: SkillInterface[];
 }
 
+interface MonsterSpeedInterface {
+	shuffleID: number,
+	monster: MonsterFightingInterface,
+	action?: SkillInterface
+}
+
 interface MonsterFightingInterface {
 	id: string;
 	name: string;
@@ -82,7 +98,9 @@ type monsterType = `${monsterTypeEnum}`;
 export {
 	MonsterInfoInterface,
 	MonsterInterface,
+	MonsterSpeedInterface,
 	MonsterFightingInterface,
 	monsterType,
 	monsterTypeEnum,
+	monsterStatsEnum
 };

@@ -5,8 +5,10 @@ import {
 	playerFightingInterface,
 	targetInfoType,
 } from "../interfaces/fight";
-import { MonsterFightingInterface } from "../interfaces/monster";
-import * as history from "./history.js";
+import { MonsterFightingInterface, MonsterInfoInterface, MonsterSpeedInterface, monsterStatsEnum, monsterType } from "../interfaces/monster.js";
+import { initFightInfo, initHistoryRound, updateHistory } from "./history.js";
+import { historyContextEnum } from "../interfaces/history.js"
+
 
 const getTeam = (playerID): MonsterFightingInterface[] => {
 	return [
@@ -378,7 +380,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 const fight = () => {
 	let mapFights: instanceInterface[] = [] as any;
 
-	const ready = (matchs: playerFightingInterface[]) => {
+	const ready = (matchs: playerFightingInterface[]): instanceInterface => {
 		matchs.forEach((match) => {
 			match["team"] = getTeam(match.id);
 			match["onBoard"] = [getTeam(match.id)[0], getTeam(match.id)[1]];
@@ -388,13 +390,13 @@ const fight = () => {
 		const instance: instanceInterface = {
 			id: fightId,
 			players: matchs,
-			fightInfo: history.initFightInfo(),
+			fightInfo: initFightInfo(),
 		};
 		mapFights.push(instance)
 		return instance;
 	};
 
-	const _getNewFightId = () => {
+	const _getNewFightId = (): string => {
 		return "fid_" + Date.now().toString();
 	};
 
@@ -420,21 +422,17 @@ const fight = () => {
 		return currInstance.players.find((player) => player.id === playerID);
 	};
 
-	const _getInstanceByID = (fightID: string) => {
+	const _getInstanceByID = (fightID: string): instanceInterface => {
 		return mapFights.find((instance) => instance.id === fightID);
 	};
 
-	// const _addActionsToInstance = (actions: string) => {
-	// 	return mapFights.map((instance) => if(instance.id === fightID));
-	// };
-
-	const _isActionsFilled = (currInstance: instanceInterface) => {
+	const _isActionsFilled = (currInstance: instanceInterface): boolean => {
 		return currInstance.players.every((player) => player.actions.length > 0)
 	};
 
-	const _playRound = (instance: instanceInterface) => {
-		history.initRound(instance)
-		const sortedListOfMonstersID = _speedContest(instance);
+	const _playRound = (instance: instanceInterface): instanceInterface => {
+		initHistoryRound(instance)
+		const sortedListOfMonstersID = _speedContest(instance);		
 		sortedListOfMonstersID.forEach((monsterID) => {
 			_doAction(instance, monsterID);
 		});
@@ -444,9 +442,9 @@ const fight = () => {
 		return instance;
 	};
 
-	const _speedContest = (instance: instanceInterface) => {
-		let tempMonstersList = [];
+	const _speedContest = (instance: instanceInterface): string[] => {
 		//1 - Prepare array of monster to proceed the speed constest with all needly informations
+		let tempMonstersList = [];
 		tempMonstersList = _prepareMonstersToSpeedContest(instance);
 
 		return _getPlacesOnRound(tempMonstersList, instance);
@@ -461,7 +459,7 @@ const fight = () => {
 	 * 			 },
 	 * 			 {...}]
 	 */
-	const _prepareMonstersToSpeedContest = (instance: instanceInterface) => {
+	const _prepareMonstersToSpeedContest = (instance: instanceInterface): MonsterSpeedInterface[] => {
 		//1 - set an array with all the monsters on the board
 		let tempMonstersList = [];
 		instance.players.forEach((player) => {
@@ -472,12 +470,8 @@ const fight = () => {
 		tempMonstersList = _shuffleMonsters(tempMonstersList);
 
 		//3 - add for each monster the action he's playing
-
 		tempMonstersList.forEach((customMonster) => {
-			customMonster.action = _getActionByMonsterID(
-				instance,
-				customMonster.monster.id
-			).skill;
+			customMonster.action = _getActionByMonsterID(instance, customMonster.monster.id).skill;
 		});
 
 		return tempMonstersList;
@@ -487,14 +481,14 @@ const fight = () => {
 	 * @param {*} tempMonstersList array of all monsters on the board
 	 * @returns array of monster and random id, look like: [{monster, shuffleID}, {...}]
 	 */
-	const _shuffleMonsters = (tempMonstersList) => {
+	const _shuffleMonsters = (tempMonstersList: MonsterFightingInterface[]): MonsterSpeedInterface[] => {
 		//1 - create array of "n°", look like: [1, 2, 3, 4]
 		const shuffleIndicators: number[] = [];
 		for (let i = 1; i <= tempMonstersList.length; i++) {
 			shuffleIndicators.push(i);
 		}
 
-		const shuffleArray = (array: number[]) => {
+		const shuffleArray = (array: number[]): number[] => {
 			const _reverseItem = (list, id1, id2) => {
 				const temp = list[id1];
 				list[id1] = list[id2];
@@ -544,7 +538,7 @@ const fight = () => {
 	 * @param {*} speedContestTempsList array of monster and random id, look like: [{monster, contestID}, {...}]
 	 * @returns array of monster in the order they will play there turn.
 	 */
-	const _getPlacesOnRound = (speedContestTempsList, instance: instanceInterface) => {
+	const _getPlacesOnRound = (speedContestTempsList: MonsterSpeedInterface[], instance: instanceInterface): string[] => {
 		let sortedMonsters = [];
 		//1 - For each monster
 		speedContestTempsList.forEach((tempMonster) => {
@@ -553,11 +547,11 @@ const fight = () => {
 				if (speedContest.action.priority < tempMonster.action.priority || //2.1   - the action have a higher priority
 
 					(tempMonster.action.priority === speedContest.action.priority && //2.2.1 - the action priotity is equal
-						speedContest.monster.stats.speed > tempMonster.monster.stats.speed) || //2.2.1 - the speed stat is different
+					 speedContest.monster.stats[monsterStatsEnum.SPEED] > tempMonster.monster.stats[monsterStatsEnum.SPEED])  || //2.2.1 - the speed stat is different
 
 					(tempMonster.action.priority === speedContest.action.priority && //2.3.1 - the action priotity is equal
-						speedContest.monster.stats.speed === tempMonster.monster.stats.speed && //2.3.2 - the speed stat is equal,
-						_shuffleContest(speedContest, tempMonster, instance)) 			         //2.3.3 - use the a random id to difine priority
+					 speedContest.monster.stats[monsterStatsEnum.SPEED] === tempMonster.monster.stats[monsterStatsEnum.SPEED] && //2.3.2 - the speed stat is equal,
+					 _shuffleContest(speedContest, tempMonster, instance)) //2.3.3 - use the a random id to difine priority
 				) return true;
 
 				return false;
@@ -576,10 +570,9 @@ const fight = () => {
 		return sortedMonsters;
 	};
 
-	const _shuffleContest = (monster1, monster2, instance: instanceInterface): boolean => {
-		history.updateHistory(instance, {
-			logOption: "logSpeedContest",
-			context: "speedContest",//history.enumContext.SPEEDCONTEST, 
+	const _shuffleContest = (monster1: MonsterSpeedInterface, monster2: MonsterSpeedInterface, instance: instanceInterface): boolean => {
+		updateHistory(instance, {
+			context: historyContextEnum.SPEEDCONTEST,
 			content: [{ monster: monster1.monster }, { monster: monster2.monster }]
 		})
 		return monster1.shuffleID < monster2.shuffleID;
@@ -643,30 +636,29 @@ const fight = () => {
 		}
 	};
 
-	const _deathCheck = (instance, actionsByTarget): boolean => {
-		//if (_isNeededToCheckDeath(actionsByTarget)) {
-		const monster = _getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot]
-		if (monster.stats.hp <= 0) {
-			console.log("kill from ", actionsByTarget.sourceID, " to ", actionsByTarget.targetInfo);
-			_kill(instance, actionsByTarget);
-			return true;
+	const _deathCheck = (instance: instanceInterface, actionsByTarget: actionInterface): boolean => {
+		if (_isNeededToCheckDeath(actionsByTarget)) {
+			const monster = _getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot]
+			if (monster.stats[monsterStatsEnum.HP] <= 0) {
+				_kill(instance, actionsByTarget);
+				return true;
+			}
 		}
-		//}
 
 		return false;
 	};
 
 	const _isNeededToCheckDeath = (actionsByTarget: actionInterface): boolean => {
-		return (!actionsByTarget.targetInfo.targetedPlayerID == undefined);
+		if (actionsByTarget.targetInfo.targetedPlayerID) return true
+        else return false
 	};
 
-	const _kill = (instance, actionsByTarget) => {
-		_getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot].stats.hp = 0;
+	const _kill = (instance: instanceInterface, actionsByTarget: actionInterface) => {
+		_getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot].stats[monsterStatsEnum.HP] = 0;
 		_getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot].isAlive = false;
 
-		history.updateHistory(instance, {
-			logOption: "logInfo",
-			context: "kill",//history.enumContext.PLAYROUND, 
+		updateHistory(instance, {
+			context: historyContextEnum.KILL,
 			content: { monster: _getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot] }
 		})
 	};
@@ -828,14 +820,13 @@ const fight = () => {
 		let isAvailableToPlayRound = true
 		if (
 			monster.isAlive === false ||
-			monster.stats.hp <= 0 || // the monster is alive
+			monster.stats[monsterStatsEnum.HP] <= 0 || // the monster is alive
 			!_isOnBoard(instance, monsterID)   // the monster is on the board
 		) {
 			isAvailableToPlayRound = false
 		}
-		history.updateHistory(instance, {
-			logOption: "logInfo",
-			context: "playRound",//history.enumContext.PLAYROUND, 
+		updateHistory(instance, {
+			context: historyContextEnum.PLAYROUND,
 			content: { isAvailableToPlayRound: isAvailableToPlayRound, monster: monster, action: _getActionByMonsterID(instance, monsterID) }
 		})
 		return isAvailableToPlayRound;
@@ -851,43 +842,38 @@ const fight = () => {
 		const onBoardSourceMonsterIndex = player.onBoard.findIndex((onBoardMonster) => onBoardMonster.id === actionsByTarget.sourceID);
 		player.onBoard[onBoardSourceMonsterIndex] = player.team[teamTargetMonsterIndex];
 
-		history.updateHistory(instance, {
-			logOption: "logInfo",
-			context: "swap",//history.enumContext.SPEEDCONTEST, 
+		updateHistory(instance, {
+			context: historyContextEnum.SWAP,
 			content: { monster: sourceMonster, targetMonster: player.team[teamTargetMonsterIndex] }
 		});
 	};
 
-	const _doCalculDamage = (instance: instanceInterface, target: actionInterface, power) => {
-		const skill = target.skill;
-		const monsterSource = _getOnBoardMonsterByID(instance, target.sourceID);
-		const monsterTarget = _getPlayerByID(target.targetInfo.targetedPlayerID, instance).onBoard[target.targetInfo.spot];
+	const _doCalculDamage = (instance: instanceInterface, target: actionInterface, power: number): MonsterFightingInterface => {
+		const skill 		 = target.skill;
+		const monsterSource  = _getOnBoardMonsterByID(instance, target.sourceID);
+		const monsterTarget  = _getPlayerByID(target.targetInfo.targetedPlayerID, instance).onBoard[target.targetInfo.spot];
 		const typeEfficiency = _getTypeEfficiency(skill.type, monsterTarget.type);
-		const isSTAB = _isSTAB(monsterSource.type, skill.type);
+		const isSTAB 		 = _isSTAB(monsterSource.type, skill.type);
 
 		const hpChanges =
 			-(
 				(
-					(monsterSource.stats.attack * power) / // source
-					(monsterTarget.stats.def) // target
+					(monsterSource.stats[monsterStatsEnum.ATK] * power) / // source
+					(monsterTarget.stats[monsterStatsEnum.DEF]) // target
 				)
 			) *
 			(typeEfficiency * isSTAB); // multiplying factor
-		monsterTarget.stats.hp += hpChanges;
+		monsterTarget.stats[monsterStatsEnum.HP] += hpChanges;
 
-		history.updateHistory(instance, {
-			logOption: "logInfo",
-			context: "damage",//history.enumContext.SPEEDCONTEST, 
-			content: {
-				monster: monsterSource, skill: skill, typeEfficiency: typeEfficiency,
-				isSTAB: isSTAB, targetMonster: monsterTarget, statName: "HP", statChanges: hpChanges
-			}
-		})
-
+		updateHistory(instance, {
+			context: historyContextEnum.DAMAGE,
+			content: {monster: monsterSource, skill: skill, typeEfficiency: typeEfficiency,
+					  isSTAB: isSTAB, targetMonster: monsterTarget, statName: monsterStatsEnum.HP, statChanges: hpChanges}})
+					  
 		return monsterTarget;
 	};
 
-	const _isSTAB = (monsterTypes, skillType) => {
+	const _isSTAB = (monsterTypes: monsterType[], skillType: monsterType): number => {
 		monsterTypes.forEach((type) => {
 			if (type === skillType) {
 				return 1.25;
@@ -896,7 +882,7 @@ const fight = () => {
 		return 1;
 	};
 
-	const _getTypeAffinities = (type) => {
+	const _getTypeAffinities = (type: monsterType) => {
 		const affinities = {
 			fire: { fire: 1, mental: 1, neutral: 1 },
 			mental: { fire: 1, mental: 1, neutral: 2 },
@@ -905,7 +891,7 @@ const fight = () => {
 		return affinities[type.toString()];
 	};
 
-	const _getTypeEfficiency = (skillType, targetTypes) => {
+	const _getTypeEfficiency = (skillType: monsterType, targetTypes: monsterType[]): number => {
 		const affinities = _getTypeAffinities(skillType);
 		let efficiency = 1;
 
@@ -922,7 +908,7 @@ const fight = () => {
 		})
 	};
 
-	const _getActionByMonsterID = (instance: instanceInterface, monsterID): actionInterface => {
+	const _getActionByMonsterID = (instance: instanceInterface, monsterID: string): actionInterface => {
 		for (let index = 0; index < instance.players.length; index++) {
 			const player = instance.players[index];
 
@@ -932,12 +918,8 @@ const fight = () => {
 		}
 	};
 
-	const _getTargeting = (
-		instance: instanceInterface,
-		actionFromMonster: actionInterface,
-		effectTargetType: string
-	) => {
-		const self = () => {
+	const _getTargeting = (instance: instanceInterface, actionFromMonster: actionInterface, effectTargetType: string) => {
+		const self = (): actionInterface[] => {
 			return [
 				{
 					sourceID: actionFromMonster.sourceID,
@@ -955,7 +937,7 @@ const fight = () => {
 
 		};
 
-		const ally = () => {
+		const ally = (): actionInterface[] => {
 			const ally = _getAlly(instance, actionFromMonster.sourceID);
 
 			if (ally === undefined) return [];
@@ -972,7 +954,7 @@ const fight = () => {
 
 		};
 
-		const allies = () => {
+		const allies = (): actionInterface[] => {
 			const effectListByTarget = [];
 			const sourceMonster = _getOnBoardMonsterByID(
 				instance,
@@ -993,7 +975,7 @@ const fight = () => {
 			return effectListByTarget;
 		};
 
-		const ennemies = () => {
+		const ennemies = (): actionInterface[] => {
 			const effectListByTarget = []
 			const targetsList = _getEnnemies(instance, actionFromMonster.sourceID);
 
@@ -1011,7 +993,7 @@ const fight = () => {
 			return effectListByTarget;
 		};
 
-		const single = () => {
+		const single = (): actionInterface[] => {
 			let target = _getMonsterBySpot(instance, actionFromMonster.targetInfo);
 
 			if (target === undefined || !target.isAlive) {
@@ -1020,7 +1002,7 @@ const fight = () => {
 					actionFromMonster.targetInfo.spot
 				); // get the other spot
 				target = _getMonsterBySpot(instance, actionFromMonster.targetInfo);
-				if (target === undefined || !target.isAlive) return { targets: [] }; // if empty too return []
+				if (target === undefined || !target.isAlive) return []; // if empty too return []
 
 				return [
 					{
@@ -1043,7 +1025,7 @@ const fight = () => {
 			]
 		};
 
-		const singleBackstage = () => {
+		const singleBackstage = (): actionInterface[] => {
 			return [
 				{
 					sourceID: actionFromMonster.sourceID,
@@ -1053,7 +1035,7 @@ const fight = () => {
 			];
 		};
 
-		const double = () => {
+		const double = (): actionInterface[] => {
 			const effectListByTarget = []
 			_getPlayerByID(actionFromMonster.targetInfo.targetedPlayerID, instance).onBoard.forEach(
 				(monster) => {
@@ -1071,7 +1053,7 @@ const fight = () => {
 			return effectListByTarget;
 		};
 
-		const all = () => {
+		const all = (): actionInterface[] => {
 			const effectListByTarget = []
 			let targetsList = [];
 
@@ -1107,7 +1089,7 @@ const fight = () => {
 		return TargetTypes[effectTargetType]();
 	};
 
-	const _getMonsterBySpot = (instance: instanceInterface, spotInfo: targetInfoType) => {
+	const _getMonsterBySpot = (instance: instanceInterface, spotInfo: targetInfoType): MonsterFightingInterface => {
 		return _getPlayerByID(spotInfo.targetedPlayerID, instance).onBoard[spotInfo.spot];
 	};
 
@@ -1116,7 +1098,7 @@ const fight = () => {
 	 * @param {*} spot = to 1 or 0 only
 	 * @returns change spot 0 to 1, and 1 to 0
 	 */
-	const _getOtherSpot = (spot) => {
+	const _getOtherSpot = (spot: number): number => {
 		return (spot + 1) % 2;
 	};
 
@@ -1126,14 +1108,14 @@ const fight = () => {
 	 * @param {*} monsterID
 	 * @returns empty array if no ally on board: []
 	 */
-	const _getAlly = (instance: instanceInterface, monsterID: string) => {
+	const _getAlly = (instance: instanceInterface, monsterID: string): MonsterFightingInterface => {
 		for (let index = 0; index < instance.players.length; index++) {
 			const player = instance.players[index];
 			if (player.id === _getOnBoardMonsterByID(instance, monsterID).playerID) return player.onBoard.find((monster) => monster.id !== monsterID)
 		}
 	};
 
-	const _getEnnemies = (instance: instanceInterface, monsterID: string) => {
+	const _getEnnemies = (instance: instanceInterface, monsterID: string): MonsterFightingInterface[] => {
 		for (let index = 0; index < instance.players.length; index++) {
 			const player = instance.players[index];
 			if (player.onBoard.every((monster) => monster.id !== monsterID)) {
@@ -1142,7 +1124,7 @@ const fight = () => {
 		}
 	};
 
-	const _getOnBoardMonsterByID = (instance: instanceInterface, monsterID: string) => {
+	const _getOnBoardMonsterByID = (instance: instanceInterface, monsterID: string): MonsterFightingInterface => {
 		for (let index = 0; index < instance.players.length; index++) {
 			const player = instance.players[index];
 
@@ -1153,7 +1135,7 @@ const fight = () => {
 		return {} as MonsterFightingInterface;
 	};
 
-	const _isOnBoard = (instance: instanceInterface, monsterID) => {
+	const _isOnBoard = (instance: instanceInterface, monsterID: string): boolean => {
 		for (let index = 0; index < instance.players.length; index++) {
 			const player = instance.players[index];
 			if (player.team.some((monster) => monster.id === monsterID)) return (player.onBoard.some((monster) => monster.id === monsterID))
@@ -1167,8 +1149,7 @@ const fight = () => {
 	 * @param {*} monsterID
 	 * @returns -1 for false
 	 */
-	const _getSpotByMonsterID = (instance: instanceInterface, monsterID: string) => {
-
+	const _getSpotByMonsterID = (instance: instanceInterface, monsterID: string): number => {
 		return _getPlayerByID(_getOnBoardMonsterByID(instance, monsterID).playerID, instance).onBoard.findIndex((onBoardMonster) => monsterID === onBoardMonster.id);
 	};
 
