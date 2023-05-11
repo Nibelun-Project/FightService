@@ -1,5 +1,6 @@
 import { MonsterFightingInterface } from "./monster";
 import { SkillInterface } from "./skill";
+import { fightInfoInterface } from "./history"
 
 enum effectTypeEnum {
 	DAMAGE = "damage",
@@ -53,7 +54,7 @@ interface playerFightingInterface {
 interface instanceInterface {
 	id: string;
 	players: playerFightingInterface[];
-	history: [];
+	fightInfo: fightInfoInterface;
 }
 
 export {
