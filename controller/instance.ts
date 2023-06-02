@@ -106,6 +106,12 @@ const isAvailableToPlayRound = (instance: instanceInterface, monsterID: string):
     return isAvailableToPlayRound;
 };
 
+const clearActions = (instance: instanceInterface) => {
+    instance.players.forEach((player) => {
+        player.actions = []
+    })
+};
+
 export {
     getMonsterBySpot,
     getOtherSpot,
@@ -117,5 +123,6 @@ export {
     getActionByMonsterID,
     getPlayerByID,
     isActionsFilled,
-    isAvailableToPlayRound
+    isAvailableToPlayRound,
+    clearActions
 }
