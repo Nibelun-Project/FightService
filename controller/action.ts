@@ -2,8 +2,9 @@ import { actionInterface, instanceInterface } from "../interfaces/fight";
 import { historyContextEnum } from "../interfaces/history.js";
 import { MonsterFightingInterface, monsterStatsEnum, monsterType } from "../interfaces/monster.js";
 import { updateHistory } from "./history.js";
-import { getOnBoardMonsterByID, getPlayerByID } from "./instance.js";
-
+import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
+import { passif } from "./passif.js";
+import { getTargeting } from "./targeting.js";
 
 
 const effectsType = () => {
@@ -48,21 +49,21 @@ const effectsType = () => {
     return { damage, balance, heal, swap };
 };
 
-/*const _doAction = (instance: instanceInterface, monsterID: string) => {
+const doAction = (instance: instanceInterface, monsterID: string) => {
     if (isAvailableToPlayRound(instance, monsterID)) {
         const actionFromMonster = getActionByMonsterID(instance, monsterID);
 
         //Loop through skill effects			
         actionFromMonster.skill.effects.forEach((effect) => {
-            const effectTargets = _getTargeting(instance, actionFromMonster, effect.targetType);
+            const effectTargets = getTargeting(instance, actionFromMonster, effect.targetType);
             effectTargets.forEach((target) => {
                 passif(effectsType()[effect.type], target, effect.power, effect.type, instance)
-                return !_deathCheck(instance, target);
+                return !deathCheck(instance, target);
             })
 
         });
     }
-};*/
+};
 
 const deathCheck = (instance: instanceInterface, actionsByTarget: actionInterface): boolean => {
     if (_isNeededToCheckDeath(actionsByTarget)) {
@@ -164,4 +165,5 @@ const _getTypeEfficiency = (skillType: monsterType, targetTypes: monsterType[]):
 export {
     effectsType,
     deathCheck,
+    doAction,
 }
