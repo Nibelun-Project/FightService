@@ -1,5 +1,7 @@
 import { actionInterface, instanceInterface, playerFightingInterface, targetInfoType } from "../interfaces/fight";
-import { MonsterFightingInterface } from "../interfaces/monster";
+import { historyContextEnum } from "../interfaces/history.js";
+import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
+import { updateHistory } from "./history.js";
 
 
 const getMonsterBySpot = (instance: instanceInterface, spotInfo: targetInfoType): MonsterFightingInterface => {
@@ -85,6 +87,25 @@ const isActionsFilled = (currInstance: instanceInterface): boolean => {
     return currInstance.players.every((player) => player.actions.length > 0)
 };
 
+const isAvailableToPlayRound = (instance: instanceInterface, monsterID: string): boolean => {
+    const monster =getOnBoardMonsterByID(instance, monsterID)
+    let isAvailableToPlayRound = true
+    if (
+        monster.isAlive === false ||
+        monster.stats[monsterStatsEnum.HP] <= 0 || // the monster is alive
+        !isOnBoard(instance, monsterID)   // the monster is on the board
+    ) {
+        isAvailableToPlayRound = false
+    }
+
+    updateHistory(instance, {
+        context: historyContextEnum.PLAYROUND,
+        content: { isAvailableToPlayRound: isAvailableToPlayRound, monster: monster, action: getActionByMonsterID(instance, monsterID) }
+    })
+    
+    return isAvailableToPlayRound;
+};
+
 export {
     getMonsterBySpot,
     getOtherSpot,
@@ -95,5 +116,6 @@ export {
     getSpotByMonsterID,
     getActionByMonsterID,
     getPlayerByID,
-    isActionsFilled
+    isActionsFilled,
+    isAvailableToPlayRound
 }
