@@ -7,6 +7,24 @@ import { passif } from "./passif.js";
 import { getTargeting } from "./targeting.js";
 
 
+
+
+const doAction = (instance: instanceInterface, monsterID: string) => {
+    if (isAvailableToPlayRound(instance, monsterID)) {
+        const actionFromMonster = getActionByMonsterID(instance, monsterID);
+
+        //Loop through skill effects			
+        actionFromMonster.skill.effects.forEach((effect) => {
+            const effectTargets = getTargeting(instance, actionFromMonster, effect.targetType);
+            effectTargets.forEach((target) => {
+                passif(effectsType()[effect.type], target, effect.power, effect.type, instance)
+                return !deathCheck(instance, target);
+            })
+
+        });
+    }
+};
+
 const effectsType = () => {
     const damage = (instance: instanceInterface, actionsByTarget: actionInterface, power: number) => {
         console.log(
@@ -47,49 +65,6 @@ const effectsType = () => {
     };
 
     return { damage, balance, heal, swap };
-};
-
-const doAction = (instance: instanceInterface, monsterID: string) => {
-    if (isAvailableToPlayRound(instance, monsterID)) {
-        const actionFromMonster = getActionByMonsterID(instance, monsterID);
-
-        //Loop through skill effects			
-        actionFromMonster.skill.effects.forEach((effect) => {
-            const effectTargets = getTargeting(instance, actionFromMonster, effect.targetType);
-            effectTargets.forEach((target) => {
-                passif(effectsType()[effect.type], target, effect.power, effect.type, instance)
-                return !deathCheck(instance, target);
-            })
-
-        });
-    }
-};
-
-const deathCheck = (instance: instanceInterface, actionsByTarget: actionInterface): boolean => {
-    if (_isNeededToCheckDeath(actionsByTarget)) {
-        const monster = getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot]
-        if (monster.stats[monsterStatsEnum.HP] <= 0) {
-            _kill(instance, actionsByTarget);
-            return true;
-        }
-    }
-
-    return false;
-};
-
-const _isNeededToCheckDeath = (actionsByTarget: actionInterface): boolean => {
-    if (actionsByTarget.targetInfo.targetedPlayerID) return true
-    else return false
-};
-
-const _kill = (instance: instanceInterface, actionsByTarget: actionInterface) => {
-    getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot].stats[monsterStatsEnum.HP] = 0;
-    getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot].isAlive = false;
-
-    updateHistory(instance, {
-        context: historyContextEnum.KILL,
-        content: { monster: getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot] }
-    })
 };
 
 const _swapOnBoard = (instance: instanceInterface, actionsByTarget: actionInterface) => {
@@ -160,6 +135,33 @@ const _getTypeEfficiency = (skillType: monsterType, targetTypes: monsterType[]):
     });
 
     return efficiency;
+};
+
+const deathCheck = (instance: instanceInterface, actionsByTarget: actionInterface): boolean => {
+    if (_isNeededToCheckDeath(actionsByTarget)) {
+        const monster = getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot]
+        if (monster.stats[monsterStatsEnum.HP] <= 0) {
+            _kill(instance, actionsByTarget);
+            return true;
+        }
+    }
+
+    return false;
+};
+
+const _isNeededToCheckDeath = (actionsByTarget: actionInterface): boolean => {
+    if (actionsByTarget.targetInfo.targetedPlayerID) return true
+    else return false
+};
+
+const _kill = (instance: instanceInterface, actionsByTarget: actionInterface) => {
+    getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot].stats[monsterStatsEnum.HP] = 0;
+    getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot].isAlive = false;
+
+    updateHistory(instance, {
+        context: historyContextEnum.KILL,
+        content: { monster: getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot] }
+    })
 };
 
 export {
