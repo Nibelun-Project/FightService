@@ -7,7 +7,7 @@ import { initFightInfo, updateHistory } from "./history.js";
 const getTeam = (playerID): MonsterFightingInterface[] => {
 	return [
 		{
-			id: 1 + playerID,
+			id: "ronka" + playerID.split("")[23],
 			name: "ronkarétoal1",
 			type: ["fire", "mental"],
 			stats: {
@@ -34,12 +34,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					type: "fire",
 				},
 				effects: [
-					{
-						targetType: "single",
-						side: "to",
-						type: "damage",
-						power: 10000000,
-					},
+					
 				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
@@ -51,8 +46,8 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "double", type: "damage", power: 45 }],
-					targetType: "double",
+					effects: [{ targetType: "self", type: "damage", power: 200 }],
+					targetType: "self",
 					priority: 100,
 				},
 				{
@@ -61,8 +56,8 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "fire",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "single", type: "damage", power: 45 }],
-					targetType: "single",
+					effects: [{ targetType: "ally", type: "damage", power: 200 }],
+					targetType: "ally",
 					priority: 100,
 				},
 				{
@@ -72,24 +67,21 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType: "single", type: "damage", power: 10 },
-						{ targetType: "single", type: "damage", power: 10 },
-						{ targetType: "single", type: "damage", power: 10 },
+						{ targetType: "allies", type: "damage", power: 200 }
 					],
-					targetType: "single",
+					targetType: "allies",
 					priority: 100,
 				},
 				{
-					name: "volcano",
+					name: "volcano3",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "fire",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType: "self", type: "damage", power: 15 },
-						{ targetType: "single", type: "damage", power: 85 },
+						{ targetType: "ennemies", type: "damage", power: 200 }
 					],
-					targetType: "single",
+					targetType: "ennemies",
 					priority: 100,
 				},
 			],
@@ -97,7 +89,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			isAlive: true,
 		},
 		{
-			id: 2 + playerID,
+			id: "étoa2" + playerID.split("")[23],
 			name: "étoalronkaré2",
 			isAlive: true,
 			type: ["fire", "mental"],
@@ -128,12 +120,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					to: "ally",
 				},
 				effects: [
-					{
-						targetType: "single",
-						side: "from",
-						type: "damage",
-						power: 1000,
-					},
+
 				],
 			},
 			skills: [
@@ -143,8 +130,8 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "double", type: "damage", power: 45 }, { targetType: "ally", type: "damage", power: 15 }],
-					targetType: "double",
+					effects: [{ targetType: "single", type: "damage", power: 200 }],
+					targetType: "single",
 					priority: 100,
 				},
 				{
@@ -153,8 +140,8 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "single", type: "damage", power: 45 }],
-					targetType: "single",
+					effects: [{ targetType: "double", type: "damage", power: 200 }],
+					targetType: "double",
 					priority: 100,
 				},
 				{
@@ -164,22 +151,19 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType: "single", type: "damage", power: 10 },
-						{ targetType: "single", type: "damage", power: 10 },
-						{ targetType: "single", type: "damage", power: 10 },
+						{ targetType: "all", type: "damage", power: 200 }
 					],
-					targetType: "single",
+					targetType: "all",
 					priority: 100,
 				},
 				{
-					name: "volcano",
+					name: "volcano2",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType: "self", type: "damage", power: 15 },
-						{ targetType: "single", type: "damage", power: 85 },
+						{ targetType: "single", type: "damage", power: 200 }
 					],
 					targetType: "single",
 					priority: 100,
@@ -188,7 +172,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			playerID: playerID.toString(),
 		},
 		{
-			id: 3 + playerID,
+			id: 3 + playerID.split("")[23],
 			name: "ronkarétoal3",
 			isAlive: true,
 			type: ["fire", "mental"],
@@ -220,12 +204,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					to: "ally",
 				},
 				effects: [
-					{
-						targetType: "single",
-						side: "to",
-						type: "damage",
-						power: 15,
-					},
+					
 				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
@@ -258,9 +237,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType: "single", type: "damage", power: 10 },
-						{ targetType: "single", type: "damage", power: 10 },
-						{ targetType: "single", type: "damage", power: 10 },
+						{ targetType: "single", type: "damage", power: 10 }
 					],
 					targetType: "single",
 					priority: 100,
@@ -272,8 +249,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType: "self", type: "damage", power: 15 },
-						{ targetType: "single", type: "damage", power: 85 },
+						{ targetType: "single", type: "damage", power: 85 }
 					],
 					targetType: "single",
 					priority: 100,
@@ -282,7 +258,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			playerID: playerID.toString(),
 		},
 		{
-			id: 4 + playerID,
+			id: 4 + playerID.split("")[23],
 			name: "ronkarétoal4",
 			isAlive: true,
 			type: ["fire", "mental"],
@@ -314,12 +290,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					to: "ally",
 				},
 				effects: [
-					{
-						targetType: "single",
-						side: "to",
-						type: "damage",
-						power: 15,
-					},
+					
 				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
