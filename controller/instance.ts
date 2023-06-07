@@ -377,7 +377,7 @@ const buildInstance = (matchs: playerFightingInterface[]) => {
         match["onBoard"] = [getTeam(match.id)[0], getTeam(match.id)[1]];
         match["actions"] = [];
     });
-    const fightId = getNewFightId();
+    const fightId = _getNewFightId();
     const instance: instanceInterface = {
         id: fightId,
         players: matchs,
@@ -387,7 +387,7 @@ const buildInstance = (matchs: playerFightingInterface[]) => {
     return instance;
 }
 
-const getNewFightId = (): string => {
+const _getNewFightId = (): string => {
     return "fid_" + Date.now().toString();
 };
 
@@ -513,19 +513,18 @@ const applyChanges = (instance: instanceInterface) => {
 
 
 export {
-    getMonsterBySpot,
-    getOtherSpot,
-    getAlly,
-    getEnnemies,
-    getOnBoardMonsterByID,
-    isOnBoard,
-    getSpotByMonsterID,
-    getActionByMonsterID,
-    getPlayerByID,
-    isActionsFilled,
-    isAvailableToPlayRound,
-    clearActions,
-    applyChanges,
-    getNewFightId,
-    buildInstance
+	getMonsterBySpot,
+	getOtherSpot,
+	getAlly,
+	getEnnemies,
+	getOnBoardMonsterByID,
+	isOnBoard,
+	getSpotByMonsterID,
+	getActionByMonsterID,
+	getPlayerByID,
+	isActionsFilled,
+	isAvailableToPlayRound,
+	clearActions,
+	applyChanges,
+	buildInstance
 }

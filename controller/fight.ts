@@ -1,7 +1,7 @@
 import { instanceInterface, playerFightingInterface } from "../interfaces/fight";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
-import { applyChanges, buildInstance, clearActions, getNewFightId, getPlayerByID, isActionsFilled } from "./instance.js";
+import { applyChanges, buildInstance, clearActions, getPlayerByID, isActionsFilled } from "./instance.js";
 import { doAction } from "./action.js";
 
 
