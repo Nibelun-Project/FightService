@@ -374,7 +374,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 const buildInstance = (matchs: playerFightingInterface[]) => {
     matchs.forEach((match) => {
         match["team"] = getTeam(match.id);
-        match["onBoard"] = [getTeam(match.id)[0], getTeam(match.id)[1]];
+        match["onBoard"] = [match.team[0], match.team[1]];
         match["actions"] = [];
     });
     const fightId = _getNewFightId();
@@ -510,6 +510,13 @@ const applyChanges = (instance: instanceInterface) => {
     })
 };
 
+const isTargetable = (monster: MonsterFightingInterface): boolean => {
+	if (monster === undefined || !monster.isAlive) {
+		return false
+	}
+	return true
+}
+
 
 
 export {
@@ -526,5 +533,6 @@ export {
 	isAvailableToPlayRound,
 	clearActions,
 	applyChanges,
-	buildInstance
+	buildInstance,
+	isTargetable
 }
