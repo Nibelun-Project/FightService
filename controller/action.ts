@@ -167,6 +167,9 @@ const _kill = (instance: instanceInterface, actionsByTarget: actionInterface) =>
 
 const _checkEndgame = (instance: instanceInterface, playerID: string) => {
     if (getPlayerByID(playerID, instance).team.every((monster) => monster.isAlive == false)) {
+        instance.fightInfo.endgame = true;
+        instance.fightInfo.winner = instance.players.find((player) => player.id != playerID).id
+
         updateHistory(instance, {
             context: historyContextEnum.ENDGAME,
             content: { winner: playerID }

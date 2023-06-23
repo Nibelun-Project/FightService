@@ -14,6 +14,8 @@ enum historyContextEnum {
 interface fightInfoInterface {
 	round:   number,
 	history: historyInterface[][]
+    endgame: boolean,
+    winner?: string
 }
 
 interface historyInterface {

@@ -8,7 +8,8 @@ const HISTORY_NAME = "fightInfo";
 const initFightInfo = (): fightInfoInterface => {
     return { 
              round: 0,
-             history: []
+             history: [],
+             endgame: false
             };
 }
 
