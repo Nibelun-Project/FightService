@@ -59,6 +59,20 @@ const comm = (io) => {
 		} else return 3;
 	};
 
+	const swapActions = (swapActions, playerID, fightID) => {
+		if (playerSockets[playerID]) {
+			const { status, matchInfo } = fightModule.doSwap(
+				swapActions,
+				fightID
+			);
+			if (status >= 2)
+				return _socketTo(matchInfo, "swap-done", matchInfo, status);
+			else if (status >= 1)
+				return _socketTo(playerID, "swap-pending", "", status);
+			else return status;
+		} else return 3;
+	};
+
 	const _socketTo = (target, emit, data, status) => {
 		if (typeof target !== "object" && typeof target === "string")
 			io.to(playerSockets[target], emit, data);
@@ -70,7 +84,7 @@ const comm = (io) => {
 		return status;
 	};
 
-	return { init, actions };
+	return { init, actions, swapActions };
 };
 
 export { comm };

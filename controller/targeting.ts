@@ -5,7 +5,7 @@ const getTargeting = (instance: instanceInterface, actionFromMonster: actionInte
     const self = (): actionInterface[] => {
         console.log("Self");
         const self = getOnBoardMonsterByID(instance, actionFromMonster.sourceID)
-        if (!isTargetable(self)) return [];        
+        if (!isTargetable(self)) return [];
         return [
             {
                 sourceID: actionFromMonster.sourceID,
@@ -23,7 +23,7 @@ const getTargeting = (instance: instanceInterface, actionFromMonster: actionInte
 
     const ally = (): actionInterface[] => {
         console.log("Ally");
-        const ally = getAlly(instance, actionFromMonster.sourceID);        
+        const ally = getAlly(instance, actionFromMonster.sourceID);
         if (!isTargetable(ally)) return [];
         return [
             {
@@ -88,14 +88,14 @@ const getTargeting = (instance: instanceInterface, actionFromMonster: actionInte
         console.log("Single");
 
         let target = getMonsterBySpot(instance, actionFromMonster.targetInfo);
-
-        if (isTargetable(target)) {
+        //DAMIEN VA REVIEW CE MAUVAIS CODE
+        if (!isTargetable(target)) {
             // if spot is empty
             actionFromMonster.targetInfo.spot = getOtherSpot(
                 actionFromMonster.targetInfo.spot
             ); // get the other spot
             target = getMonsterBySpot(instance, actionFromMonster.targetInfo);
-            if (isTargetable(target)) return []; // if empty too return []
+            if (!isTargetable(target)) return []; // if empty too return []
 
             return [
                 {
@@ -136,7 +136,7 @@ const getTargeting = (instance: instanceInterface, actionFromMonster: actionInte
         const effectListByTarget = []
         getPlayerByID(actionFromMonster.targetInfo.targetedPlayerID, instance).onBoard.forEach(
             (monster) => {
-                if(isTargetable(monster)) {
+                if (isTargetable(monster)) {
                     effectListByTarget.push({
                         sourceID: actionFromMonster.sourceID,
                         targetInfo: {

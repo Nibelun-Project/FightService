@@ -1,8 +1,10 @@
-import { instanceInterface, playerFightingInterface } from "../interfaces/fight";
+import { actionInterface, instanceInterface, playerFightingInterface } from "../interfaces/fight";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
 import { applyChanges, buildInstance, clearActions, getPlayerByID, isActionsFilled } from "./instance.js";
-import { doAction } from "./action.js";
+import { deathCheck, doAction, effectsType } from "./action.js";
+import { getTargeting } from "./targeting.js";
+import { passif } from "./passif.js";
 
 
 const fight = () => {
@@ -15,7 +17,7 @@ const fight = () => {
 	};
 
 	const waitActions = (actions, playerID, fightID) => {
-		const currInstance = _getInstanceByID(fightID);
+		const currInstance = getInstanceByID(fightID);
 		if (!currInstance) return { status: 3, match: null };
 		getPlayerByID(playerID, currInstance).actions = actions;
 
@@ -32,13 +34,13 @@ const fight = () => {
 			};
 	};
 
-	const _getInstanceByID = (fightID: string): instanceInterface => {
+	const getInstanceByID = (fightID: string): instanceInterface => {
 		return mapFights.find((instance) => instance.id === fightID);
 	};
 
 	const _playRound = (instance: instanceInterface): instanceInterface => {
 		initHistoryRound(instance)
-		const sortedListOfMonstersID = speedContest(instance);		
+		const sortedListOfMonstersID = speedContest(instance);
 		sortedListOfMonstersID.forEach((monsterID) => {
 			doAction(instance, monsterID);
 		});
@@ -48,7 +50,24 @@ const fight = () => {
 		return instance;
 	};
 
-	return { ready, waitActions };
+	const doSwap = (swapActions: actionInterface[], fightID: string) => {
+		const instance = getInstanceByID(fightID)
+		for (let index = 0; index < swapActions.length; index++) {
+			const action = swapActions[index];
+
+			action.skill.effects.forEach((effect) => {
+				const effectTargets = getTargeting(instance, action, effect.targetType);
+
+				effectTargets.forEach((target) => {
+					passif(effectsType()[effect.type], target, effect.power, effect.type, instance);
+					return !deathCheck(instance, target);
+				})
+			});
+		}
+		return { status: 2, matchInfo: instance }
+	}
+
+	return { ready, waitActions, doSwap };
 };
 
 export default fight;

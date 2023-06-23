@@ -29,6 +29,19 @@ const combatRouter = (communicationInstance) => {
 		} else res.status(400).send("Missing arguments");
 	});
 
+	router.post("/swaps", (req, res) => {
+		if (req.body.swapActions && req.body.playerID && req.body.fightID) {
+			const controllerRes = fightStatus(
+				communicationInstance.swapActions(
+					req.body.swapActions,
+					req.body.playerID,
+					req.body.fightID
+				)
+			);
+			res.status(controllerRes.status).send(controllerRes.message);
+		} else res.status(400).send("Missing arguments");
+	});
+
 	return router;
 };
 
