@@ -89,13 +89,13 @@ const getTargeting = (instance: instanceInterface, actionFromMonster: actionInte
 
         let target = getMonsterBySpot(instance, actionFromMonster.targetInfo);
 
-        if (isTargetable(target)) {
+        if (!isTargetable(target)) {
             // if spot is empty
             actionFromMonster.targetInfo.spot = getOtherSpot(
                 actionFromMonster.targetInfo.spot
             ); // get the other spot
             target = getMonsterBySpot(instance, actionFromMonster.targetInfo);
-            if (isTargetable(target)) return []; // if empty too return []
+            if (!isTargetable(target)) return []; // if empty too return []
 
             return [
                 {

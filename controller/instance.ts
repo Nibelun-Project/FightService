@@ -7,7 +7,7 @@ import { initFightInfo, updateHistory } from "./history.js";
 const getTeam = (playerID): MonsterFightingInterface[] => {
 	return [
 		{
-			id: "ronka" + playerID.split("")[23],
+			id: "ronka" + playerID,
 			name: "ronkarétoal1",
 			type: ["fire", "mental"],
 			stats: {
@@ -31,7 +31,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				trigger: {
 					when: "after",
 					from: "self",
-					type: "fire",
+					type: "mental",
 				},
 				effects: [
 					
@@ -47,7 +47,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [{ targetType: "self", type: "damage", power: 200 }],
-					targetType: "self",
+					targetType: "single",
 					priority: 100,
 				},
 				{
@@ -89,7 +89,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			isAlive: true,
 		},
 		{
-			id: "étoa2" + playerID.split("")[23],
+			id: "étoa2" + playerID,
 			name: "étoalronkaré2",
 			isAlive: true,
 			type: ["fire", "mental"],
@@ -114,10 +114,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				name: "pâs2",
 				description: "okdescript ion",
 				trigger: {
-					when: "before",
-					actionType: "damage",
-					from: "ennemies",
-					to: "ally",
+					when: "after",
+					from: "self",
+					type: "mental",
 				},
 				effects: [
 
@@ -172,7 +171,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			playerID: playerID.toString(),
 		},
 		{
-			id: 3 + playerID.split("")[23],
+			id: 3 + playerID,
 			name: "ronkarétoal3",
 			isAlive: true,
 			type: ["fire", "mental"],
@@ -197,11 +196,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			image: "../ronk.png",
 			passive: {
 				trigger: {
-					when: "before",
-					actionType: "damage",
-					from: "ally",
-					type: "neutral",
-					to: "ally",
+					when: "after",
+					from: "self",
+					type: "mental",
 				},
 				effects: [
 					
@@ -258,7 +255,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			playerID: playerID.toString(),
 		},
 		{
-			id: 4 + playerID.split("")[23],
+			id: 4 + playerID,
 			name: "ronkarétoal4",
 			isAlive: true,
 			type: ["fire", "mental"],
@@ -283,11 +280,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			image: "../ronk.png",
 			passive: {
 				trigger: {
-					when: "before",
-					actionType: "damage",
-					from: "ally",
-					type: "neutral",
-					to: "ally",
+					when: "after",
+					from: "self",
+					type: "mental",
 				},
 				effects: [
 					
@@ -361,6 +356,13 @@ const buildInstance = (matchs: playerFightingInterface[]) => {
 const _getNewFightId = (): string => {
     return "fid_" + Date.now().toString();
 };
+
+const clearBoardBeforeRound = (instance: instanceInterface) => {
+	instance.players.forEach((player) => {
+		player.onBoard = player.onBoard.filter((monster) => _isAlive(monster))
+		player.actions = player.actions.filter((action) => _isAlive(getOnBoardMonsterByID(instance, action.sourceID)) ) 
+	})
+}
 
 const getMonsterBySpot = (instance: instanceInterface, spotInfo: targetInfoType): MonsterFightingInterface => {
     return getPlayerByID(spotInfo.targetedPlayerID, instance).onBoard[spotInfo.spot];
@@ -482,6 +484,13 @@ const applyChanges = (instance: instanceInterface) => {
 };
 
 const isTargetable = (monster: MonsterFightingInterface): boolean => {
+	if (!_isAlive(monster)) {
+		return false
+	}
+	return true
+}
+
+const _isAlive = (monster: MonsterFightingInterface): boolean => {
 	if (monster === undefined || !monster.isAlive) {
 		return false
 	}
@@ -505,5 +514,6 @@ export {
 	clearActions,
 	applyChanges,
 	buildInstance,
-	isTargetable
+	isTargetable,
+	clearBoardBeforeRound
 }
