@@ -46,7 +46,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "self", type: "damage", power: 200 }],
+					effects: [{ targetType: "single", type: "damage", power: 200 }],
 					targetType: "single",
 					priority: 100,
 				},
