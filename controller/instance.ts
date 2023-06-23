@@ -198,7 +198,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			image: "../ronk.png",
 			passive: {
 				trigger: {
-					when: "before",
+				when: "before",
 					actionType: "damage",
 					from: "ally",
 					type: "mental",
@@ -363,6 +363,13 @@ const _getNewFightId = (): string => {
 	return "fid_" + Date.now().toString();
 };
 
+const clearBoardBeforeRound = (instance: instanceInterface) => {
+	instance.players.forEach((player) => {
+		player.onBoard = player.onBoard.filter((monster) => _isAlive(monster))
+		player.actions = player.actions.filter((action) => _isAlive(getOnBoardMonsterByID(instance, action.sourceID)) ) 
+	})
+}
+
 const getMonsterBySpot = (instance: instanceInterface, spotInfo: targetInfoType): MonsterFightingInterface => {
 	return getPlayerByID(spotInfo.targetedPlayerID, instance).onBoard[spotInfo.spot];
 };
@@ -483,6 +490,13 @@ const applyChanges = (instance: instanceInterface) => {
 };
 
 const isTargetable = (monster: MonsterFightingInterface): boolean => {
+	if (!_isAlive(monster)) {
+		return false
+	}
+	return true
+}
+
+const _isAlive = (monster: MonsterFightingInterface): boolean => {
 	if (monster === undefined || !monster.isAlive) {
 		return false
 	}
@@ -504,5 +518,6 @@ export {
 	clearActions,
 	applyChanges,
 	buildInstance,
-	isTargetable
+	isTargetable,
+	clearBoardBeforeRound
 }

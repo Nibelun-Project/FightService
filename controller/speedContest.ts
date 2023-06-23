@@ -13,15 +13,7 @@ const speedContest = (instance: instanceInterface): string[] => {
     return _getPlacesOnRound(tempMonstersList, instance);
 };
 
-/**
- *
- * @param {*} instance
- * @returns [{shuffleID: 1,
- * 			  monster:   {...},
- * 			  action:    {...}
- * 			 },
- * 			 {...}]
- */
+
 const _prepareMonstersToSpeedContest = (instance: instanceInterface): MonsterSpeedInterface[] => {
     //1 - set an array with all the monsters on the board
     let tempMonstersList = [];
@@ -40,10 +32,6 @@ const _prepareMonstersToSpeedContest = (instance: instanceInterface): MonsterSpe
     return tempMonstersList;
 };
 
-/**
- * @param {*} tempMonstersList array of all monsters on the board
- * @returns array of monster and random id, look like: [{monster, shuffleID}, {...}]
- */
 const _shuffleMonsters = (tempMonstersList: MonsterFightingInterface[]): MonsterSpeedInterface[] => {
     //1 - create array of "n°", look like: [1, 2, 3, 4]
     const shuffleIndicators: number[] = [];
@@ -52,14 +40,14 @@ const _shuffleMonsters = (tempMonstersList: MonsterFightingInterface[]): Monster
     }
 
     const _shuffleArray = (array: number[]): number[] => {
-        const _reverseItem = (list, id1, id2) => {
+        const _reverseItem = (list: number[], id1: number, id2: number) => {
             const temp = list[id1];
             list[id1] = list[id2];
             list[id2] = temp;
         };
 
         //if the ally on the left get a lower priority switch with the ally
-        const _allyPriority = (id1, id2) => {
+        const _allyPriority = (id1: number, id2: number) => {
             if (array[id1] > array[id2]) {
                 _reverseItem(array, id1, id2);
             }
@@ -99,7 +87,7 @@ const _shuffleMonsters = (tempMonstersList: MonsterFightingInterface[]): Monster
 
 /**
  * @param {*} speedContestTempsList array of monster and random id, look like: [{monster, contestID}, {...}]
- * @returns array of monster in the order they will play there turn.
+ * @returns array of monsterID in the order they will play there turn.
  */
 const _getPlacesOnRound = (speedContestTempsList: MonsterSpeedInterface[], instance: instanceInterface): string[] => {
     let sortedMonsters = [];

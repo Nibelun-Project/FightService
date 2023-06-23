@@ -1,10 +1,11 @@
 import { actionInterface, instanceInterface, playerFightingInterface } from "../interfaces/fight";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
-import { applyChanges, buildInstance, clearActions, getPlayerByID, isActionsFilled } from "./instance.js";
+import { applyChanges, buildInstance, clearActions, clearBoardBeforeRound, getPlayerByID, isActionsFilled } from "./instance.js";
 import { deathCheck, doAction, effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
 import { passif } from "./passif.js";
+
 
 
 const fight = () => {
@@ -40,7 +41,8 @@ const fight = () => {
 
 	const _playRound = (instance: instanceInterface): instanceInterface => {
 		initHistoryRound(instance)
-		const sortedListOfMonstersID = speedContest(instance);
+		clearBoardBeforeRound(instance);
+		const sortedListOfMonstersID = speedContest(instance);		
 		sortedListOfMonstersID.forEach((monsterID) => {
 			doAction(instance, monsterID);
 		});
