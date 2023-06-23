@@ -7,7 +7,8 @@ enum historyContextEnum {
     PLAYROUND    = "playRound",
     DAMAGE       = "damage",
     KILL         = "kill",
-    SWAP         = "swap"
+    SWAP         = "swap",
+    ENDGAME      = "endgame"
 }
 
 interface fightInfoInterface {
@@ -21,7 +22,7 @@ interface historyInterface {
 }
 
 interface historyContentInterface {
-    monster:         MonsterFightingInterface
+    monster?:         MonsterFightingInterface
     targetMonster?:  MonsterFightingInterface
     action?:         actionInterface,
     skill?:          SkillInterface,
@@ -29,8 +30,8 @@ interface historyContentInterface {
     isSTAB?:         number,
     statName?:       string,
     statChanges?:    number,
-    isAvailableToPlayRound?: boolean
-
+    isAvailableToPlayRound?: boolean,
+    winner?:         string
 }
 
 export {

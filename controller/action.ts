@@ -142,6 +142,7 @@ const deathCheck = (instance: instanceInterface, actionsByTarget: actionInterfac
         const monster = getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot]
         if (monster.stats[monsterStatsEnum.HP] <= 0) {
             _kill(instance, actionsByTarget);
+            _checkEndgame(instance, actionsByTarget.targetInfo.targetedPlayerID);
             return true;
         }
     }
@@ -163,6 +164,15 @@ const _kill = (instance: instanceInterface, actionsByTarget: actionInterface) =>
         content: { monster: getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot] }
     })
 };
+
+const _checkEndgame = (instance: instanceInterface, playerID: string) => {
+    if (getPlayerByID(playerID, instance).team.every((monster) => monster.isAlive == false)) {
+        updateHistory(instance, {
+            context: historyContextEnum.ENDGAME,
+            content: { winner: playerID }
+        })
+    }
+}
 
 export {
     effectsType,
