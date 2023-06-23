@@ -6,9 +6,6 @@ import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailable
 import { passif } from "./passif.js";
 import { getTargeting } from "./targeting.js";
 
-
-
-
 const doAction = (instance: instanceInterface, monsterID: string) => {
     if (isAvailableToPlayRound(instance, monsterID)) {
         const actionFromMonster = getActionByMonsterID(instance, monsterID);
@@ -84,11 +81,11 @@ const _swapOnBoard = (instance: instanceInterface, actionsByTarget: actionInterf
 };
 
 const _doCalculDamage = (instance: instanceInterface, target: actionInterface, power: number): MonsterFightingInterface => {
-    const skill 		 = target.skill;
-    const monsterSource  = getOnBoardMonsterByID(instance, target.sourceID);
-    const monsterTarget  = getPlayerByID(target.targetInfo.targetedPlayerID, instance).onBoard[target.targetInfo.spot];
+    const skill = target.skill;
+    const monsterSource = getOnBoardMonsterByID(instance, target.sourceID);
+    const monsterTarget = getPlayerByID(target.targetInfo.targetedPlayerID, instance).onBoard[target.targetInfo.spot];
     const typeEfficiency = _getTypeEfficiency(skill.type, monsterTarget.type);
-    const isSTAB 		 = _isSTAB(monsterSource.type, skill.type);
+    const isSTAB = _isSTAB(monsterSource.type, skill.type);
 
     const hpChanges =
         -(
@@ -102,9 +99,12 @@ const _doCalculDamage = (instance: instanceInterface, target: actionInterface, p
 
     updateHistory(instance, {
         context: historyContextEnum.DAMAGE,
-        content: {monster: monsterSource, skill: skill, typeEfficiency: typeEfficiency,
-                  isSTAB: isSTAB, targetMonster: monsterTarget, statName: monsterStatsEnum.HP, statChanges: hpChanges}})
-                  
+        content: {
+            monster: monsterSource, skill: skill, typeEfficiency: typeEfficiency,
+            isSTAB: isSTAB, targetMonster: monsterTarget, statName: monsterStatsEnum.HP, statChanges: hpChanges
+        }
+    })
+
     return monsterTarget;
 };
 
