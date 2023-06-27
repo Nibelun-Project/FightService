@@ -1,7 +1,7 @@
 import { actionInterface, instanceInterface } from "../interfaces/fight";
 import { historyContextEnum } from "../interfaces/history.js";
 import { MonsterFightingInterface, monsterStatsEnum, monsterType } from "../interfaces/monster.js";
-import { updateHistory } from "./history.js";
+import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from "./history.js";
 import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
 import { passif } from "./passif.js";
 import { getTargeting } from "./targeting.js";
@@ -76,7 +76,7 @@ const _swapOnBoard = (instance: instanceInterface, actionsByTarget: actionInterf
 
     updateHistory(instance, {
         context: historyContextEnum.SWAP,
-        content: { monster: sourceMonster, targetMonster: player.team[teamTargetMonsterIndex] }
+        content: { monster: convertMonsterToHistory(sourceMonster), targetMonster: convertMonsterToHistory(player.team[teamTargetMonsterIndex]) }
     });
 };
 
@@ -100,8 +100,8 @@ const _doCalculDamage = (instance: instanceInterface, target: actionInterface, p
     updateHistory(instance, {
         context: historyContextEnum.DAMAGE,
         content: {
-            monster: monsterSource, skill: skill, typeEfficiency: typeEfficiency,
-            isSTAB: isSTAB, targetMonster: monsterTarget, statName: monsterStatsEnum.HP, statChanges: hpChanges
+            monster: convertMonsterToHistory(monsterSource), skill: convertSkillToHistory(skill), typeEfficiency: typeEfficiency,
+            isSTAB: isSTAB, targetMonster: convertMonsterToHistory(monsterTarget), statName: monsterStatsEnum.HP, statChanges: hpChanges
         }
     })
 
@@ -161,7 +161,7 @@ const _kill = (instance: instanceInterface, actionsByTarget: actionInterface) =>
 
     updateHistory(instance, {
         context: historyContextEnum.KILL,
-        content: { monster: getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot] }
+        content: { monster: convertMonsterToHistory(getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot]) }
     })
 };
 

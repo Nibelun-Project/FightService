@@ -1,7 +1,11 @@
-import { instanceInterface } from "../interfaces/fight";
-import { fightInfoInterface, 
+import { actionInterface, instanceInterface } from "../interfaces/fight";
+import { MonsterHistoryInterface, fightInfoInterface, 
+         historyActionInterface, 
          historyContextEnum, 
-         historyInterface } from "../interfaces/history.js";
+         historyInterface, 
+         historySkillInterface} from "../interfaces/history.js";
+import { MonsterFightingInterface } from "../interfaces/monster";
+import { SkillInterface } from "../interfaces/skill";
 
 
 const HISTORY_NAME = "fightInfo";
@@ -18,20 +22,45 @@ const initHistoryRound = (instance: instanceInterface) => {
     instance[HISTORY_NAME].round++
 }
 
-const updateHistory = (instance: instanceInterface, update: historyInterface) => { 
-    let fightInfo = instance[HISTORY_NAME];  
-    if (update.context !== historyContextEnum.SPEEDCONTEST ||
-        (fightInfo.history[fightInfo.round-1].every((event) => {             
-            return ((event.content[0].monster.id !== update.content[0].monster.id  &&
-                     event.content[1].monster.id !== update.content[0].monster.id) &&
-                    (event.content[0].monster.id !== update.content[1].monster.id  &&
-                     event.content[1].monster.id !== update.content[1].monster.id))
-        })))fightInfo.history[fightInfo.round-1].push(update)
+const convertMonsterToHistory = (monster: MonsterFightingInterface):MonsterHistoryInterface => {
+    return {
+        id: monster.id,
+        name: monster.name,
+        type: monster.type,
+    }
 }
 
+const convertSkillToHistory = (skill: SkillInterface): historySkillInterface => {
+    return {
+        name: skill.name,
+	    type: skill.type,
+	    targetType: skill.targetType
+    }
+}
+
+const convertActionToHistory = (action: actionInterface): historyActionInterface => {
+    return {
+        sourceID: action.sourceID,
+        skill: convertSkillToHistory(action.skill)
+    }
+}
+
+const updateHistory = (instance: instanceInterface, update: historyInterface) => { 
+    let fightInfo = instance[HISTORY_NAME];      
+    if (update.context !== historyContextEnum.SPEEDCONTEST ||
+        (fightInfo.history[fightInfo.round-1].every((event) => {             
+            return !((event.content.monstersID[0] === update.content.monstersID[0]  ||
+                      event.content.monstersID[1] === update.content.monstersID[0]) &&
+                     (event.content.monstersID[0] === update.content.monstersID[1]  ||
+                      event.content.monstersID[1] === update.content.monstersID[1]))
+        })))fightInfo.history[fightInfo.round-1].push(update)
+}
 
 export {
     initFightInfo,
     initHistoryRound,
-    updateHistory
+    updateHistory,
+    convertMonsterToHistory,
+    convertSkillToHistory,
+    convertActionToHistory
 }

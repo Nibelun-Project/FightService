@@ -1,4 +1,3 @@
-import { actionInterface } from "./fight";
 import { PassiveInterface } from "./passive";
 import { SkillInterface } from "./skill";
 

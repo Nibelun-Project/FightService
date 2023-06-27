@@ -1,7 +1,7 @@
 import { actionInterface, instanceInterface, playerFightingInterface, targetInfoType } from "../interfaces/fight";
 import { historyContextEnum } from "../interfaces/history.js";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
-import { initFightInfo, updateHistory } from "./history.js";
+import { convertActionToHistory, convertMonsterToHistory, initFightInfo, updateHistory } from "./history.js";
 
 
 const getTeam = (playerID): MonsterFightingInterface[] => {
@@ -14,7 +14,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				hp: 300,
 				attack: 100,
 				def: 80,
-				speed: 50,
+				speed: 100,
 				stamina: 120,
 				balance: 100,
 			},
@@ -117,7 +117,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					when: "before",
 					actionType: "damage",
 					from: "ennemies",
-					to: "ally",
+					to: "self",
 					type: "mental"
 				},
 				effects: [
@@ -200,9 +200,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				trigger: {
 				when: "before",
 					actionType: "damage",
-					from: "ally",
+					from: "self",
 					type: "mental",
-					to: "ally",
+					to: "self",
 				},
 				effects: [
 
@@ -286,9 +286,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				trigger: {
 					when: "before",
 					actionType: "damage",
-					from: "ally",
+					from: "self",
 					type: "mental",
-					to: "ally",
+					to: "self",
 				},
 				effects: [
 
@@ -462,13 +462,13 @@ const isAvailableToPlayRound = (instance: instanceInterface, monsterID: string):
 		!isOnBoard(instance, monsterID)   // the monster is on the board
 	) {
 		isAvailableToPlayRound = false
-	}
+	}	
 
 	updateHistory(instance, {
 		context: historyContextEnum.PLAYROUND,
-		content: { isAvailableToPlayRound: isAvailableToPlayRound, monster: monster, action: getActionByMonsterID(instance, monsterID) }
+		content: { isAvailableToPlayRound: isAvailableToPlayRound, monster: convertMonsterToHistory(monster), action: convertActionToHistory(getActionByMonsterID(instance, monsterID)) }
 	})
-
+	
 	return isAvailableToPlayRound;
 };
 

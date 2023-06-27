@@ -4,7 +4,6 @@ import { MonsterFightingInterface, MonsterSpeedInterface, monsterStatsEnum } fro
 import { updateHistory } from "./history.js";
 import { getActionByMonsterID } from "./instance.js";
 
-
 const speedContest = (instance: instanceInterface): string[] => {
     //1 - Prepare array of monster to proceed the speed constest with all needly informations
     let tempMonstersList = [];
@@ -92,17 +91,20 @@ const _shuffleMonsters = (tempMonstersList: MonsterFightingInterface[]): Monster
 const _getPlacesOnRound = (speedContestTempsList: MonsterSpeedInterface[], instance: instanceInterface): string[] => {
     let sortedMonsters = [];
     //1 - For each monster
-    speedContestTempsList.forEach((tempMonster) => {
+    speedContestTempsList.forEach((tempMonster) => {        
         //2 - Get the number of monster wich will play before, following conditions:
         const count = speedContestTempsList.filter((speedContest) => {
-            if (speedContest.action.priority < tempMonster.action.priority || //2.1   - the action have a higher priority
+                      
+            if (speedContest.monster.id != tempMonster.monster.id && //2.1 comparison between the same monster
 
-                (tempMonster.action.priority === speedContest.action.priority && //2.2.1 - the action priotity is equal
-                 speedContest.monster.stats[monsterStatsEnum.SPEED] > tempMonster.monster.stats[monsterStatsEnum.SPEED])  || //2.2.1 - the speed stat is different
+                (speedContest.action.priority < tempMonster.action.priority || //2.2   - the action have a higher priority
 
                 (tempMonster.action.priority === speedContest.action.priority && //2.3.1 - the action priotity is equal
-                 speedContest.monster.stats[monsterStatsEnum.SPEED] === tempMonster.monster.stats[monsterStatsEnum.SPEED] && //2.3.2 - the speed stat is equal,
-                 _shuffleContest(speedContest, tempMonster, instance)) //2.3.3 - use the a random id to difine priority
+                 speedContest.monster.stats[monsterStatsEnum.SPEED] > tempMonster.monster.stats[monsterStatsEnum.SPEED])  || //2.3.2 - the speed stat is different
+
+                (tempMonster.action.priority === speedContest.action.priority && //2.4.1 - the action priotity is equal
+                 speedContest.monster.stats[monsterStatsEnum.SPEED] === tempMonster.monster.stats[monsterStatsEnum.SPEED] && //2.4.2 - the speed stat is equal,
+                 _shuffleContest(speedContest, tempMonster, instance))) //2.4.3 - use the a random id to difine priority
             ) return true;
 
             return false;
@@ -124,8 +126,9 @@ const _getPlacesOnRound = (speedContestTempsList: MonsterSpeedInterface[], insta
 const _shuffleContest = (monster1: MonsterSpeedInterface, monster2: MonsterSpeedInterface, instance: instanceInterface): boolean => {
     updateHistory(instance, {
         context: historyContextEnum.SPEEDCONTEST,
-        content: [{ monster: monster1.monster }, { monster: monster2.monster }]
+        content: { monstersID: [monster1.monster.id, monster2.monster.id] }
     })
+    
     return monster1.shuffleID < monster2.shuffleID;
 }
 

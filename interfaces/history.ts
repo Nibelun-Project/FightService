@@ -1,5 +1,5 @@
-import { actionInterface }          from "../interfaces/fight";
-import { MonsterFightingInterface } from "./monster";
+import { actionInterface, targetType }          from "../interfaces/fight";
+import { monsterType } from "./monster";
 import { SkillInterface }           from "./skill";
 
 enum historyContextEnum {
@@ -20,24 +20,47 @@ interface fightInfoInterface {
 
 interface historyInterface {
 	context: `${historyContextEnum}`,
-    content: historyContentInterface[] | historyContentInterface
+    content: historyContentInterface
 }
 
 interface historyContentInterface {
-    monster?:         MonsterFightingInterface
-    targetMonster?:  MonsterFightingInterface
-    action?:         actionInterface,
-    skill?:          SkillInterface,
+    monster?:        MonsterHistoryInterface
+    targetMonster?:  MonsterHistoryInterface,
+    action?:         historyActionInterface,
+    skill?:          historySkillInterface,
     typeEfficiency?: number,
     isSTAB?:         number,
     statName?:       string,
     statChanges?:    number,
     isAvailableToPlayRound?: boolean,
-    winner?:         string
+    winner?:         string,
+    monstersID?:     string[]
 }
+
+interface MonsterHistoryInterface {
+	id: string;
+	name: string;
+	type: monsterType[];
+}
+
+interface historySkillInterface {
+    name: string;
+	type: monsterType;
+    targetType: targetType;
+}
+
+interface historyActionInterface {
+    sourceID: string;
+	skill: historySkillInterface
+}
+
+
 
 export {
     fightInfoInterface,
     historyInterface,
-    historyContextEnum
+    historyContextEnum,
+    MonsterHistoryInterface,
+    historySkillInterface,
+    historyActionInterface
 };
