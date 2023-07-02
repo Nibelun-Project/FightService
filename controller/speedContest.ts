@@ -1,5 +1,5 @@
-import { instanceInterface } from "../interfaces/fight.js";
 import { historyContextEnum } from "../interfaces/history.js";
+import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface, MonsterSpeedInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { updateHistory } from "./history.js";
 import { getActionByMonsterID } from "./instance.js";

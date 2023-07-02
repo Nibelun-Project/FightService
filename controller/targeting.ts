@@ -1,4 +1,5 @@
-import { actionInterface, instanceInterface } from "../interfaces/fight";
+import { actionInterface } from "../interfaces/action.js";
+import { instanceInterface } from "../interfaces/instance.js";
 import { getAlly, getEnnemies, getMonsterBySpot, getOnBoardMonsterByID, getOtherSpot, getPlayerByID, getSpotByMonsterID, isTargetable } from "./instance.js";
 
 const getTargeting = (instance: instanceInterface, actionFromMonster: actionInterface, effectTargetType: string) => {

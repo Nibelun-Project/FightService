@@ -1,4 +1,4 @@
-import { actionInterface, instanceInterface, playerFightingInterface } from "../interfaces/fight";
+import { playerFightingInterface } from "../interfaces/player";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
 import { applyChanges, buildInstance, clearActions, clearBoardBeforeRound, getPlayerByID, isActionsFilled } from "./instance.js";
@@ -6,6 +6,8 @@ import { deathCheck, doAction, effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
 import { passif } from "./passif.js";
 import { rollStatus } from "./status.js";
+import { actionInterface } from "../interfaces/action.js";
+import { instanceInterface } from "../interfaces/instance.js";
 
 
 

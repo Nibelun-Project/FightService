@@ -1,10 +1,11 @@
-import { actionInterface, instanceInterface } from "../interfaces/fight";
+import { actionInterface } from "../interfaces/action.js";
 import { fightInfoInterface, 
          historyActionInterface, 
          historyContextEnum, 
          historyInterface, 
          historyMonsterInterface, 
          historySkillInterface} from "../interfaces/history.js";
+import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster";
 import { SkillInterface } from "../interfaces/skill";
 

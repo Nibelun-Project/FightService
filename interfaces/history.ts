@@ -1,4 +1,4 @@
-import { targetType }          from "../interfaces/fight";
+import { targetType } from "./action";
 import { monsterType } from "./monster";
 
 enum historyContextEnum {
@@ -35,8 +35,8 @@ interface historyContentInterface {
     isAvailableToPlayRound?: boolean,
     winner?:         string,
     monstersID?:     string[],
-    statusName?: string,
-    nbrRound?: number
+    statusName?:     string,
+    nbrRound?:       number
 }
 
 interface historyMonsterInterface {

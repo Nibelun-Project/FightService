@@ -1,19 +1,24 @@
-import { actionInterface, instanceInterface } from "../interfaces/fight.js";
+import { actionInterface } from "../interfaces/action.js";
 import { historyContextEnum } from "../interfaces/history.js";
+import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
-import { statusInterface, statusName } from "../interfaces/status.js";
-import { checkEndgame } from "./action.js";
+import { hasEffectAtTheEndOfRound, statusInterface, statusNameType, statusName } from "../interfaces/status.js";
 import { convertMonsterToHistory, updateHistory } from "./history.js";
-import { getOnBoardMonsterByID, getPlayerByID } from "./instance.js";
+import { checkEndgame, getOnBoardMonsterByID, getPlayerByID } from "./instance.js";
 
 const rollStatus = (instance: instanceInterface, monsterID: string) => {
     let monster = getOnBoardMonsterByID(instance, monsterID)
     if (monster.isAlive === true) {
         monster.statuses.forEach((status) => {
-            _statusEffects(monster)[status.name]();
+
+            if (Object.values<statusNameType>(hasEffectAtTheEndOfRound).includes(status.name)) {
+                _statusEffects(monster)[status.name]();
+            }
+
             if (status.nbrRound-- === 1) {
                 monster.statuses.splice(monster.statuses.indexOf(status), 1);
             }
+
         })
         _deathCheck(instance, monster);
     }
@@ -37,7 +42,7 @@ const buildStatus = (name: statusName, nbrRound: number): statusInterface => {
 
 const applyStatus = (instance: instanceInterface, target: actionInterface, statusToApply: statusInterface) => { 
     const targetMonster = getPlayerByID(target.targetInfo.targetedPlayerID, instance).onBoard[target.targetInfo.spot];
-    const sourceMonster = getPlayerByID(target.sourceID, instance).onBoard[target.targetInfo.spot];
+    const sourceMonster = getOnBoardMonsterByID(instance, target.sourceID)
 
     let nbrRound = 0;
     if (targetMonster.statuses.some((monsterStatus) => { return (monsterStatus.name === statusToApply.name) })) {

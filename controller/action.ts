@@ -1,9 +1,10 @@
-import { actionInterface, instanceInterface } from "../interfaces/fight";
+import { actionInterface } from "../interfaces/action";
 import { historyContextEnum } from "../interfaces/history.js";
+import { instanceInterface } from "../interfaces/instance";
 import { MonsterFightingInterface, monsterStatsEnum, monsterType } from "../interfaces/monster.js";
 import { statusName } from "../interfaces/status.js";
 import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from "./history.js";
-import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
+import { checkEndgame, getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
 import { passif } from "./passif.js";
 import { applyStatus, buildStatus } from "./status.js";
 import { getTargeting } from "./targeting.js";
@@ -163,21 +164,10 @@ const _kill = (instance: instanceInterface, actionsByTarget: actionInterface) =>
     })
 };
 
-const checkEndgame = (instance: instanceInterface, playerID: string) => {
-    if (getPlayerByID(playerID, instance).team.every((monster) => monster.isAlive === false)) {
-        instance.fightInfo.endgame = true;
-        instance.fightInfo.winner = instance.players.find((player) => player.id != playerID).id
 
-        updateHistory(instance, {
-            context: historyContextEnum.ENDGAME,
-            content: { winner: instance.fightInfo.winner }
-        })
-    }
-}
 
 export {
     effectsType,
     deathCheck,
     doAction,
-    checkEndgame
 }

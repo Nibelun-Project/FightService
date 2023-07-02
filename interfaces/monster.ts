@@ -1,5 +1,6 @@
 import { PassiveInterface } from "./passive";
 import { SkillInterface } from "./skill";
+import { statusInterface } from "./status";
 
 enum monsterTypeEnum {
 	AERIAL = "aerial",

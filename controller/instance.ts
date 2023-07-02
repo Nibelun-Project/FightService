@@ -1,5 +1,7 @@
-import { actionInterface, instanceInterface, playerFightingInterface, targetInfoType } from "../interfaces/fight";
+import { actionInterface, targetInfoType } from "../interfaces/action";
+import { playerFightingInterface } from "../interfaces/player";
 import { historyContextEnum } from "../interfaces/history.js";
+import { instanceInterface } from "../interfaces/instance";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { convertActionToHistory, convertMonsterToHistory, initFightInfo, updateHistory } from "./history.js";
 
@@ -27,7 +29,8 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				balance: 100,
 			},
 			statuses:  [
-
+				{name: "asleep", nbrRound: 2},
+				{name: "poisoned", nbrRound: 2}
 			],
 			image: "../ronk.png",
 			passive: {
@@ -37,7 +40,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					type: "mental",
 				},
 				effects: [
-
+					
 				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
@@ -70,9 +73,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType: "allies", type: "damage", power: 200 }
+						{ targetType: "ally", type: "damage", power: 200 }
 					],
-					targetType: "allies",
+					targetType: "ally",
 					priority: 100,
 				},
 				{
@@ -382,6 +385,18 @@ const clearBoardBeforeRound = (instance: instanceInterface) => {
 	})
 }
 
+const checkEndgame = (instance: instanceInterface, playerID: string) => {
+    if (getPlayerByID(playerID, instance).team.every((monster) => monster.isAlive === false)) {
+        instance.fightInfo.endgame = true;
+        instance.fightInfo.winner = instance.players.find((player) => player.id != playerID).id
+
+        updateHistory(instance, {
+            context: historyContextEnum.ENDGAME,
+            content: { winner: instance.fightInfo.winner }
+        })
+    }
+}
+
 const getMonsterBySpot = (instance: instanceInterface, spotInfo: targetInfoType): MonsterFightingInterface => {
 	return getPlayerByID(spotInfo.targetedPlayerID, instance).onBoard[spotInfo.spot];
 };
@@ -531,5 +546,6 @@ export {
 	applyChanges,
 	buildInstance,
 	isTargetable,
-	clearBoardBeforeRound
+	clearBoardBeforeRound,
+	checkEndgame
 }
