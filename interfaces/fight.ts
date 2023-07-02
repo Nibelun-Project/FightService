@@ -3,22 +3,23 @@ import { SkillInterface } from "./skill";
 import { fightInfoInterface } from "./history"
 
 enum effectTypeEnum {
-	DAMAGE = "damage",
 	BALANCE = "balance",
+	DAMAGE = "damage",
 	HEAL = "heal",
-	SWAP = "swap",
-	PATTACK = "+attack",
 	MATTACK = "+attack",
+	PATTACK = "+attack",
+	POISON = "poison",
+	SWAP = "swap"
 }
 
 enum targetTypeEnum {
-	SINGLE = "single",
-	DOUBLE = "double",
-	ALLY = "ally",
-	ALLIES = "allies",
-	ENNEMIES = "ennemies",
 	ALL = "all",
+	ALLIES = "allies",
+	ALLY = "ally",
+	DOUBLE = "double",
+	ENNEMIES = "ennemies",
 	SELF = "self",
+	SINGLE = "single"
 }
 
 type targetType = `${targetTypeEnum}`

@@ -5,6 +5,7 @@ import { applyChanges, buildInstance, clearActions, clearBoardBeforeRound, getPl
 import { deathCheck, doAction, effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
 import { passif } from "./passif.js";
+import { rollStatus } from "./status.js";
 
 
 
@@ -45,6 +46,7 @@ const fight = () => {
 		const sortedListOfMonstersID = speedContest(instance);		
 		sortedListOfMonstersID.forEach((monsterID) => {
 			doAction(instance, monsterID);
+			rollStatus(instance, monsterID);
 		});
 		applyChanges(instance);
 		clearActions(instance);

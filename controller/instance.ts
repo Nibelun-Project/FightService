@@ -26,6 +26,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 120,
 				balance: 100,
 			},
+			statuses:  [
+
+			],
 			image: "../ronk.png",
 			passive: {
 				trigger: {
@@ -51,13 +54,13 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					priority: 100,
 				},
 				{
-					name: "volcano",
+					name: "Poison",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "fire",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "ally", type: "damage", power: 200 }],
-					targetType: "ally",
+					effects: [{ targetType: "single", type: "poison", power: 2 }],
+					targetType: "single",
 					priority: 100,
 				},
 				{
@@ -109,6 +112,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 100,
 				balance: 100,
 			},
+			statuses:  [
+
+			],
 			image: "../etoal.png",
 			passive: {
 				name: "pâs2",
@@ -195,6 +201,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 120,
 				balance: 100,
 			},
+			statuses:  [
+
+			],
 			image: "../ronk.png",
 			passive: {
 				trigger: {
@@ -281,6 +290,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 120,
 				balance: 100,
 			},
+			statuses:  [
+
+			],
 			image: "../ronk.png",
 			passive: {
 				trigger: {
