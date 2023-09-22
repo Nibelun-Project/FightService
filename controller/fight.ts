@@ -55,21 +55,34 @@ const fight = () => {
 		return instance;
 	};
 
-	const doSwap = (swapActions: actionInterface[], fightID: string) => {
-		const instance = getInstanceByID(fightID)
+	const doSwap = (swapActions: actionInterface[], fightID: string, playerID: string, both: boolean) => {
+		const currInstance = getInstanceByID(fightID)
+		getPlayerByID(playerID, currInstance).actions = swapActions;
+
 		for (let index = 0; index < swapActions.length; index++) {
 			const action = swapActions[index];
 
 			action.skill.effects.forEach((effect) => {
-				const effectTargets = getTargeting(instance, action, effect.targetType);
+				const effectTargets = getTargeting(currInstance, action, effect.targetType);
 
 				effectTargets.forEach((target) => {
-					passif(effectsType()[effect.type], target, effect.power, effect.type, instance);
-					return !deathCheck(instance, target);
+					passif(effectsType()[effect.type], target, effect.power, effect.type, currInstance);
+					return !deathCheck(currInstance, target);
 				})
 			});
 		}
-		return { status: 2, matchInfo: instance }
+		if (both) {
+			clearActions(currInstance)
+			if (isActionsFilled(currInstance)) {
+				return { status: 2, matchInfo: currInstance }
+			} else
+				return {
+					status: 1,
+					matchInfo: currInstance
+				};
+		} else {
+			return { status: 2, matchInfo: currInstance }
+		}
 	}
 
 	return { ready, waitActions, doSwap };
