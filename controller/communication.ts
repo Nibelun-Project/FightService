@@ -1,4 +1,5 @@
-import { instanceInterface, playerFightingInterface } from "../interfaces/fight.js";
+import { playerFightingInterface } from "../interfaces/player.js";
+import { instanceInterface } from "../interfaces/instance.js";
 import fight from "./fight.js";
 import matchmaking from "./matchmaking.js";
 

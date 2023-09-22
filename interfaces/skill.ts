@@ -1,6 +1,5 @@
-import { effectType, targetType } from "./fight";
+import { effectType, targetType } from "./action";
 import { monsterType } from "./monster";
-import { sideType } from "./passive";
 
 enum skillCostEnum {
 	STAMINA = "stamina",
@@ -8,6 +7,12 @@ enum skillCostEnum {
 	BALANCE = "balance",
 }
 
+enum sideEnum {
+	TO = "to",
+	FROM = "from",
+}
+
+type sideType = `${sideEnum}`;
 type skillCostType = `${skillCostEnum}`
 
 interface SkillInterface {

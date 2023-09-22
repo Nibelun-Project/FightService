@@ -1,24 +1,30 @@
-import { actionInterface, instanceInterface } from "../interfaces/fight";
+import { actionInterface } from "../interfaces/action.js";
+import { instanceInterface } from "../interfaces/instance.js";
 import { getAlly, getEnnemies, getMonsterBySpot, getOnBoardMonsterByID, getOtherSpot, getPlayerByID, getSpotByMonsterID, isTargetable } from "./instance.js";
 
 const getTargeting = (instance: instanceInterface, actionFromMonster: actionInterface, effectTargetType: string) => {
-    const self = (): actionInterface[] => {
-        console.log("Self");
-        const self = getOnBoardMonsterByID(instance, actionFromMonster.sourceID)
-        if (!isTargetable(self)) return [];
-        return [
-            {
-                sourceID: actionFromMonster.sourceID,
-                targetInfo: {
-                    targetedPlayerID: getOnBoardMonsterByID(
-                        instance,
-                        actionFromMonster.sourceID
-                    ).playerID,
-                    spot: getSpotByMonsterID(instance, actionFromMonster.sourceID),
-                },
-                skill: actionFromMonster.skill,
-            }
-        ]
+
+    const all = (): actionInterface[] => {
+        console.log("All");
+
+        const effectListByTarget = []
+        let targetsList = [];
+
+        instance.players.forEach((player) => {
+            player.onBoard.forEach((monster) => {
+                if (isTargetable(monster)) {
+                    effectListByTarget.push({
+                        sourceID: actionFromMonster.sourceID,
+                        targetInfo: {
+                            targetedPlayerID: monster.playerID,
+                            spot: getSpotByMonsterID(instance, monster.id),
+                        },
+                        skill: actionFromMonster.skill,
+                    });
+                }
+            });
+        })
+        return effectListByTarget;
     };
 
     const ally = (): actionInterface[] => {
@@ -62,6 +68,28 @@ const getTargeting = (instance: instanceInterface, actionFromMonster: actionInte
         return effectListByTarget;
     };
 
+    const double = (): actionInterface[] => {
+        console.log("Double");
+
+        const effectListByTarget = []
+        getPlayerByID(actionFromMonster.targetInfo.targetedPlayerID, instance).onBoard.forEach(
+            (monster) => {
+                if (isTargetable(monster)) {
+                    effectListByTarget.push({
+                        sourceID: actionFromMonster.sourceID,
+                        targetInfo: {
+                            targetedPlayerID: monster.playerID,
+                            spot: getSpotByMonsterID(instance, monster.id),
+                        },
+                        skill: actionFromMonster.skill,
+                    });
+                }
+            }
+        );
+
+        return effectListByTarget;
+    };
+
     const ennemies = (): actionInterface[] => {
         console.log("Ennemies");
 
@@ -82,6 +110,25 @@ const getTargeting = (instance: instanceInterface, actionFromMonster: actionInte
         });
 
         return effectListByTarget;
+    };
+
+    const self = (): actionInterface[] => {
+        console.log("Self");
+        const self = getOnBoardMonsterByID(instance, actionFromMonster.sourceID)
+        if (!isTargetable(self)) return [];
+        return [
+            {
+                sourceID: actionFromMonster.sourceID,
+                targetInfo: {
+                    targetedPlayerID: getOnBoardMonsterByID(
+                        instance,
+                        actionFromMonster.sourceID
+                    ).playerID,
+                    spot: getSpotByMonsterID(instance, actionFromMonster.sourceID),
+                },
+                skill: actionFromMonster.skill,
+            }
+        ]
     };
 
     const single = (): actionInterface[] => {
@@ -130,63 +177,20 @@ const getTargeting = (instance: instanceInterface, actionFromMonster: actionInte
         ];
     };
 
-    const double = (): actionInterface[] => {
-        console.log("Double");
-
-        const effectListByTarget = []
-        getPlayerByID(actionFromMonster.targetInfo.targetedPlayerID, instance).onBoard.forEach(
-            (monster) => {
-                if (isTargetable(monster)) {
-                    effectListByTarget.push({
-                        sourceID: actionFromMonster.sourceID,
-                        targetInfo: {
-                            targetedPlayerID: monster.playerID,
-                            spot: getSpotByMonsterID(instance, monster.id),
-                        },
-                        skill: actionFromMonster.skill,
-                    });
-                }
-            }
-        );
-
-        return effectListByTarget;
-    };
-
-    const all = (): actionInterface[] => {
-        console.log("All");
-
-        const effectListByTarget = []
-        let targetsList = [];
-
-        instance.players.forEach((player) => {
-            player.onBoard.forEach((monster) => {
-                if (isTargetable(monster)) {
-                    effectListByTarget.push({
-                        sourceID: actionFromMonster.sourceID,
-                        targetInfo: {
-                            targetedPlayerID: monster.playerID,
-                            spot: getSpotByMonsterID(instance, monster.id),
-                        },
-                        skill: actionFromMonster.skill,
-                    });
-                }
-            });
-        })
-        return effectListByTarget;
-    };
-
     const TargetTypes = {
-        self,
-        ally,
+        all,
         allies,
+        ally,
+        double,
         ennemies,
+        self,
         single,
         singleBackstage,
-        double,
-        all,
     };
+
     return TargetTypes[effectTargetType]();
 };
+
 export {
     getTargeting
 }

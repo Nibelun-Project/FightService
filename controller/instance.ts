@@ -1,5 +1,7 @@
-import { actionInterface, instanceInterface, playerFightingInterface, targetInfoType } from "../interfaces/fight";
+import { actionInterface, targetInfoType } from "../interfaces/action";
+import { playerFightingInterface } from "../interfaces/player";
 import { historyContextEnum } from "../interfaces/history.js";
+import { instanceInterface } from "../interfaces/instance";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { convertActionToHistory, convertMonsterToHistory, initFightInfo, updateHistory } from "./history.js";
 
@@ -26,6 +28,10 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 120,
 				balance: 100,
 			},
+			statuses:  [
+				{name: "asleep", nbrRound: 2},
+				{name: "poisoned", nbrRound: 2}
+			],
 			image: "../ronk.png",
 			passive: {
 				trigger: {
@@ -34,7 +40,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					type: "mental",
 				},
 				effects: [
-
+					
 				],
 				name: "Preventive Heal",
 				description: "you heal yourself or your ally before damage",
@@ -51,13 +57,13 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					priority: 100,
 				},
 				{
-					name: "volcano",
+					name: "Poison",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "fire",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "ally", type: "damage", power: 200 }],
-					targetType: "ally",
+					effects: [{ targetType: "single", type: "poison", power: 2 }],
+					targetType: "single",
 					priority: 100,
 				},
 				{
@@ -67,9 +73,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
 					effects: [
-						{ targetType: "allies", type: "damage", power: 200 }
+						{ targetType: "ally", type: "damage", power: 200 }
 					],
-					targetType: "allies",
+					targetType: "ally",
 					priority: 100,
 				},
 				{
@@ -109,6 +115,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 100,
 				balance: 100,
 			},
+			statuses:  [
+
+			],
 			image: "../etoal.png",
 			passive: {
 				name: "pâs2",
@@ -195,6 +204,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 120,
 				balance: 100,
 			},
+			statuses:  [
+
+			],
 			image: "../ronk.png",
 			passive: {
 				trigger: {
@@ -281,6 +293,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 120,
 				balance: 100,
 			},
+			statuses:  [
+
+			],
 			image: "../ronk.png",
 			passive: {
 				trigger: {
@@ -368,6 +383,18 @@ const clearBoardBeforeRound = (instance: instanceInterface) => {
 		player.onBoard = player.onBoard.filter((monster) => _isAlive(monster))
 		player.actions = player.actions.filter((action) => _isAlive(getOnBoardMonsterByID(instance, action.sourceID)) ) 
 	})
+}
+
+const checkEndgame = (instance: instanceInterface, playerID: string) => {
+    if (getPlayerByID(playerID, instance).team.every((monster) => monster.isAlive === false)) {
+        instance.fightInfo.endgame = true;
+        instance.fightInfo.winner = instance.players.find((player) => player.id != playerID).id
+
+        updateHistory(instance, {
+            context: historyContextEnum.ENDGAME,
+            content: { winner: instance.fightInfo.winner }
+        })
+    }
 }
 
 const getMonsterBySpot = (instance: instanceInterface, spotInfo: targetInfoType): MonsterFightingInterface => {
@@ -519,5 +546,6 @@ export {
 	applyChanges,
 	buildInstance,
 	isTargetable,
-	clearBoardBeforeRound
+	clearBoardBeforeRound,
+	checkEndgame
 }

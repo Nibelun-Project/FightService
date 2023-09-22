@@ -1,28 +1,30 @@
 import { PassiveInterface } from "./passive";
 import { SkillInterface } from "./skill";
+import { statusInterface } from "./status";
 
 enum monsterTypeEnum {
+	AERIAL = "aerial",
 	FIRE = "fire",
-	PLANT = "plant",
-	WATER = "water",
-	NEUTRAL = "neutral",
+	GHOST = "ghost",
 	MARTIAL = "martial",
 	MENTAL = "mental",
+	NEUTRAL = "neutral",
+	PLANT = "plant",
 	POISON = "poison",
-	AERIAL = "aerial",
-	VOLT = "volt",
 	ROCK = "rock",
-	GHOST = "ghost",
 	SPATIAL = "spatial",
+	VOLT = "volt",
+	WATER = "water",
 }
 
+
 enum monsterStatsEnum {
-	HP = "hp",
-	DEF = "def",
 	ATK = "attack",
+	BALANCE = "balance",
+	DEF = "def",
+	HP = "hp",
 	SPEED = "speed",
 	STAMINA = "stamina",
-	BALANCE = "balance"
 }
 
 interface MonsterInfoInterface {
@@ -86,6 +88,7 @@ interface MonsterFightingInterface {
 		stamina: number;
 		balance: number;
 	};
+	statuses: statusInterface[];
 	image: string;
 	passive: PassiveInterface;
 	skills: SkillInterface[];

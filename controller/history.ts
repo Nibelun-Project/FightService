@@ -1,9 +1,11 @@
-import { actionInterface, instanceInterface } from "../interfaces/fight";
-import { MonsterHistoryInterface, fightInfoInterface, 
+import { actionInterface } from "../interfaces/action.js";
+import { fightInfoInterface, 
          historyActionInterface, 
          historyContextEnum, 
          historyInterface, 
+         historyMonsterInterface, 
          historySkillInterface} from "../interfaces/history.js";
+import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster";
 import { SkillInterface } from "../interfaces/skill";
 
@@ -22,11 +24,12 @@ const initHistoryRound = (instance: instanceInterface) => {
     instance[HISTORY_NAME].round++
 }
 
-const convertMonsterToHistory = (monster: MonsterFightingInterface):MonsterHistoryInterface => {
+const convertMonsterToHistory = (monster: MonsterFightingInterface): historyMonsterInterface => {
     return {
         id: monster.id,
         name: monster.name,
         type: monster.type,
+        playerID: monster.playerID,
     }
 }
 

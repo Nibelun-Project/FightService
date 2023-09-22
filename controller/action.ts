@@ -1,9 +1,12 @@
-import { actionInterface, instanceInterface } from "../interfaces/fight";
+import { actionInterface } from "../interfaces/action";
 import { historyContextEnum } from "../interfaces/history.js";
+import { instanceInterface } from "../interfaces/instance";
 import { MonsterFightingInterface, monsterStatsEnum, monsterType } from "../interfaces/monster.js";
+import { statusName } from "../interfaces/status.js";
 import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from "./history.js";
-import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
+import { checkEndgame, getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
 import { passif } from "./passif.js";
+import { applyStatus, buildStatus } from "./status.js";
 import { getTargeting } from "./targeting.js";
 
 const doAction = (instance: instanceInterface, monsterID: string) => {
@@ -33,23 +36,15 @@ const effectsType = () => {
         _doCalculDamage(instance, actionsByTarget, power);
     };
 
-    const balance = (instance, actionsByTarget, power) => {
+    const poison = (instance, actionsByTarget, power) => {
         console.log(
-            "balance from ",
+            "poison from",
             actionsByTarget.sourceID,
             " to ",
             actionsByTarget.targetInfo
         );
-    };
-
-    const heal = (instance, actionsByTarget, power) => {
-        console.log(
-            "heal from ",
-            actionsByTarget.sourceID,
-            " to ",
-            actionsByTarget.targetInfo
-        );
-    };
+        _applyPoison(instance, actionsByTarget, power);
+    }
 
     const swap = (instance, actionsByTarget) => {
         console.log(
@@ -61,23 +56,7 @@ const effectsType = () => {
         _swapOnBoard(instance, actionsByTarget);
     };
 
-    return { damage, balance, heal, swap };
-};
-
-const _swapOnBoard = (instance: instanceInterface, actionsByTarget: actionInterface) => {
-    const sourceMonster = getOnBoardMonsterByID(instance, actionsByTarget.sourceID);
-    const player = getPlayerByID(sourceMonster.playerID, instance)
-    const teamSourceMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.sourceID);
-    player.team[teamSourceMonsterIndex] = sourceMonster;
-
-    const teamTargetMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.targetInfo.id);
-    const onBoardSourceMonsterIndex = player.onBoard.findIndex((onBoardMonster) => onBoardMonster.id === actionsByTarget.sourceID);
-    player.onBoard[onBoardSourceMonsterIndex] = player.team[teamTargetMonsterIndex];
-
-    updateHistory(instance, {
-        context: historyContextEnum.SWAP,
-        content: { monster: convertMonsterToHistory(sourceMonster), targetMonster: convertMonsterToHistory(player.team[teamTargetMonsterIndex]) }
-    });
+    return { damage, poison, swap };
 };
 
 const _doCalculDamage = (instance: instanceInterface, target: actionInterface, power: number): MonsterFightingInterface => {
@@ -137,12 +116,32 @@ const _getTypeEfficiency = (skillType: monsterType, targetTypes: monsterType[]):
     return efficiency;
 };
 
+const _applyPoison = (instance: instanceInterface, target: actionInterface, power: number) => {
+    applyStatus(instance, target, buildStatus(statusName.POISONED, power))
+}
+
+const _swapOnBoard = (instance: instanceInterface, actionsByTarget: actionInterface) => {
+    const sourceMonster = getOnBoardMonsterByID(instance, actionsByTarget.sourceID);
+    const player = getPlayerByID(sourceMonster.playerID, instance)
+    const teamSourceMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.sourceID);
+    player.team[teamSourceMonsterIndex] = sourceMonster;
+
+    const teamTargetMonsterIndex = player.team.findIndex((teamMonster) => teamMonster.id === actionsByTarget.targetInfo.id);
+    const onBoardSourceMonsterIndex = player.onBoard.findIndex((onBoardMonster) => onBoardMonster.id === actionsByTarget.sourceID);
+    player.onBoard[onBoardSourceMonsterIndex] = player.team[teamTargetMonsterIndex];
+
+    updateHistory(instance, {
+        context: historyContextEnum.SWAP,
+        content: { monster: convertMonsterToHistory(sourceMonster), targetMonster: convertMonsterToHistory(player.team[teamTargetMonsterIndex]) }
+    });
+};
+
 const deathCheck = (instance: instanceInterface, actionsByTarget: actionInterface): boolean => {
     if (_isNeededToCheckDeath(actionsByTarget)) {
         const monster = getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot]
         if (monster.stats[monsterStatsEnum.HP] <= 0) {
             _kill(instance, actionsByTarget);
-            _checkEndgame(instance, actionsByTarget.targetInfo.targetedPlayerID);
+            checkEndgame(instance, actionsByTarget.targetInfo.targetedPlayerID);
             return true;
         }
     }
@@ -165,17 +164,7 @@ const _kill = (instance: instanceInterface, actionsByTarget: actionInterface) =>
     })
 };
 
-const _checkEndgame = (instance: instanceInterface, playerID: string) => {
-    if (getPlayerByID(playerID, instance).team.every((monster) => monster.isAlive == false)) {
-        instance.fightInfo.endgame = true;
-        instance.fightInfo.winner = instance.players.find((player) => player.id != playerID).id
 
-        updateHistory(instance, {
-            context: historyContextEnum.ENDGAME,
-            content: { winner: playerID }
-        })
-    }
-}
 
 export {
     effectsType,

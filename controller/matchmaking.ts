@@ -1,4 +1,4 @@
-import { playerFightingInterface } from "../interfaces/fight";
+import { playerFightingInterface } from "../interfaces/player";
 
 const matchmaking = () => {
 	let waitingPlayers = [];
