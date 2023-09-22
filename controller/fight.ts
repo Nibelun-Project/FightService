@@ -24,10 +24,14 @@ const fight = () => {
 
 		if (isActionsFilled(currInstance)) {
 			mapFights[fightID] = _playRound(currInstance);
-			return {
-				status: 2,
-				matchInfo: currInstance
-			};
+			if (currInstance.fightInfo.endgame) {
+				return { status: 4, matchInfo: currInstance }
+			} else {
+				return {
+					status: 2,
+					matchInfo: currInstance
+				};
+			}
 		} else
 			return {
 				status: 1,
@@ -42,13 +46,12 @@ const fight = () => {
 	const _playRound = (instance: instanceInterface): instanceInterface => {
 		initHistoryRound(instance)
 		clearBoardBeforeRound(instance);
-		const sortedListOfMonstersID = speedContest(instance);		
+		const sortedListOfMonstersID = speedContest(instance);
 		sortedListOfMonstersID.forEach((monsterID) => {
 			doAction(instance, monsterID);
 		});
 		applyChanges(instance);
 		clearActions(instance);
-		console.log(instance.fightInfo.round, instance.fightInfo.history);
 		return instance;
 	};
 

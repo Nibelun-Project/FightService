@@ -31,10 +31,10 @@ const passif = (
         if (owner.passive.trigger.actionType && owner.passive.trigger.actionType !== actionType) return false;
         const ownerFrom = fromType[owner.passive.trigger.from](owner);
         if (!ownerFrom.find((monster: MonsterFightingInterface) => {
-            return monster.id === from.id
+            return !monster ? false : monster.id === from.id
         })) return false;
         if (owner.passive.trigger.to && !fromType[owner.passive.trigger.to](owner).find((monster: MonsterFightingInterface) => {
-            return monster.id === getMonsterBySpot(instance, to).id
+            return !monster ? false : monster.id === getMonsterBySpot(instance, to).id
         })) return false;
 
         if (owner.passive.trigger.type && owner.passive.trigger.type !== target.skill.type) return false;

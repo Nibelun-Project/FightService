@@ -51,10 +51,15 @@ const comm = (io) => {
 				playerID,
 				fightID
 			);
-			if (status >= 2)
+			if (status === 2)
 				return _socketTo(matchInfo, "action-done", matchInfo, status);
-			else if (status >= 1)
+			else if (status === 1)
 				return _socketTo(playerID, "action-pending", "", status);
+			else if (status === 4) {
+				console.log("status 4");
+
+				return _socketTo(matchInfo, "endgame", matchInfo, 2)
+			}
 			else return status;
 		} else return 3;
 	};
