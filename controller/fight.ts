@@ -61,7 +61,7 @@ const fight = () => {
 
 	const doSwap = (swapActions: actionInterface[], fightID: string, playerID: string, both: boolean) => {
 		const currInstance = getInstanceByID(fightID)
-		getPlayerByID(playerID, currInstance).actions = swapActions;
+		if (both) getPlayerByID(playerID, currInstance).actions = swapActions;
 
 		for (let index = 0; index < swapActions.length; index++) {
 			const action = swapActions[index];
@@ -76,8 +76,8 @@ const fight = () => {
 			});
 		}
 		if (both) {
-			clearActions(currInstance)
 			if (isActionsFilled(currInstance)) {
+				clearActions(currInstance)
 				return { status: 2, matchInfo: currInstance }
 			} else
 				return {
