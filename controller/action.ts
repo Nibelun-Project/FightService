@@ -1,10 +1,11 @@
 import { actionInterface } from "../interfaces/action";
 import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance";
-import { MonsterFightingInterface, monsterStatsEnum, monsterType } from "../interfaces/monster.js";
+import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { statusName } from "../interfaces/status.js";
 import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from "./history.js";
 import { checkEndgame, getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
+import { getTypeEfficiency, isSTAB } from "./MonsterType.js";
 import { passif } from "./passif.js";
 import { applyStatus, buildStatus } from "./status.js";
 import { getTargeting } from "./targeting.js";
@@ -63,8 +64,8 @@ const _doCalculDamage = (instance: instanceInterface, target: actionInterface, p
     const skill = target.skill;
     const monsterSource = getOnBoardMonsterByID(instance, target.sourceID);
     const monsterTarget = getPlayerByID(target.targetInfo.targetedPlayerID, instance).onBoard[target.targetInfo.spot];
-    const typeEfficiency = _getTypeEfficiency(skill.type, monsterTarget.type);
-    const isSTAB = _isSTAB(monsterSource.type, skill.type);
+    const typeEfficiency = getTypeEfficiency(skill.type, monsterTarget.type);
+    const stab = isSTAB(monsterSource.type, skill.type);
 
     const hpChanges =
         -(
@@ -73,47 +74,18 @@ const _doCalculDamage = (instance: instanceInterface, target: actionInterface, p
                 (monsterTarget.stats[monsterStatsEnum.DEF]) // target
             )
         ) *
-        (typeEfficiency * isSTAB); // multiplying factor
+        (typeEfficiency * stab); // multiplying factor
     monsterTarget.stats[monsterStatsEnum.HP] += hpChanges;
 
     updateHistory(instance, {
         context: historyContextEnum.DAMAGE,
         content: {
             monster: convertMonsterToHistory(monsterSource), skill: convertSkillToHistory(skill), typeEfficiency: typeEfficiency,
-            isSTAB: isSTAB, targetMonster: convertMonsterToHistory(monsterTarget), statName: monsterStatsEnum.HP, statChanges: hpChanges
+            isSTAB: stab, targetMonster: convertMonsterToHistory(monsterTarget), statName: monsterStatsEnum.HP, statChanges: hpChanges
         }
     })
 
     return monsterTarget;
-};
-
-const _isSTAB = (monsterTypes: monsterType[], skillType: monsterType): number => {
-    monsterTypes.forEach((type) => {
-        if (type === skillType) {
-            return 1.25;
-        }
-    });
-    return 1;
-};
-
-const _getTypeAffinities = (type: monsterType) => {
-    const affinities = {
-        fire: { fire: 1, mental: 1, neutral: 1 },
-        mental: { fire: 1, mental: 1, neutral: 2 },
-        neutral: { fire: 1, mental: 1, neutral: 0.5 },
-    };
-    return affinities[type.toString()];
-};
-
-const _getTypeEfficiency = (skillType: monsterType, targetTypes: monsterType[]): number => {
-    const affinities = _getTypeAffinities(skillType);
-    let efficiency = 1;
-
-    targetTypes.forEach((type) => {
-        efficiency *= affinities[type];
-    });
-
-    return efficiency;
 };
 
 const _applyPoison = (instance: instanceInterface, target: actionInterface, power: number) => {
