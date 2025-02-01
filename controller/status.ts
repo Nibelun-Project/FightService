@@ -1,10 +1,11 @@
 import { actionInterface } from "../interfaces/action.js";
 import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
-import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
+import { MonsterFightingInterface } from "../interfaces/monster.js";
 import { hasEffectAtTheEndOfRound, statusInterface, statusNameType, statusName } from "../interfaces/status.js";
+import { deathCheckMonster } from "./death.js";
 import { convertMonsterToHistory, updateHistory } from "./history.js";
-import { checkEndgame, getOnBoardMonsterByID, getPlayerByID } from "./instance.js";
+import { getOnBoardMonsterByID, getPlayerByID } from "./instance.js";
 
 const rollStatus = (instance: instanceInterface, monsterID: string) => {
     let monster = getOnBoardMonsterByID(instance, monsterID)
@@ -20,7 +21,7 @@ const rollStatus = (instance: instanceInterface, monsterID: string) => {
             }
 
         })
-        _deathCheck(instance, monster);
+        deathCheckMonster(instance, monster);
     }
 }
 
@@ -58,27 +59,6 @@ const applyStatus = (instance: instanceInterface, target: actionInterface, statu
             statusName: statusToApply.name, nbrRound: nbrRound }
     })
 }
-
-const _deathCheck = (instance: instanceInterface, monster: MonsterFightingInterface) => {
-    if (monster.stats[monsterStatsEnum.HP] <= 0) {
-        _kill(instance, monster);
-        checkEndgame(instance, monster.playerID);
-    }
-    
-
-};
-
-const _kill = (instance: instanceInterface, monster: MonsterFightingInterface) => {
-
-    monster.stats[monsterStatsEnum.HP] = 0;
-    monster.isAlive = false;
-
-    updateHistory(instance, {
-        context: historyContextEnum.KILL,
-        content: { monster: convertMonsterToHistory(monster) }
-    })
-}
-
 
 export {
     rollStatus,

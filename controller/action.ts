@@ -1,10 +1,11 @@
-import { actionInterface } from "../interfaces/action";
+import { actionInterface } from "../interfaces/action.js";
 import { historyContextEnum } from "../interfaces/history.js";
-import { instanceInterface } from "../interfaces/instance";
+import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { statusName } from "../interfaces/status.js";
+import { deathCheckActionTaget } from "./death.js";
 import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from "./history.js";
-import { checkEndgame, getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
+import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
 import { getTypeEfficiency, isSTAB } from "./MonsterType.js";
 import { passif } from "./passif.js";
 import { applyStatus, buildStatus } from "./status.js";
@@ -19,7 +20,7 @@ const doAction = (instance: instanceInterface, monsterID: string) => {
             const effectTargets = getTargeting(instance, actionFromMonster, effect.targetType);
             effectTargets.forEach((target) => {
                 passif(effectsType()[effect.type], target, effect.power, effect.type, instance)
-                return !deathCheck(instance, target);
+                return !deathCheckActionTaget(instance, target);
             })
 
         });
@@ -108,38 +109,8 @@ const _swapOnBoard = (instance: instanceInterface, actionsByTarget: actionInterf
     });
 };
 
-const deathCheck = (instance: instanceInterface, actionsByTarget: actionInterface): boolean => {
-    if (_isNeededToCheckDeath(actionsByTarget)) {
-        const monster = getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot]
-        if (monster.stats[monsterStatsEnum.HP] <= 0) {
-            _kill(instance, actionsByTarget);
-            checkEndgame(instance, actionsByTarget.targetInfo.targetedPlayerID);
-            return true;
-        }
-    }
-
-    return false;
-};
-
-const _isNeededToCheckDeath = (actionsByTarget: actionInterface): boolean => {
-    if (actionsByTarget.targetInfo.targetedPlayerID) return true
-    else return false
-};
-
-const _kill = (instance: instanceInterface, actionsByTarget: actionInterface) => {
-    getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot].stats[monsterStatsEnum.HP] = 0;
-    getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot].isAlive = false;
-
-    updateHistory(instance, {
-        context: historyContextEnum.KILL,
-        content: { monster: convertMonsterToHistory(getPlayerByID(actionsByTarget.targetInfo.targetedPlayerID, instance).onBoard[actionsByTarget.targetInfo.spot]) }
-    })
-};
-
-
 
 export {
     effectsType,
-    deathCheck,
     doAction,
 }
