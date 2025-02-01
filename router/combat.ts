@@ -35,7 +35,8 @@ const combatRouter = (communicationInstance) => {
 				communicationInstance.swapActions(
 					req.body.swapActions,
 					req.body.playerID,
-					req.body.fightID
+					req.body.fightID,
+					req.body.both
 				)
 			);
 			res.status(controllerRes.status).send(controllerRes.message);

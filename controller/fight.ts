@@ -27,10 +27,14 @@ const fight = () => {
 
 		if (isActionsFilled(currInstance)) {
 			mapFights[fightID] = _playRound(currInstance);
-			return {
-				status: 2,
-				matchInfo: currInstance
-			};
+			if (currInstance.fightInfo.endgame) {
+				return { status: 4, matchInfo: currInstance }
+			} else {
+				return {
+					status: 2,
+					matchInfo: currInstance
+				};
+			}
 		} else
 			return {
 				status: 1,
@@ -45,32 +49,44 @@ const fight = () => {
 	const _playRound = (instance: instanceInterface): instanceInterface => {
 		initHistoryRound(instance)
 		clearBoardBeforeRound(instance);
-		const sortedListOfMonstersID = speedContest(instance);		
+		const sortedListOfMonstersID = speedContest(instance);
 		sortedListOfMonstersID.forEach((monsterID) => {
 			doAction(instance, monsterID);
 			rollStatus(instance, monsterID);
 		});
 		applyChanges(instance);
 		clearActions(instance);
-		console.log(instance.fightInfo.round, instance.fightInfo.history);
 		return instance;
 	};
 
-	const doSwap = (swapActions: actionInterface[], fightID: string) => {
-		const instance = getInstanceByID(fightID)
+	const doSwap = (swapActions: actionInterface[], fightID: string, playerID: string, both: boolean) => {
+		const currInstance = getInstanceByID(fightID)
+		if (both) getPlayerByID(playerID, currInstance).actions = swapActions;
+
 		for (let index = 0; index < swapActions.length; index++) {
 			const action = swapActions[index];
 
 			action.skill.effects.forEach((effect) => {
-				const effectTargets = getTargeting(instance, action, effect.targetType);
+				const effectTargets = getTargeting(currInstance, action, effect.targetType);
 
 				effectTargets.forEach((target) => {
-					passif(effectsType()[effect.type], target, effect.power, effect.type, instance);
-					return !deathCheck(instance, target);
+					passif(effectsType()[effect.type], target, effect.power, effect.type, currInstance);
+					return !deathCheck(currInstance, target);
 				})
 			});
 		}
-		return { status: 2, matchInfo: instance }
+		if (both) {
+			if (isActionsFilled(currInstance)) {
+				clearActions(currInstance)
+				return { status: 2, matchInfo: currInstance }
+			} else
+				return {
+					status: 1,
+					matchInfo: currInstance
+				};
+		} else {
+			return { status: 2, matchInfo: currInstance }
+		}
 	}
 
 	return { ready, waitActions, doSwap };

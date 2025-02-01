@@ -52,19 +52,26 @@ const comm = (io) => {
 				playerID,
 				fightID
 			);
-			if (status >= 2)
+			if (status === 2)
 				return _socketTo(matchInfo, "action-done", matchInfo, status);
-			else if (status >= 1)
+			else if (status === 1)
 				return _socketTo(playerID, "action-pending", "", status);
+			else if (status === 4) {
+				console.log("status 4");
+
+				return _socketTo(matchInfo, "endgame", matchInfo, 2)
+			}
 			else return status;
 		} else return 3;
 	};
 
-	const swapActions = (swapActions, playerID, fightID) => {
+	const swapActions = (swapActions, playerID, fightID, both: boolean) => {
 		if (playerSockets[playerID]) {
 			const { status, matchInfo } = fightModule.doSwap(
 				swapActions,
-				fightID
+				fightID,
+				playerID,
+				both
 			);
 			if (status >= 2)
 				return _socketTo(matchInfo, "swap-done", matchInfo, status);
