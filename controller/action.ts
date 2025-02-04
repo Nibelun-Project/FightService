@@ -2,6 +2,7 @@ import { actionInterface } from "../interfaces/action.js";
 import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
+import { effectInterface } from "../interfaces/skill.js";
 import { statusName } from "../interfaces/status.js";
 import { deathCheckActionTaget } from "./death.js";
 import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from "./history.js";
@@ -19,7 +20,7 @@ const doAction = (instance: instanceInterface, monsterID: string) => {
         actionFromMonster.skill.effects.forEach((effect) => {
             const effectTargets = getTargeting(instance, actionFromMonster, effect.targetType);
             effectTargets.forEach((target) => {
-                passif(effectsType()[effect.type], target, effect.power, effect.type, instance)
+                passif(effectsType()[effect.type], target, effect, instance)
                 return !deathCheckActionTaget(instance, target);
             })
 
@@ -28,27 +29,27 @@ const doAction = (instance: instanceInterface, monsterID: string) => {
 };
 
 const effectsType = () => {
-    const damage = (instance: instanceInterface, actionsByTarget: actionInterface, power: number) => {
+    const damage = (instance: instanceInterface, actionsByTarget: actionInterface, effect: effectInterface) => {
         console.log(
             "damage from ",
             actionsByTarget.sourceID,
             " to ",
             actionsByTarget.targetInfo
         );
-        _doCalculDamage(instance, actionsByTarget, power);
+        _doCalculDamage(instance, actionsByTarget, effect.power);
     };
 
-    const poison = (instance, actionsByTarget, power) => {
+    const poison = (instance: instanceInterface, actionsByTarget: actionInterface, effect: effectInterface) => {
         console.log(
             "poison from",
             actionsByTarget.sourceID,
             " to ",
             actionsByTarget.targetInfo
         );
-        _applyPoison(instance, actionsByTarget, power);
+        _applyPoison(instance, actionsByTarget, effect.power);
     }
 
-    const swap = (instance, actionsByTarget) => {
+    const swap = (instance: instanceInterface, actionsByTarget: actionInterface) => {
         console.log(
             "swap on",
             actionsByTarget.sourceID,

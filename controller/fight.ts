@@ -71,7 +71,7 @@ const fight = () => {
 				const effectTargets = getTargeting(currInstance, action, effect.targetType);
 
 				effectTargets.forEach((target) => {
-					passif(effectsType()[effect.type], target, effect.power, effect.type, currInstance);
+					passif(effectsType()[effect.type], target, effect, currInstance);
 					return !deathCheckActionTaget(currInstance, target);
 				})
 			});
