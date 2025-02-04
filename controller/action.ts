@@ -8,7 +8,7 @@ import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from ".
 import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
 import { getTypeEfficiency, isSTAB } from "./monsterType.js";
 import { passif } from "./passif.js";
-import { applyStatus, buildStatus } from "./status.js";
+import { applyStatus } from "./status.js";
 import { getTargeting } from "./targeting.js";
 
 const doAction = (instance: instanceInterface, monsterID: string) => {
