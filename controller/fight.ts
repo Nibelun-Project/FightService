@@ -8,7 +8,7 @@ import { passif } from "./passif.js";
 import { rollStatus } from "./status.js";
 import { actionInterface } from "../interfaces/action.js";
 import { instanceInterface } from "../interfaces/instance.js";
-import { deathCheck } from "./death.js";
+import { deathCheckActionTaget } from "./death.js";
 
 
 
@@ -72,7 +72,7 @@ const fight = () => {
 
 				effectTargets.forEach((target) => {
 					passif(effectsType()[effect.type], target, effect.power, effect.type, currInstance);
-					return !deathCheck(currInstance, target);
+					return !deathCheckActionTaget(currInstance, target);
 				})
 			});
 		}

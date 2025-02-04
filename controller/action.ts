@@ -6,7 +6,7 @@ import { statusName } from "../interfaces/status.js";
 import { deathCheckActionTaget } from "./death.js";
 import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from "./history.js";
 import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
-import { getTypeEfficiency, isSTAB } from "./MonsterType.js";
+import { getTypeEfficiency, isSTAB } from "./monsterType.js";
 import { passif } from "./passif.js";
 import { applyStatus, buildStatus } from "./status.js";
 import { getTargeting } from "./targeting.js";
