@@ -2,12 +2,13 @@ import { playerFightingInterface } from "../interfaces/player";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
 import { applyChanges, buildInstance, clearActions, clearBoardBeforeRound, getPlayerByID, isActionsFilled } from "./instance.js";
-import { deathCheck, doAction, effectsType } from "./action.js";
+import { doAction, effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
 import { passif } from "./passif.js";
 import { rollStatus } from "./status.js";
 import { actionInterface } from "../interfaces/action.js";
 import { instanceInterface } from "../interfaces/instance.js";
+import { deathCheckActionTaget } from "./death.js";
 
 
 
@@ -70,8 +71,8 @@ const fight = () => {
 				const effectTargets = getTargeting(currInstance, action, effect.targetType);
 
 				effectTargets.forEach((target) => {
-					passif(effectsType()[effect.type], target, effect.power, effect.type, currInstance);
-					return !deathCheck(currInstance, target);
+					passif(effectsType()[effect.type], target, effect, currInstance);
+					return !deathCheckActionTaget(currInstance, target);
 				})
 			});
 		}

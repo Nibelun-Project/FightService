@@ -45,7 +45,6 @@ interface statusInterface {
 }
 
 export {
-    statusName,
     statusInterface,
     preventToPlayRound,
     hasEffectAtTheEndOfRound,
