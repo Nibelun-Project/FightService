@@ -73,9 +73,9 @@ const comm = (io) => {
 				playerID,
 				both
 			);
-			if (status >= 2)
+			if (status === 2)
 				return _socketTo(matchInfo, "swap-done", matchInfo, status);
-			else if (status >= 1)
+			else if (status === 1)
 				return _socketTo(playerID, "swap-pending", "", status);
 			else return status;
 		} else return 3;
