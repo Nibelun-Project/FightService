@@ -3,7 +3,6 @@ import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
-import { statusName } from "../interfaces/status.js";
 import { deathCheckActionTaget } from "./death.js";
 import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from "./history.js";
 import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
@@ -39,14 +38,15 @@ const effectsType = () => {
         _doCalculDamage(instance, actionsByTarget, effect.power);
     };
 
-    const poison = (instance: instanceInterface, actionsByTarget: actionInterface, effect: effectInterface) => {
+    const status = (instance: instanceInterface, actionsByTarget: actionInterface, effect: effectInterface) => {
         console.log(
-            "poison from",
+            effect.status,
+            " from ",
             actionsByTarget.sourceID,
             " to ",
             actionsByTarget.targetInfo
         );
-        _applyPoison(instance, actionsByTarget, effect.power);
+        applyStatus(instance, actionsByTarget, effect);
     }
 
     const swap = (instance: instanceInterface, actionsByTarget: actionInterface) => {
@@ -59,7 +59,7 @@ const effectsType = () => {
         _swapOnBoard(instance, actionsByTarget);
     };
 
-    return { damage, poison, swap };
+    return { damage, status, swap };
 };
 
 const _doCalculDamage = (instance: instanceInterface, target: actionInterface, power: number): MonsterFightingInterface => {
@@ -89,10 +89,6 @@ const _doCalculDamage = (instance: instanceInterface, target: actionInterface, p
 
     return monsterTarget;
 };
-
-const _applyPoison = (instance: instanceInterface, target: actionInterface, power: number) => {
-    applyStatus(instance, target, buildStatus(statusName.POISONED, power))
-}
 
 const _swapOnBoard = (instance: instanceInterface, actionsByTarget: actionInterface) => {
     const sourceMonster = getOnBoardMonsterByID(instance, actionsByTarget.sourceID);
