@@ -20,6 +20,8 @@ enum effectTypeEnum {
 	SWAP = "swap"
 }
 
+enum cantBePreventBySleep { SWAP = effectTypeEnum.SWAP }
+
 type effectType = `${effectTypeEnum}`
 type targetType = `${targetTypeEnum}`
 
@@ -47,4 +49,5 @@ export {
     targetInfoType,
     effectType,
     targetType,
+	cantBePreventBySleep
 }

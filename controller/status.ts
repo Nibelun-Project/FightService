@@ -1,9 +1,9 @@
-import { actionInterface } from "../interfaces/action.js";
+import { actionInterface, cantBePreventBySleep, effectType } from "../interfaces/action.js";
 import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
-import { hasEffectAtTheEndOfRound, statusInterface, statusNameType } from "../interfaces/status.js";
+import { hasEffectAtTheEndOfRound, preventToPlayRound, statusInterface, statusNameType } from "../interfaces/status.js";
 import { deathCheckMonster } from "./death.js";
 import { convertMonsterToHistory, updateHistory } from "./history.js";
 import { getOnBoardMonsterByID, getPlayerByID } from "./instance.js";
@@ -62,8 +62,18 @@ const applyStatus = (instance: instanceInterface, target: actionInterface, effec
     })
 }
 
+const isStatusPreventToPlayRound = (effect: effectInterface, monster: MonsterFightingInterface ): boolean => {
+    if (!Object.values<effectType>(cantBePreventBySleep).includes(effect.type) ) {
+        return monster.statuses.some((status) => {
+            return Object.values<statusNameType>(preventToPlayRound).includes(status.name)
+        })
+    }
+    return false
+}
+
 export {
     rollStatus,
     buildStatus,
-    applyStatus
+    applyStatus,
+    isStatusPreventToPlayRound
 }

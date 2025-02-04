@@ -18,7 +18,7 @@ const doAction = (instance: instanceInterface, monsterID: string) => {
         //Loop through skill effects			
         actionFromMonster.skill.effects.forEach((effect) => {
             const effectTargets = getTargeting(instance, actionFromMonster, effect.targetType);
-            effectTargets.forEach((target) => {
+            effectTargets.forEach((target: actionInterface) => {
                 passif(effectsType()[effect.type], target, effect, instance)
                 return !deathCheckActionTaget(instance, target);
             })
@@ -49,6 +49,7 @@ const effectsType = () => {
         applyStatus(instance, actionsByTarget, effect);
     }
 
+    
     const swap = (instance: instanceInterface, actionsByTarget: actionInterface) => {
         console.log(
             "swap on",
