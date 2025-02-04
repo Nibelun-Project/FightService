@@ -64,16 +64,21 @@ const applyStatus = (instance: instanceInterface, target: actionInterface, effec
 
 const isStatusPreventToPlayRound = (effect: effectInterface, monster: MonsterFightingInterface ): boolean => {
     if (!Object.values<effectType>(cantBePreventBySleep).includes(effect.type) ) {
-        return monster.statuses.some((status) => {
-            return Object.values<statusNameType>(preventToPlayRound).includes(status.name)
-        })
+        return hasStatusFromList(monster, preventToPlayRound)
     }
     return false
+}
+
+const hasStatusFromList = (monster: MonsterFightingInterface, statusList: any): boolean => {
+    return monster.statuses.some((status) => {
+        return Object.values<statusNameType>(statusList).includes(status.name)
+    })
 }
 
 export {
     rollStatus,
     buildStatus,
     applyStatus,
-    isStatusPreventToPlayRound
+    isStatusPreventToPlayRound,
+    hasStatusFromList
 }
