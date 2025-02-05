@@ -3,7 +3,7 @@ import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
-import { hasEffectAtTheEndOfRound, preventToPlayRound, statusInterface, statusNameType } from "../interfaces/status.js";
+import { hasEffectAtTheEndOfRound, listOfStatus, preventToPlayRound, statusInterface, statusNameType } from "../interfaces/status.js";
 import { deathCheckMonster } from "./death.js";
 import { convertMonsterToHistory, updateHistory } from "./history.js";
 import { getOnBoardMonsterByID, getPlayerByID } from "./instance.js";
@@ -69,7 +69,8 @@ const isStatusPreventToPlayRound = (effect: effectInterface, monster: MonsterFig
     return false
 }
 
-const hasStatusFromList = (monster: MonsterFightingInterface, statusList: any): boolean => {
+
+const hasStatusFromList = (monster: MonsterFightingInterface, statusList: listOfStatus): boolean => {
     return monster.statuses.some((status) => {
         return Object.values<statusNameType>(statusList).includes(status.name)
     })

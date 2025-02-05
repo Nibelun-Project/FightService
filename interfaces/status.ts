@@ -40,6 +40,8 @@ enum hasEffectDuringRound {
     INVIGORATED = statusName.INVIGORATED, 
     NULLIFIED = statusName.NULLIFIED}
 
+type listOfStatus = typeof preventToPlayRound | typeof hasEffectAtTheEndOfRound | typeof hasEffectDuringRound
+
 type statusNameType = `${statusName}`
 
 interface statusInterface {
@@ -52,5 +54,6 @@ export {
     preventToPlayRound,
     hasEffectAtTheEndOfRound,
     hasEffectDuringRound,
-    statusNameType
+    statusNameType,
+    listOfStatus
 }
