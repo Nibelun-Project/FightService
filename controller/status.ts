@@ -28,11 +28,16 @@ const rollStatus = (instance: instanceInterface, monsterID: string) => {
 
 const _statusEffects = (monster: MonsterFightingInterface) => {
 
-    const poisoned = () => {
+    const burned = () => {
         monster.stats.hp -= monster.starting.hp * 0.05
     }
 
-    return {poisoned};
+    const poisoned = () => {
+        monster.stats.hp -= monster.starting.hp * 0.05
+    }
+    
+
+    return {burned, poisoned};
 }
 
 const buildStatus = (name: statusNameType, nbrRound: number): statusInterface => {
