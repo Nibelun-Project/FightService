@@ -35,9 +35,14 @@ const _statusEffects = (monster: MonsterFightingInterface) => {
     const poisoned = () => {
         monster.stats.hp -= monster.starting.hp * 0.05
     }
+
+    const regenerated = () => {
+        monster.stats.hp += monster.starting.hp * 0.05
+        if (monster.stats.hp > monster.starting.hp) monster.stats.hp = monster.starting.hp
+    }
     
 
-    return {burned, poisoned};
+    return {burned, poisoned, regenerated};
 }
 
 const buildStatus = (name: statusNameType, nbrRound: number): statusInterface => {
