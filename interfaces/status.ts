@@ -2,23 +2,23 @@ enum statusName {
     //Negative Status Conditions
     ASLEEP    = "asleep",
     BURNED    = "burned",
-    COLD      = "cold",
+    COLD      = "cold", // TBD
     FROZEN    = "frozen",
-    EXHAUSTED = "exhausted",
-    ISOLATED  = "isolated",
+    EXHAUSTED = "exhausted", // TBD
+    ISOLATED  = "isolated", // TBD
     POISONED  = "poisoned",
-    SEIZED    = "seized",
-    TRAPPED   = "trapped",
+    SEIZED    = "seized", // TBD
+    TRAPPED   = "trapped", // TBD
 
     //Positive Status Conditions
-    ALERTED     = "alerted",
+    ALERTED     = "alerted", // TBD
     REGENERATED = "regenerated",
-    EVADING     = "evading",
-    IMMUNE      = "immune",
-    INVIGORATED = "invigorated",
+    EVADING     = "evading", // TBD
+    IMMUNE      = "immune", // TBD
+    INVIGORATED = "invigorated", // TBD
 
     //Neutral Status Conditions
-    NULLIFIED = "nullified"
+    NULLIFIED = "nullified" // TBD
 }
 
 enum preventToPlayRound { 
