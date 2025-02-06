@@ -16,6 +16,7 @@ enum effectTypeEnum {
 	HEAL = "heal",
 	MATTACK = "+attack",
 	PATTACK = "+attack",
+	STATUS = "status",
 	POISON = "poison",
 	SWAP = "swap"
 }
@@ -45,5 +46,7 @@ export {
     actionInterface,
     targetInfoType,
     effectType,
-    targetType
+	effectTypeEnum,
+    targetType,
+	targetTypeEnum
 }

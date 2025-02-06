@@ -6,6 +6,7 @@ enum statusName {
     FROZEN    = "frozen",
     EXHAUSTED = "exhausted", // TBD
     ISOLATED  = "isolated", // TBD
+    OVERSTAIN = "overstrain",
     POISONED  = "poisoned",
     SEIZED    = "seized", // TBD
     TRAPPED   = "trapped", // TBD
@@ -23,7 +24,8 @@ enum statusName {
 
 enum preventToPlayRound { 
     ASLEEP = statusName.ASLEEP, 
-    FROZEN = statusName.FROZEN}
+    FROZEN = statusName.FROZEN,
+    OVERSTAIN = statusName.OVERSTAIN}
 
 enum hasEffectAtTheEndOfRound { 
     BURNED = statusName.BURNED, 
@@ -55,5 +57,6 @@ export {
     hasEffectAtTheEndOfRound,
     hasEffectDuringRound,
     statusNameType,
+    statusName,
     listOfStatus
 }

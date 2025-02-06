@@ -52,22 +52,20 @@ const buildStatus = (name: statusNameType, nbrRound: number): statusInterface =>
     }
 }
 
-const applyStatus = (instance: instanceInterface, target: actionInterface, effect: effectInterface) => { 
-    const targetMonster = getPlayerByID(target.targetInfo.targetedPlayerID, instance).onBoard[target.targetInfo.spot];
-    const sourceMonster = getOnBoardMonsterByID(instance, target.sourceID)
+const applyStatus = (instance: instanceInterface, monster: MonsterFightingInterface, effect: effectInterface) => { 
     const statusToApply = buildStatus(effect.status, effect.power)
 
     let nbrRound = 0;
-    if (targetMonster.statuses.some((monsterStatus) => { return (monsterStatus.name === statusToApply.name) })) {
+    if (monster.statuses.some((monsterStatus) => { return (monsterStatus.name === statusToApply.name) })) {
         nbrRound = 0;
     } else {
         nbrRound = effect.power;
-        targetMonster.statuses.push(statusToApply);
+        monster.statuses.push(statusToApply);
     }
 
     updateHistory(instance, {
         context: historyContextEnum.STATUS,
-        content: { monster: convertMonsterToHistory(sourceMonster), targetMonster: convertMonsterToHistory(targetMonster), 
+        content: { targetMonster: convertMonsterToHistory(monster), 
             statusName: statusToApply.name, nbrRound: nbrRound }
     })
 }

@@ -24,7 +24,7 @@ const getTypeEfficiency = (skillType: monsterType, targetTypes: monsterType[]): 
 const isSTAB = (monsterTypes: monsterType[], skillType: monsterType): number => {
     monsterTypes.forEach((type) => {
         if (type === skillType) {
-            return 1.25;
+            return 1.5;
         }
     });
     return 1;

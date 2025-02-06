@@ -4,7 +4,7 @@ import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { convertActionToHistory, convertMonsterToHistory, initFightInfo, updateHistory } from "./history.js";
-import { isActionHighPriority } from "./skill";
+import { isSkillHighPriority } from "./skill";
 import { preventToPlayRound } from "../interfaces/status";
 import { hasStatusFromList } from "./status";
 
@@ -492,7 +492,7 @@ const isAvailableToPlayRound = (instance: instanceInterface, monsterID: string):
 		!isOnBoard(instance, monsterID) ||  // the monster is on the board
 		(
 			hasStatusFromList(monster, preventToPlayRound) &&
-			!isActionHighPriority(getActionByMonsterID(instance, monsterID))
+			!isSkillHighPriority(getActionByMonsterID(instance, monsterID))
 		)
 	) {
 		isAvailableToPlayRound = false

@@ -8,13 +8,14 @@ import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from ".
 import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
 import { getTypeEfficiency, isSTAB } from "./monsterType.js";
 import { passif } from "./passif.js";
+import { paySkillCost } from "./skill.js";
 import { applyStatus } from "./status.js";
 import { getTargeting } from "./targeting.js";
 
 const doAction = (instance: instanceInterface, monsterID: string) => {
     if (isAvailableToPlayRound(instance, monsterID)) {
         const actionFromMonster = getActionByMonsterID(instance, monsterID);
-
+        paySkillCost(instance, getOnBoardMonsterByID(instance, monsterID), actionFromMonster.skill)
         //Loop through skill effects			
         actionFromMonster.skill.effects.forEach((effect) => {
             const effectTargets = getTargeting(instance, actionFromMonster, effect.targetType);
@@ -46,7 +47,7 @@ const effectsType = () => {
             " to ",
             actionsByTarget.targetInfo
         );
-        applyStatus(instance, actionsByTarget, effect);
+        applyStatus(instance, getOnBoardMonsterByID(instance, actionsByTarget.sourceID), effect);
     }
 
     
