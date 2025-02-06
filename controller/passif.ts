@@ -4,7 +4,6 @@ import { MonsterFightingInterface } from "../interfaces/monster";
 import { effectInterface } from "../interfaces/skill";
 import { effectsType } from "./action.js";
 import { getAlly, getEnnemies, getMonsterBySpot, getOnBoardMonsterByID, getPlayerByID, getSpotByMonsterID } from "./instance.js";
-import { isStatusPreventToPlayRound } from "./status";
 import { getTargeting } from "./targeting.js";
 
 
@@ -146,9 +145,7 @@ const passif = (
 
     
     loopThroughPassif(passifBefore);
-    if (!loopThroughPassif(passifPrevent) && 
-        isStatusPreventToPlayRound(effect, getOnBoardMonsterByID(instance, target.sourceID))
-    ) action(instance, target, effect);
+    if (!loopThroughPassif(passifPrevent)) action(instance, target, effect);
     loopThroughPassif(passifAfter);
 };
 

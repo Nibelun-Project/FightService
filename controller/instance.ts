@@ -4,6 +4,9 @@ import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { convertActionToHistory, convertMonsterToHistory, initFightInfo, updateHistory } from "./history.js";
+import { isActionHighPriority } from "./skill";
+import { preventToPlayRound } from "../interfaces/status";
+import { hasStatusFromList } from "./status";
 
 
 const getTeam = (playerID): MonsterFightingInterface[] => {
@@ -486,7 +489,11 @@ const isAvailableToPlayRound = (instance: instanceInterface, monsterID: string):
 	if (
 		monster.isAlive === false ||
 		monster.stats[monsterStatsEnum.HP] <= 0 || // the monster is alive
-		!isOnBoard(instance, monsterID)   // the monster is on the board
+		!isOnBoard(instance, monsterID) ||  // the monster is on the board
+		(
+			hasStatusFromList(monster, preventToPlayRound) &&
+			!isActionHighPriority(getActionByMonsterID(instance, monsterID))
+		)
 	) {
 		isAvailableToPlayRound = false
 	}	

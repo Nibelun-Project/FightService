@@ -19,9 +19,6 @@ enum effectTypeEnum {
 	POISON = "poison",
 	SWAP = "swap"
 }
-
-enum cantBePreventBySleep { SWAP = effectTypeEnum.SWAP }
-
 type effectType = `${effectTypeEnum}`
 type targetType = `${targetTypeEnum}`
 
@@ -48,6 +45,5 @@ export {
     actionInterface,
     targetInfoType,
     effectType,
-    targetType,
-	cantBePreventBySleep
+    targetType
 }
