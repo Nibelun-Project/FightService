@@ -3,13 +3,11 @@ import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
-import { hasEffectAtTheEndOfRound, listOfStatus, statusInterface, statusNameType } from "../interfaces/status.js";
+import { hasEffectAtTheEndOfRound, listOfStatus, statusInterface, statusName, statusNameType } from "../interfaces/status.js";
 import { deathCheckMonster } from "./death.js";
 import { convertMonsterToHistory, updateHistory } from "./history.js";
-import { getOnBoardMonsterByID, getPlayerByID } from "./instance.js";
 
-const rollStatus = (instance: instanceInterface, monsterID: string) => {
-    let monster = getOnBoardMonsterByID(instance, monsterID)
+const _rollStatus = (instance: instanceInterface, monster: MonsterFightingInterface) => {
     if (monster.isAlive === true) {
         monster.statuses.forEach((status) => {
 
@@ -24,6 +22,14 @@ const rollStatus = (instance: instanceInterface, monsterID: string) => {
         })
         deathCheckMonster(instance, monster);
     }
+}
+
+const rollOnboardStatus = (instance: instanceInterface) => {
+    instance.players.forEach((player) => {
+        player.onBoard.forEach((monster) => {
+            _rollStatus(instance, monster)
+        })
+    })
 }
 
 const _statusEffects = (monster: MonsterFightingInterface) => {
@@ -75,10 +81,14 @@ const hasStatusFromList = (monster: MonsterFightingInterface, statusList: listOf
         return Object.values<statusNameType>(statusList).includes(status.name)
     })
 }
+ const hastStatus = (monster: MonsterFightingInterface, status: statusNameType): boolean => {
+    return monster.statuses.some((status) => { status.name === status.name })
+ }
 
 export {
-    rollStatus,
+    rollOnboardStatus,
     buildStatus,
     applyStatus,
-    hasStatusFromList
+    hasStatusFromList,
+    hastStatus
 }

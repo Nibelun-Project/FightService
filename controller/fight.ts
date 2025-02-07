@@ -5,10 +5,10 @@ import { applyChanges, buildInstance, clearActions, clearBoardBeforeRound, getPl
 import { doAction, effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
 import { passif } from "./passif.js";
-import { rollStatus } from "./status.js";
 import { actionInterface } from "../interfaces/action.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { deathCheckActionTaget } from "./death.js";
+import { endRoundEvents } from "./fightEvent";
 
 
 
@@ -53,8 +53,8 @@ const fight = () => {
 		const sortedListOfMonstersID = speedContest(instance);
 		sortedListOfMonstersID.forEach((monsterID) => {
 			doAction(instance, monsterID);
-			rollStatus(instance, monsterID);
 		});
+		endRoundEvents(instance)
 		applyChanges(instance);
 		clearActions(instance);
 		return instance;
