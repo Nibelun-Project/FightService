@@ -1,4 +1,3 @@
-import { actionInterface } from "../interfaces/action";
 import { instanceInterface } from "../interfaces/instance";
 import { MonsterFightingInterface } from "../interfaces/monster";
 import { effectInterface } from "../interfaces/skill";
@@ -9,7 +8,7 @@ import { getTargeting } from "./targeting.js";
 
 const passif = (
     action,
-    target: actionInterface,
+    target,
     effect: effectInterface,
     instance: instanceInterface
 ) => {
