@@ -96,6 +96,8 @@ interface MonsterFightingInterface {
 }
 
 type monsterType = `${monsterTypeEnum}`;
+type monsterStat = `${monsterStatsEnum}`;
+type statToRefill = typeof monsterStatsEnum.BALANCE | typeof monsterStatsEnum.HP | typeof monsterStatsEnum.STAMINA
 
 export {
 	MonsterInfoInterface,
@@ -104,5 +106,7 @@ export {
 	MonsterFightingInterface,
 	monsterType,
 	monsterTypeEnum,
-	monsterStatsEnum
+	monsterStat,
+	monsterStatsEnum,
+	statToRefill
 };

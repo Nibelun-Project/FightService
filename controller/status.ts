@@ -1,4 +1,3 @@
-import { actionInterface } from "../interfaces/action.js";
 import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster.js";

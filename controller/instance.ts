@@ -506,12 +506,6 @@ const isAvailableToPlayRound = (instance: instanceInterface, monsterID: string):
 	return isAvailableToPlayRound;
 };
 
-const clearActions = (instance: instanceInterface) => {
-	instance.players.forEach((player) => {
-		player.actions = []
-	})
-};
-
 const applyChanges = (instance: instanceInterface) => {
 	instance.players.forEach((player) => {
 		player.onBoard.forEach((onBoardMonster) => {
@@ -549,7 +543,6 @@ export {
 	getPlayerByID,
 	isActionsFilled,
 	isAvailableToPlayRound,
-	clearActions,
 	applyChanges,
 	buildInstance,
 	isTargetable,

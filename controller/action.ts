@@ -108,8 +108,15 @@ const _swapOnBoard = (instance: instanceInterface, actionsByTarget: actionInterf
     });
 };
 
+const clearActions = (instance: instanceInterface) => {
+	instance.players.forEach((player) => {
+		player.actions = []
+	})
+};
+
 
 export {
     effectsType,
+    clearActions,
     doAction,
 }
