@@ -4,7 +4,7 @@ enum statusName {
     BURNED    = "burned",
     COLD      = "cold", // TBD
     FROZEN    = "frozen",
-    EXHAUSTED = "exhausted", // TBD
+    EXHAUSTED = "exhausted",
     ISOLATED  = "isolated", // TBD
     OVERSTAIN = "overstrain",
     POISONED  = "poisoned",
@@ -16,7 +16,7 @@ enum statusName {
     REGENERATED = "regenerated",
     EVADING     = "evading", // TBD
     IMMUNE      = "immune", // TBD
-    INVIGORATED = "invigorated", // TBD
+    INVIGORATED = "invigorated",
 
     //Neutral Status Conditions
     NULLIFIED = "nullified" // TBD

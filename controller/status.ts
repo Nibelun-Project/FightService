@@ -1,10 +1,11 @@
 import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
-import { MonsterFightingInterface } from "../interfaces/monster.js";
+import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
-import { hasEffectAtTheEndOfRound, listOfStatus, statusInterface, statusName, statusNameType } from "../interfaces/status.js";
+import { hasEffectAtTheEndOfRound, listOfStatus, statusInterface, statusNameType } from "../interfaces/status.js";
 import { deathCheckMonster } from "./death.js";
 import { convertMonsterToHistory, updateHistory } from "./history.js";
+import { refillStat } from "./monsterStat.js";
 
 const _rollStatus = (instance: instanceInterface, monster: MonsterFightingInterface) => {
     if (monster.isAlive === true) {
@@ -42,8 +43,7 @@ const _statusEffects = (monster: MonsterFightingInterface) => {
     }
 
     const regenerated = () => {
-        monster.stats.hp += monster.starting.hp * 0.05
-        if (monster.stats.hp > monster.starting.hp) monster.stats.hp = monster.starting.hp
+        refillStat()[monsterStatsEnum.HP](monster, monster.starting.hp * 0.05)
     }
     
 

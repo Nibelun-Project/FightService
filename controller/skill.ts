@@ -11,13 +11,13 @@ const isSkillHighPriority = (action: actionInterface): boolean => {
 }
 
 const paySkillCost = (instance: instanceInterface ,monster: MonsterFightingInterface, skill: SkillInterface) => {
-    costType[skill.cost.type](instance, monster, skill.cost.value)
+    costType()[skill.cost.type](instance, monster, skill.cost.value)
 }
 
 const costType = () => {
 
-    const balance = (monster: MonsterFightingInterface, cost: number) => {}
-    const hp = (monster: MonsterFightingInterface, cost: number) => {}
+    const balance = (instance: instanceInterface, monster: MonsterFightingInterface, cost: number) => {}
+    const hp = (instance: instanceInterface, monster: MonsterFightingInterface, cost: number) => {}
     const stamina = (instance: instanceInterface, monster: MonsterFightingInterface, cost: number) => {
         monster.stats.stamina -= cost
         if (monster.stats.stamina < 0) {
@@ -29,11 +29,10 @@ const costType = () => {
                 "power": 1,
                 "status": statusName.OVERSTAIN
             })
-            
         }
     }
 	
-    return [balance, hp, stamina]
+    return {balance, hp, stamina}
 }
 
 export {

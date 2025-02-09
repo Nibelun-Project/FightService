@@ -11,18 +11,18 @@ const staminaRefill = (instance: instanceInterface) => {
                 hastStatus(monster, statusName.INVIGORATED) ||
                 !hastStatus(monster, statusName.EXHAUSTED) &&
                 !hastStatus(monster, statusName.INVIGORATED)) {
-                    refillStat[monsterStatsEnum.STAMINA](monster, 10)
+                    refillStat()[monsterStatsEnum.STAMINA](monster, 10)
                 
             }else if (hastStatus(monster, statusName.EXHAUSTED)) {
-                refillStat[monsterStatsEnum.STAMINA](monster, 10)
+                refillStat()[monsterStatsEnum.STAMINA](monster, 5)
             }else if (hastStatus(monster, statusName.INVIGORATED)) {
-                refillStat[monsterStatsEnum.STAMINA](monster, 10)
+                refillStat()[monsterStatsEnum.STAMINA](monster, 15)
             }
         })
         player.team.filter(
             (monster) => !isOnBoard(instance, monster.id)
             ).forEach((monster) => {
-                refillStat[monsterStatsEnum.STAMINA](monster, 10)
+                refillStat()[monsterStatsEnum.STAMINA](monster, 15)
         })
     })
 }
@@ -48,7 +48,7 @@ const refillStat = () => {
         }
     }
 
-    return [balance, hp, stamina]
+    return {balance, hp, stamina}
     
 }
 
