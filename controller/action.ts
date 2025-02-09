@@ -30,34 +30,14 @@ const doAction = (instance: instanceInterface, monsterID: string) => {
 
 const effectsType = () => {
     const damage = (instance: instanceInterface, actionsByTarget: actionInterface, effect: effectInterface) => {
-        console.log(
-            "damage from ",
-            actionsByTarget.sourceID,
-            " to ",
-            actionsByTarget.targetInfo
-        );
         _doCalculDamage(instance, actionsByTarget, effect.power);
     };
 
     const status = (instance: instanceInterface, actionsByTarget: actionInterface, effect: effectInterface) => {
-        console.log(
-            effect.status,
-            " from ",
-            actionsByTarget.sourceID,
-            " to ",
-            actionsByTarget.targetInfo
-        );
         applyStatus(instance, getOnBoardMonsterByID(instance, actionsByTarget.sourceID), effect);
     }
 
-    
     const swap = (instance: instanceInterface, actionsByTarget: actionInterface) => {
-        console.log(
-            "swap on",
-            actionsByTarget.sourceID,
-            " with ",
-            actionsByTarget.targetInfo
-        );
         _swapOnBoard(instance, actionsByTarget);
     };
 

@@ -7,7 +7,9 @@ enum historyContextEnum {
     HEAL         = "heal",
     KILL         = "kill",
     PLAYROUND    = "playRound",
+    PREVENT      = "prevent",
     SPEEDCONTEST = "speedContest",
+    STAMINA      = "stamina",
     STATUS       = "status",
     SWAP         = "swap",
 }

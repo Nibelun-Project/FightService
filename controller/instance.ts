@@ -5,7 +5,7 @@ import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { convertActionToHistory, convertMonsterToHistory, initFightInfo, updateHistory } from "./history.js";
 import { isSkillHighPriority } from "./skill.js";
-import { preventToPlayRound } from "../interfaces/status.js";
+import { preventToPlayRound, statusName } from "../interfaces/status.js";
 import { hasStatusFromList } from "./status.js";
 
 
@@ -32,8 +32,6 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				balance: 100,
 			},
 			statuses:  [
-				{name: "asleep", nbrRound: 2},
-				{name: "poisoned", nbrRound: 2}
 			],
 			image: "../ronk.png",
 			passive: {
@@ -50,12 +48,12 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			},
 			skills: [
 				{
-					name: "neutralo",
+					name: "Burn",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "single", type: "damage", power: 200 }],
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.BURNED}],
 					targetType: "single",
 					priority: 100,
 				},
@@ -65,31 +63,27 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "fire",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "single", type: "poison", power: 2 }],
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.POISONED}],
 					targetType: "single",
 					priority: 100,
 				},
 				{
-					name: "pewpew",
+					name: "Regenerated",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType: "ally", type: "damage", power: 200 }
-					],
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.REGENERATED}],
 					targetType: "ally",
 					priority: 100,
 				},
 				{
-					name: "volcano3",
+					name: "Wait",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "fire",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType: "ennemies", type: "damage", power: 200 }
-					],
+					effects: [],
 					targetType: "ennemies",
 					priority: 100,
 				},
@@ -138,47 +132,43 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			},
 			skills: [
 				{
-					name: "neutralo",
+					name: "Burn",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "single", type: "damage", power: 200 }],
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.BURNED}],
 					targetType: "single",
 					priority: 100,
 				},
 				{
-					name: "volcano",
+					name: "Poison",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "neutral",
+					type: "fire",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "double", type: "damage", power: 200 }],
-					targetType: "double",
-					priority: 100,
-				},
-				{
-					name: "pewpew",
-					description:
-						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "neutral",
-					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType: "all", type: "damage", power: 200 }
-					],
-					targetType: "all",
-					priority: 100,
-				},
-				{
-					name: "volcano2",
-					description:
-						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "neutral",
-					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType: "single", type: "damage", power: 200 }
-					],
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.POISONED}],
 					targetType: "single",
+					priority: 100,
+				},
+				{
+					name: "Regenerated",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "neutral",
+					cost: { type: "stamina", value: 40 },
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.REGENERATED}],
+					targetType: "ally",
+					priority: 100,
+				},
+				{
+					name: "Wait",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "fire",
+					cost: { type: "stamina", value: 40 },
+					effects: [],
+					targetType: "ennemies",
 					priority: 100,
 				},
 			],
@@ -227,47 +217,43 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			},
 			skills: [
 				{
-					name: "neutralo",
+					name: "Burn",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "double", type: "damage", power: 45 }],
-					targetType: "double",
-					priority: 100,
-				},
-				{
-					name: "volcano",
-					description:
-						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "neutral",
-					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "single", type: "damage", power: 45 }],
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.BURNED}],
 					targetType: "single",
 					priority: 100,
 				},
 				{
-					name: "pewpew",
+					name: "Poison",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "neutral",
+					type: "fire",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType: "single", type: "damage", power: 10 }
-					],
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.POISONED}],
 					targetType: "single",
 					priority: 100,
 				},
 				{
-					name: "volcano",
+					name: "Regenerated",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [
-						{ targetType: "single", type: "damage", power: 85 }
-					],
-					targetType: "single",
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.REGENERATED}],
+					targetType: "ally",
+					priority: 100,
+				},
+				{
+					name: "Wait",
+					description:
+						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
+					type: "fire",
+					cost: { type: "stamina", value: 40 },
+					effects: [],
+					targetType: "ennemies",
 					priority: 100,
 				},
 			],
@@ -316,43 +302,43 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 			},
 			skills: [
 				{
-					name: "volcano",
+					name: "Burn",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "single", type: "damage", power: 45 }],
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.BURNED}],
 					targetType: "single",
 					priority: 100,
 				},
 				{
-					name: "volcano",
+					name: "Poison",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "neutral",
+					type: "fire",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "single", type: "damage", power: 45 }],
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.POISONED}],
 					targetType: "single",
 					priority: 100,
 				},
 				{
-					name: "volcano",
+					name: "Regenerated",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
 					type: "neutral",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "single", type: "damage", power: 45 }],
-					targetType: "single",
+					effects: [{ targetType: "single", type: "status", power: 1 , status: statusName.REGENERATED}],
+					targetType: "ally",
 					priority: 100,
 				},
 				{
-					name: "volcano",
+					name: "Wait",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "neutral",
+					type: "fire",
 					cost: { type: "stamina", value: 40 },
-					effects: [{ targetType: "single", type: "damage", power: 45 }],
-					targetType: "single",
+					effects: [],
+					targetType: "ennemies",
 					priority: 100,
 				},
 			],
