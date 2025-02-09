@@ -1,6 +1,6 @@
-import { PassiveInterface } from "./passive";
-import { SkillInterface } from "./skill";
-import { statusInterface } from "./status";
+import { PassiveInterface } from "./passive.js";
+import { SkillInterface } from "./skill.js";
+import { statusInterface } from "./status.js";
 
 enum monsterTypeEnum {
 	AERIAL = "aerial",

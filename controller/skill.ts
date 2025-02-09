@@ -1,9 +1,9 @@
-import { actionInterface, effectTypeEnum, targetTypeEnum } from "../interfaces/action";
-import { instanceInterface } from "../interfaces/instance";
-import { MonsterFightingInterface } from "../interfaces/monster";
-import { SkillInterface } from "../interfaces/skill";
-import { statusName } from "../interfaces/status";
-import { applyStatus } from "./status";
+import { actionInterface, effectTypeEnum, targetTypeEnum } from "../interfaces/action.js";
+import { instanceInterface } from "../interfaces/instance.js";
+import { MonsterFightingInterface } from "../interfaces/monster.js";
+import { SkillInterface } from "../interfaces/skill.js";
+import { statusName } from "../interfaces/status.js";
+import { applyStatus } from "./status.js";
 
 const isSkillHighPriority = (action: actionInterface): boolean => {
     if (action.skill.priority < 50)  return true

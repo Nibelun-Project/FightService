@@ -1,8 +1,8 @@
-import { instanceInterface } from "../interfaces/instance"
-import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster"
-import { statusName } from "../interfaces/status"
-import { isOnBoard } from "./instance"
-import { hastStatus } from "./status"
+import { instanceInterface } from "../interfaces/instance.js"
+import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js"
+import { statusName } from "../interfaces/status.js"
+import { isOnBoard } from "./instance.js"
+import { hastStatus } from "./status.js"
 
 const staminaRefill = (instance: instanceInterface) => {
     instance.players.forEach((player) => {

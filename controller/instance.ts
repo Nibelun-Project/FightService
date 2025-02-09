@@ -1,12 +1,12 @@
-import { actionInterface, targetInfoType } from "../interfaces/action";
-import { playerFightingInterface } from "../interfaces/player";
+import { actionInterface, targetInfoType } from "../interfaces/action.js";
+import { playerFightingInterface } from "../interfaces/player.js";
 import { historyContextEnum } from "../interfaces/history.js";
-import { instanceInterface } from "../interfaces/instance";
+import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js";
 import { convertActionToHistory, convertMonsterToHistory, initFightInfo, updateHistory } from "./history.js";
-import { isSkillHighPriority } from "./skill";
-import { preventToPlayRound } from "../interfaces/status";
-import { hasStatusFromList } from "./status";
+import { isSkillHighPriority } from "./skill.js";
+import { preventToPlayRound } from "../interfaces/status.js";
+import { hasStatusFromList } from "./status.js";
 
 
 const getTeam = (playerID): MonsterFightingInterface[] => {

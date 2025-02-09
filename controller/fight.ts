@@ -1,4 +1,4 @@
-import { playerFightingInterface } from "../interfaces/player";
+import { playerFightingInterface } from "../interfaces/player.js";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
 import { applyChanges, buildInstance, clearBoardBeforeRound, getPlayerByID, isActionsFilled } from "./instance.js";
@@ -8,8 +8,8 @@ import { passif } from "./passif.js";
 import { actionInterface } from "../interfaces/action.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { deathCheckActionTaget } from "./death.js";
-import { staminaRefill } from "./monsterStat";
-import { rollOnboardStatus } from "./status";
+import { staminaRefill } from "./monsterStat.js";
+import { rollOnboardStatus } from "./status.js";
 
 
 

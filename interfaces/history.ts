@@ -1,5 +1,5 @@
-import { targetType } from "./action";
-import { monsterType } from "./monster";
+import { targetType } from "./action.js";
+import { monsterType } from "./monster.js";
 
 enum historyContextEnum {
     DAMAGE       = "damage",

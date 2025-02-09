@@ -1,6 +1,6 @@
-import { effectType, targetType } from "./action";
-import { monsterType } from "./monster";
-import { statusNameType } from "./status";
+import { effectType, targetType } from "./action.js";
+import { monsterType } from "./monster.js";
+import { statusNameType } from "./status.js";
 
 enum skillCostEnum {
 	STAMINA = "stamina",

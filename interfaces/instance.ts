@@ -1,5 +1,5 @@
-import { playerFightingInterface } from "./player";
-import { fightInfoInterface } from "./history";
+import { playerFightingInterface } from "./player.js";
+import { fightInfoInterface } from "./history.js";
 
 interface instanceInterface {
 	id: string;
