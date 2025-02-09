@@ -4,6 +4,7 @@ import { monsterType } from "./monster.js";
 enum historyContextEnum {
     DAMAGE       = "damage",
     ENDGAME      = "endgame",
+    HEAL         = "heal",
     KILL         = "kill",
     PLAYROUND    = "playRound",
     SPEEDCONTEST = "speedContest",
