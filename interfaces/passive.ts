@@ -1,6 +1,6 @@
-import { effectType, targetType } from "./action";
-import { monsterType } from "./monster";
-import { effectInterface } from "./skill";
+import { effectType, targetType } from "./action.js";
+import { monsterType } from "./monster.js";
+import { effectInterface } from "./skill.js";
 
 enum triggerWhenEnum {
 	BEFORE = "before",

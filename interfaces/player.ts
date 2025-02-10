@@ -1,5 +1,5 @@
-import { MonsterFightingInterface } from "./monster";
-import { actionInterface } from "./action";
+import { MonsterFightingInterface } from "./monster.js";
+import { actionInterface } from "./action.js";
 
 interface playerFightingInterface {
 	id: string;

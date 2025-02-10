@@ -1,6 +1,6 @@
-import { PassiveInterface } from "./passive";
-import { SkillInterface } from "./skill";
-import { statusInterface } from "./status";
+import { PassiveInterface } from "./passive.js";
+import { SkillInterface } from "./skill.js";
+import { statusInterface } from "./status.js";
 
 enum monsterTypeEnum {
 	AERIAL = "aerial",
@@ -17,6 +17,20 @@ enum monsterTypeEnum {
 	WATER = "water",
 }
 
+enum typeConst {
+	STAB = 1.5
+}
+
+const affinities = {
+	fire : { fire: 1, mental: 1, neutral: 1 },
+	mental : { fire: 1, mental: 1, neutral: 2 },
+	neutral : { fire: 1, mental: 1, neutral: 0.5 },
+};
+
+
+
+
+type monsterType = `${monsterTypeEnum}`;
 
 enum monsterStatsEnum {
 	ATK = "attack",
@@ -25,6 +39,13 @@ enum monsterStatsEnum {
 	HP = "hp",
 	SPEED = "speed",
 	STAMINA = "stamina",
+}
+
+type monsterStat = `${monsterStatsEnum}`;
+type statToRefill = typeof monsterStatsEnum.BALANCE | typeof monsterStatsEnum.HP | typeof monsterStatsEnum.STAMINA
+enum statsConst {
+	STAMINAREFILLONBOARD = 10,
+	STAMINAREFILLNOTONBOARD = 15
 }
 
 interface MonsterInfoInterface {
@@ -95,8 +116,6 @@ interface MonsterFightingInterface {
 	playerID: string;
 }
 
-type monsterType = `${monsterTypeEnum}`;
-
 export {
 	MonsterInfoInterface,
 	MonsterInterface,
@@ -104,5 +123,10 @@ export {
 	MonsterFightingInterface,
 	monsterType,
 	monsterTypeEnum,
-	monsterStatsEnum
+	monsterStat,
+	monsterStatsEnum,
+	statToRefill,
+	statsConst,
+	typeConst,
+	affinities
 };

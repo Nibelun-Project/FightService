@@ -8,17 +8,18 @@ import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from ".
 import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
 import { getTypeEfficiency, isSTAB } from "./monsterType.js";
 import { passif } from "./passif.js";
+import { paySkillCost } from "./skill.js";
 import { applyStatus } from "./status.js";
 import { getTargeting } from "./targeting.js";
 
 const doAction = (instance: instanceInterface, monsterID: string) => {
     if (isAvailableToPlayRound(instance, monsterID)) {
         const actionFromMonster = getActionByMonsterID(instance, monsterID);
-
+        paySkillCost(instance, getOnBoardMonsterByID(instance, monsterID), actionFromMonster.skill)
         //Loop through skill effects			
         actionFromMonster.skill.effects.forEach((effect) => {
             const effectTargets = getTargeting(instance, actionFromMonster, effect.targetType);
-            effectTargets.forEach((target) => {
+            effectTargets.forEach((target: actionInterface) => {
                 passif(effectsType()[effect.type], target, effect, instance)
                 return !deathCheckActionTaget(instance, target);
             })
@@ -29,33 +30,14 @@ const doAction = (instance: instanceInterface, monsterID: string) => {
 
 const effectsType = () => {
     const damage = (instance: instanceInterface, actionsByTarget: actionInterface, effect: effectInterface) => {
-        console.log(
-            "damage from ",
-            actionsByTarget.sourceID,
-            " to ",
-            actionsByTarget.targetInfo
-        );
         _doCalculDamage(instance, actionsByTarget, effect.power);
     };
 
     const status = (instance: instanceInterface, actionsByTarget: actionInterface, effect: effectInterface) => {
-        console.log(
-            effect.status,
-            " from ",
-            actionsByTarget.sourceID,
-            " to ",
-            actionsByTarget.targetInfo
-        );
-        applyStatus(instance, actionsByTarget, effect);
+        applyStatus(instance, getOnBoardMonsterByID(instance, actionsByTarget.sourceID), effect);
     }
 
     const swap = (instance: instanceInterface, actionsByTarget: actionInterface) => {
-        console.log(
-            "swap on",
-            actionsByTarget.sourceID,
-            " with ",
-            actionsByTarget.targetInfo
-        );
         _swapOnBoard(instance, actionsByTarget);
     };
 
@@ -106,8 +88,15 @@ const _swapOnBoard = (instance: instanceInterface, actionsByTarget: actionInterf
     });
 };
 
+const clearActions = (instance: instanceInterface) => {
+	instance.players.forEach((player) => {
+		player.actions = []
+	})
+};
+
 
 export {
     effectsType,
+    clearActions,
     doAction,
 }

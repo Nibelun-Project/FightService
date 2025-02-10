@@ -6,8 +6,8 @@ import { fightInfoInterface,
          historyMonsterInterface, 
          historySkillInterface} from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
-import { MonsterFightingInterface } from "../interfaces/monster";
-import { SkillInterface } from "../interfaces/skill";
+import { MonsterFightingInterface } from "../interfaces/monster.js";
+import { SkillInterface } from "../interfaces/skill.js";
 
 
 const HISTORY_NAME = "fightInfo";

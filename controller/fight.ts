@@ -1,14 +1,15 @@
-import { playerFightingInterface } from "../interfaces/player";
+import { playerFightingInterface } from "../interfaces/player.js";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
-import { applyChanges, buildInstance, clearActions, clearBoardBeforeRound, getPlayerByID, isActionsFilled } from "./instance.js";
-import { doAction, effectsType } from "./action.js";
+import { applyChanges, buildInstance, clearBoardBeforeRound, getPlayerByID, isActionsFilled } from "./instance.js";
+import { clearActions, doAction, effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
 import { passif } from "./passif.js";
-import { rollStatus } from "./status.js";
 import { actionInterface } from "../interfaces/action.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { deathCheckActionTaget } from "./death.js";
+import { staminaRefill } from "./monsterStat.js";
+import { rollOnboardStatus } from "./status.js";
 
 
 
@@ -53,8 +54,9 @@ const fight = () => {
 		const sortedListOfMonstersID = speedContest(instance);
 		sortedListOfMonstersID.forEach((monsterID) => {
 			doAction(instance, monsterID);
-			rollStatus(instance, monsterID);
 		});
+		staminaRefill(instance)
+		rollOnboardStatus(instance)
 		applyChanges(instance);
 		clearActions(instance);
 		return instance;

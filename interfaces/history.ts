@@ -1,12 +1,15 @@
-import { targetType } from "./action";
-import { monsterType } from "./monster";
+import { targetType } from "./action.js";
+import { monsterType } from "./monster.js";
 
 enum historyContextEnum {
     DAMAGE       = "damage",
     ENDGAME      = "endgame",
+    HEAL         = "heal",
     KILL         = "kill",
     PLAYROUND    = "playRound",
+    PREVENT      = "prevent",
     SPEEDCONTEST = "speedContest",
+    STAMINA      = "stamina",
     STATUS       = "status",
     SWAP         = "swap",
 }

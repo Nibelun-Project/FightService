@@ -1,6 +1,6 @@
-import { instanceInterface } from "../interfaces/instance";
-import { MonsterFightingInterface } from "../interfaces/monster";
-import { effectInterface } from "../interfaces/skill";
+import { instanceInterface } from "../interfaces/instance.js";
+import { MonsterFightingInterface } from "../interfaces/monster.js";
+import { effectInterface } from "../interfaces/skill.js";
 import { effectsType } from "./action.js";
 import { getAlly, getEnnemies, getMonsterBySpot, getOnBoardMonsterByID, getPlayerByID, getSpotByMonsterID } from "./instance.js";
 import { getTargeting } from "./targeting.js";

@@ -16,10 +16,10 @@ enum effectTypeEnum {
 	HEAL = "heal",
 	MATTACK = "+attack",
 	PATTACK = "+attack",
+	STATUS = "status",
 	POISON = "poison",
 	SWAP = "swap"
 }
-
 type effectType = `${effectTypeEnum}`
 type targetType = `${targetTypeEnum}`
 
@@ -46,5 +46,7 @@ export {
     actionInterface,
     targetInfoType,
     effectType,
+	effectTypeEnum,
     targetType,
+	targetTypeEnum
 }

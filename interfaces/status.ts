@@ -2,40 +2,54 @@ enum statusName {
     //Negative Status Conditions
     ASLEEP    = "asleep",
     BURNED    = "burned",
-    COLD      = "cold",
+    COLD      = "cold", // TBD
     FROZEN    = "frozen",
     EXHAUSTED = "exhausted",
-    ISOLATED  = "isolated",
+    ISOLATED  = "isolated", // TBD
+    OVERSTRAIN = "overstrain",
     POISONED  = "poisoned",
-    SEIZED    = "seized",
-    TRAPPED   = "trapped",
+    SEIZED    = "seized", // TBD
+    TRAPPED   = "trapped", // TBD
 
     //Positive Status Conditions
-    ALERTED     = "alerted",
+    ALERTED     = "alerted", // TBD
     REGENERATED = "regenerated",
-    EVADING     = "evading",
-    IMMUNE      = "immune",
+    EVADING     = "evading", // TBD
+    IMMUNE      = "immune", // TBD
     INVIGORATED = "invigorated",
 
     //Neutral Status Conditions
-    NULLIFIED = "nullified"
+    NULLIFIED = "nullified" // TBD
+}
+enum statusConst {
+    BURNED = 0.05, 
+    EXHAUSTED = 1.5,
+    INVIGORATED = 0.5,
+    POISONED = 0.05, 
+    REGENERATED = 0.05
 }
 
-enum preventToPlayRound { ASLEEP = statusName.ASLEEP, 
-                          FROZEN = statusName.FROZEN}
+enum preventToPlayRound { 
+    ASLEEP = statusName.ASLEEP, 
+    FROZEN = statusName.FROZEN,
+    OVERSTRAIN = statusName.OVERSTRAIN}
 
-enum hasEffectAtTheEndOfRound { BURNED = statusName.BURNED, 
-                                POISONED = statusName.POISONED, 
-                                REGENERATED = statusName.REGENERATED}
+enum hasEffectAtTheEndOfRound { 
+    BURNED = statusName.BURNED, 
+    POISONED = statusName.POISONED, 
+    REGENERATED = statusName.REGENERATED}
 
-enum hasEffectDuringRound {EXHAUSTED = statusName.EXHAUSTED,   
-                           ISOLATED = statusName.ISOLATED, 
-                           SEIZED = statusName.SEIZED, 
-                           ALERTED = statusName.ALERTED,     
-                           EVADING = statusName.EVADING, 
-                           IMMUNE = statusName.IMMUNE, 
-                           INVIGORATED = statusName.INVIGORATED, 
-                           NULLIFIED = statusName.NULLIFIED}
+enum hasEffectDuringRound {
+    EXHAUSTED = statusName.EXHAUSTED,   
+    ISOLATED = statusName.ISOLATED, 
+    SEIZED = statusName.SEIZED, 
+    ALERTED = statusName.ALERTED,     
+    EVADING = statusName.EVADING, 
+    IMMUNE = statusName.IMMUNE, 
+    INVIGORATED = statusName.INVIGORATED, 
+    NULLIFIED = statusName.NULLIFIED}
+
+type listOfStatus = typeof preventToPlayRound | typeof hasEffectAtTheEndOfRound | typeof hasEffectDuringRound
 
 type statusNameType = `${statusName}`
 
@@ -49,5 +63,8 @@ export {
     preventToPlayRound,
     hasEffectAtTheEndOfRound,
     hasEffectDuringRound,
-    statusNameType
+    statusNameType,
+    statusName,
+    listOfStatus,
+    statusConst
 }
