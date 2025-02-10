@@ -17,6 +17,20 @@ enum monsterTypeEnum {
 	WATER = "water",
 }
 
+enum typeConst {
+	STAB = 1.5
+}
+
+const affinities = {
+	fire : { fire: 1, mental: 1, neutral: 1 },
+	mental : { fire: 1, mental: 1, neutral: 2 },
+	neutral : { fire: 1, mental: 1, neutral: 0.5 },
+};
+
+
+
+
+type monsterType = `${monsterTypeEnum}`;
 
 enum monsterStatsEnum {
 	ATK = "attack",
@@ -25,6 +39,13 @@ enum monsterStatsEnum {
 	HP = "hp",
 	SPEED = "speed",
 	STAMINA = "stamina",
+}
+
+type monsterStat = `${monsterStatsEnum}`;
+type statToRefill = typeof monsterStatsEnum.BALANCE | typeof monsterStatsEnum.HP | typeof monsterStatsEnum.STAMINA
+enum statsConst {
+	STAMINAREFILLONBOARD = 10,
+	STAMINAREFILLNOTONBOARD = 15
 }
 
 interface MonsterInfoInterface {
@@ -95,10 +116,6 @@ interface MonsterFightingInterface {
 	playerID: string;
 }
 
-type monsterType = `${monsterTypeEnum}`;
-type monsterStat = `${monsterStatsEnum}`;
-type statToRefill = typeof monsterStatsEnum.BALANCE | typeof monsterStatsEnum.HP | typeof monsterStatsEnum.STAMINA
-
 export {
 	MonsterInfoInterface,
 	MonsterInterface,
@@ -108,5 +125,8 @@ export {
 	monsterTypeEnum,
 	monsterStat,
 	monsterStatsEnum,
-	statToRefill
+	statToRefill,
+	statsConst,
+	typeConst,
+	affinities
 };

@@ -1,28 +1,16 @@
 import { instanceInterface } from "../interfaces/instance.js"
-import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monster.js"
-import { statusName } from "../interfaces/status.js"
+import { MonsterFightingInterface, monsterStatsEnum, statsConst } from "../interfaces/monster.js"
 import { isOnBoard } from "./instance.js"
-import { hastStatus } from "./status.js"
 
 const staminaRefill = (instance: instanceInterface) => {
     instance.players.forEach((player) => {
         player.onBoard.forEach((monster) => {
-            if (hastStatus(monster, statusName.EXHAUSTED) &&
-                hastStatus(monster, statusName.INVIGORATED) ||
-                !hastStatus(monster, statusName.EXHAUSTED) &&
-                !hastStatus(monster, statusName.INVIGORATED)) {
-                    refillStat()[monsterStatsEnum.STAMINA](monster, 10)
-                
-            }else if (hastStatus(monster, statusName.EXHAUSTED)) {
-                refillStat()[monsterStatsEnum.STAMINA](monster, 5)
-            }else if (hastStatus(monster, statusName.INVIGORATED)) {
-                refillStat()[monsterStatsEnum.STAMINA](monster, 15)
-            }
+            refillStat()[monsterStatsEnum.STAMINA](monster, statsConst.STAMINAREFILLONBOARD) 
         })
         player.team.filter(
             (monster) => !isOnBoard(instance, monster.id)
             ).forEach((monster) => {
-                refillStat()[monsterStatsEnum.STAMINA](monster, 15)
+                refillStat()[monsterStatsEnum.STAMINA](monster, statsConst.STAMINAREFILLNOTONBOARD )
         })
     })
 }
