@@ -27,9 +27,6 @@ const affinities = {
 	neutral : { fire: 1, mental: 1, neutral: 0.5 },
 };
 
-
-
-
 type monsterType = `${monsterTypeEnum}`;
 
 enum monsterStatsEnum {
@@ -42,7 +39,7 @@ enum monsterStatsEnum {
 }
 
 type monsterStat = `${monsterStatsEnum}`;
-type statToRefill = typeof monsterStatsEnum.BALANCE | typeof monsterStatsEnum.HP | typeof monsterStatsEnum.STAMINA
+
 enum statsConst {
 	STAMINAREFILLONBOARD = 10,
 	STAMINAREFILLNOTONBOARD = 15
@@ -125,7 +122,6 @@ export {
 	monsterTypeEnum,
 	monsterStat,
 	monsterStatsEnum,
-	statToRefill,
 	statsConst,
 	typeConst,
 	affinities

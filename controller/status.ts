@@ -77,7 +77,7 @@ const applyStatus = (instance: instanceInterface, monster: MonsterFightingInterf
     const statusToApply = buildStatus(effect.status, effect.power)
 
     let nbrRound = 0;
-    if (monster.statuses.some((monsterStatus) => { return (monsterStatus.name === statusToApply.name) })) {
+    if (monster.statuses.some((monsterStatus) =>  (monsterStatus.name === statusToApply.name) )) {
         nbrRound = 0;
     } else {
         nbrRound = effect.power;
@@ -92,12 +92,10 @@ const applyStatus = (instance: instanceInterface, monster: MonsterFightingInterf
 }
 
 const hasStatusFromList = (monster: MonsterFightingInterface, statusList: listOfStatus): boolean => {
-    return monster.statuses.some((status) => {
-        return Object.values<statusNameType>(statusList).includes(status.name)
-    })
+    return monster.statuses.some((status) => Object.values<statusNameType>(statusList).includes(status.name))
 }
  const hastStatus = (monster: MonsterFightingInterface, status: statusNameType): boolean => {
-    return monster.statuses.some((status) => { status.name === status.name })
+    return monster.statuses.some((status) =>  status.name === status.name )
  }
 
 export {
