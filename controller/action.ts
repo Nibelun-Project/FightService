@@ -5,7 +5,7 @@ import { MonsterFightingInterface, monsterStatsEnum } from "../interfaces/monste
 import { effectInterface } from "../interfaces/skill.js";
 import { deathCheckActionTaget } from "./death.js";
 import { convertMonsterToHistory, convertSkillToHistory, updateHistory } from "./history.js";
-import { getActionByMonsterID, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
+import { getActionByMonsterID, getMonsterBySpot, getOnBoardMonsterByID, getPlayerByID, isAvailableToPlayRound } from "./instance.js";
 import { getTypeEfficiency, isSTAB } from "./monsterType.js";
 import { passif } from "./passif.js";
 import { paySkillCost } from "./skill.js";
@@ -34,7 +34,8 @@ const effectsType = () => {
     };
 
     const status = (instance: instanceInterface, actionsByTarget: actionInterface, effect: effectInterface) => {
-        applyStatus(instance, getOnBoardMonsterByID(instance, actionsByTarget.sourceID), effect);
+        const monster = getMonsterBySpot(instance, actionsByTarget.targetInfo)       
+        applyStatus(instance, monster, effect);        
     }
 
     const swap = (instance: instanceInterface, actionsByTarget: actionInterface) => {

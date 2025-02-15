@@ -2,7 +2,7 @@ enum statusName {
     //Negative Status Conditions
     ASLEEP    = "asleep",
     BURNED    = "burned",
-    COLD      = "cold", // TBD
+    COLD      = "cold",
     FROZEN    = "frozen",
     EXHAUSTED = "exhausted",
     ISOLATED  = "isolated", // TBD
@@ -21,6 +21,9 @@ enum statusName {
     //Neutral Status Conditions
     NULLIFIED = "nullified" // TBD
 }
+
+type statusNameType = `${statusName}`
+
 enum statusConst {
     BURNED = 0.05, 
     EXHAUSTED = 1.5,
@@ -32,12 +35,14 @@ enum statusConst {
 enum preventToPlayRound { 
     ASLEEP = statusName.ASLEEP, 
     FROZEN = statusName.FROZEN,
-    OVERSTRAIN = statusName.OVERSTRAIN}
+    OVERSTRAIN = statusName.OVERSTRAIN
+}
 
 enum hasEffectAtTheEndOfRound { 
     BURNED = statusName.BURNED, 
     POISONED = statusName.POISONED, 
-    REGENERATED = statusName.REGENERATED}
+    REGENERATED = statusName.REGENERATED
+}
 
 enum hasEffectDuringRound {
     EXHAUSTED = statusName.EXHAUSTED,   
@@ -47,11 +52,14 @@ enum hasEffectDuringRound {
     EVADING = statusName.EVADING, 
     IMMUNE = statusName.IMMUNE, 
     INVIGORATED = statusName.INVIGORATED, 
-    NULLIFIED = statusName.NULLIFIED}
+    NULLIFIED = statusName.NULLIFIED
+}
 
-type listOfStatus = typeof preventToPlayRound | typeof hasEffectAtTheEndOfRound | typeof hasEffectDuringRound
+enum canBeReApply {
+    COLD = statusName.COLD,
+}
 
-type statusNameType = `${statusName}`
+type listOfStatus = typeof preventToPlayRound | typeof hasEffectAtTheEndOfRound | typeof hasEffectDuringRound | typeof canBeReApply
 
 interface statusInterface {
     name:  statusNameType,
@@ -63,6 +71,7 @@ export {
     preventToPlayRound,
     hasEffectAtTheEndOfRound,
     hasEffectDuringRound,
+    canBeReApply,
     statusNameType,
     statusName,
     listOfStatus,
