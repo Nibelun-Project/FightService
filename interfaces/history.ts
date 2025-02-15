@@ -2,69 +2,69 @@ import { targetType } from "./action.js";
 import { monsterType } from "./monster.js";
 
 enum historyContextEnum {
-    DAMAGE       = "damage",
-    ENDGAME      = "endgame",
-    HEAL         = "heal",
-    KILL         = "kill",
-    PLAYROUND    = "playRound",
-    PREVENT      = "prevent",
-    SPEEDCONTEST = "speedContest",
-    STAMINA      = "stamina",
-    STATUS       = "status",
-    SWAP         = "swap",
+  DAMAGE = "damage",
+  ENDGAME = "endgame",
+  HEAL = "heal",
+  KILL = "kill",
+  PLAYROUND = "playRound",
+  PREVENT = "prevent",
+  SPEEDCONTEST = "speedContest",
+  STAMINA = "stamina",
+  STATUS = "status",
+  SWAP = "swap",
 }
 
 interface fightInfoInterface {
-	round:   number,
-	history: historyInterface[][]
-    endgame: boolean,
-    winner?: string
+  round: number;
+  history: historyInterface[][];
+  endgame: boolean;
+  winner?: string;
 }
 
 interface historyInterface {
-	context: `${historyContextEnum}`,
-    content: historyContentInterface
+  context: `${historyContextEnum}`;
+  content: historyContentInterface;
 }
 
 interface historyContentInterface {
-    monster?:        historyMonsterInterface
-    targetMonster?:  historyMonsterInterface,
-    action?:         historyActionInterface,
-    skill?:          historySkillInterface,
-    typeEfficiency?: number,
-    isSTAB?:         number,
-    statName?:       string,
-    statChanges?:    number,
-    isAvailableToPlayRound?: boolean,
-    winner?:         string,
-    monstersID?:     string[],
-    statusName?:     string,
-    nbrRound?:       number
+  monster?: historyMonsterInterface;
+  targetMonster?: historyMonsterInterface;
+  action?: historyActionInterface;
+  skill?: historySkillInterface;
+  typeEfficiency?: number;
+  isSTAB?: number;
+  statName?: string;
+  statChanges?: number;
+  isAvailableToPlayRound?: boolean;
+  winner?: string;
+  monstersID?: string[];
+  statusName?: string;
+  nbrRound?: number;
 }
 
 interface historyMonsterInterface {
-	id: string;
-	name: string;
-	type: monsterType[];
-    playerID: string;
+  id: string;
+  name: string;
+  type: monsterType[];
+  playerID: string;
 }
 
 interface historySkillInterface {
-    name: string;
-	type: monsterType;
-    targetType: targetType;
+  name: string;
+  type: monsterType;
+  targetType: targetType;
 }
 
 interface historyActionInterface {
-    sourceID: string;
-	skill: historySkillInterface
+  sourceID: string;
+  skill: historySkillInterface;
 }
 
 export {
-    fightInfoInterface,
-    historyInterface,
-    historyContextEnum,
-    historyMonsterInterface,
-    historySkillInterface,
-    historyActionInterface
+  fightInfoInterface,
+  historyInterface,
+  historyContextEnum,
+  historyMonsterInterface,
+  historySkillInterface,
+  historyActionInterface,
 };
