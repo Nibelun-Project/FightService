@@ -50,7 +50,7 @@ const comm = (io) => {
 			const { status, matchInfo } = fightModule.waitActions(
 				actions,
 				playerID,
-				fightID
+				fightID,
 			);
 			if (status === 2)
 				return _socketTo(matchInfo, "action-done", matchInfo, status);
@@ -59,9 +59,8 @@ const comm = (io) => {
 			else if (status === 4) {
 				console.log("status 4");
 
-				return _socketTo(matchInfo, "endgame", matchInfo, 2)
-			}
-			else return status;
+				return _socketTo(matchInfo, "endgame", matchInfo, 2);
+			} else return status;
 		} else return 3;
 	};
 
@@ -71,7 +70,7 @@ const comm = (io) => {
 				swapActions,
 				fightID,
 				playerID,
-				both
+				both,
 			);
 			if (status === 2)
 				return _socketTo(matchInfo, "swap-done", matchInfo, status);
@@ -87,7 +86,7 @@ const comm = (io) => {
 		else {
 			target.players.forEach((player: playerFightingInterface) => {
 				io.to(playerSockets[player.id]).emit(emit, data);
-			})
+			});
 		}
 		return status;
 	};

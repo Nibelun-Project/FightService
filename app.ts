@@ -19,7 +19,6 @@ import { comm } from "./controller/communication.js";
 //socket communication controller
 const communication = comm(io);
 
-
 app.use(bodyParser.json());
 app.use(cookieParser());
 
