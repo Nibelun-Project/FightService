@@ -27,7 +27,7 @@ type statusNameType = `${statusName}`;
 enum statusConst {
 	BURNED = 0.05,
 	EXHAUSTED = -0.5,
-	INVIGORATED = 1.5,
+	INVIGORATED = 0.5,
 	POISONED = 0.05,
 	REGENERATED = 0.05,
 }

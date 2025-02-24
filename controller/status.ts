@@ -149,7 +149,18 @@ const applyStatus = (
 			},
 		});
 	} else {
-		_statusEffectsOnApply()[statusToApply.name](instance, monster, effect);
+		if (!isStatusFromList(effect.status, hasEffectOnApply))
+			pushStatus(
+				instance,
+				monster,
+				buildStatus(effect.status, effect.power),
+			);
+		else
+			_statusEffectsOnApply()[statusToApply.name](
+				instance,
+				monster,
+				effect,
+			);
 	}
 };
 
@@ -194,7 +205,7 @@ const _statusEffectsOnApply = () => {
 			monster.skills.forEach((skill) => {
 				if (skill.cost.type === skillCostEnum.STAMINA) {
 					const update = skill.cost.value * statusConst.EXHAUSTED;
-					skill.cost.value += update;
+					skill.cost.value -= update;
 					updateModOnSkill(skill, {
 						cause: modCause.STATUS,
 						content: {
@@ -222,7 +233,7 @@ const _statusEffectsOnApply = () => {
 			);
 			monster.skills.forEach((skill) => {
 				const update = skill.cost.value * statusConst.INVIGORATED;
-				skill.cost.value += update;
+				skill.cost.value -= update;
 				updateModOnSkill(skill, {
 					cause: modCause.STATUS,
 					content: {
@@ -262,28 +273,30 @@ const removeStatus = (
 
 const _statusEffectsOnRemove = () => {
 	const exhausted = (monster: MonsterFightingInterface) => {
-		_removeStatus(monster, hasEffectOnApply.EXHAUSTED);
+		_removeStatus(monster, statusName.EXHAUSTED);
 		monster.skills.forEach((skill) => {
 			if (hasSkillModStatus(skill, hasEffectOnApply.EXHAUSTED)) {
 				const mod = getSkillModByStatus(
 					skill,
 					hasEffectOnApply.EXHAUSTED,
 				);
-				skill.cost.value -= mod.content.value;
+				skill.cost.value += mod.content.value;
 				removeModOnSkill(skill, mod);
 			}
 		});
 	};
 
 	const invigorated = (monster: MonsterFightingInterface) => {
-		_removeStatus(monster, hasEffectOnApply.INVIGORATED);
+		_removeStatus(monster, statusName.INVIGORATED);
 		monster.skills.forEach((skill) => {
-			const mod = getSkillModByStatus(
-				skill,
-				hasEffectOnApply.INVIGORATED,
-			);
-
-			removeModOnSkill(skill, mod);
+			if (hasSkillModStatus(skill, hasEffectOnApply.INVIGORATED)) {
+				const mod = getSkillModByStatus(
+					skill,
+					hasEffectOnApply.INVIGORATED,
+				);
+				skill.cost.value += mod.content.value;
+				removeModOnSkill(skill, mod);
+			}
 		});
 	};
 
