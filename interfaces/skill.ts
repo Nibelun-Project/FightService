@@ -1,4 +1,5 @@
 import { effectType, targetType } from "./action.js";
+import { modInterface } from "./modification.js";
 import { monsterType } from "./monster.js";
 import { statusNameType } from "./status.js";
 
@@ -24,6 +25,7 @@ interface SkillInterface {
 	effects: effectInterface[];
 	targetType: targetType;
 	priority: number;
+	mod?: modInterface[];
 }
 
 interface effectInterface {
@@ -34,4 +36,4 @@ interface effectInterface {
 	status?: statusNameType;
 }
 
-export { SkillInterface, effectInterface };
+export { SkillInterface, effectInterface, skillCostEnum };

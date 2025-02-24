@@ -26,8 +26,8 @@ type statusNameType = `${statusName}`;
 
 enum statusConst {
 	BURNED = 0.05,
-	EXHAUSTED = 1.5,
-	INVIGORATED = 0.5,
+	EXHAUSTED = -0.5,
+	INVIGORATED = 1.5,
 	POISONED = 0.05,
 	REGENERATED = 0.05,
 }
@@ -44,15 +44,15 @@ enum hasEffectAtTheEndOfRound {
 	REGENERATED = statusName.REGENERATED,
 }
 
-enum hasEffectDuringRound {
+enum hasEffectOnApply {
+	COLD = statusName.COLD,
 	EXHAUSTED = statusName.EXHAUSTED,
-	ISOLATED = statusName.ISOLATED,
-	SEIZED = statusName.SEIZED,
-	ALERTED = statusName.ALERTED,
-	EVADING = statusName.EVADING,
-	IMMUNE = statusName.IMMUNE,
 	INVIGORATED = statusName.INVIGORATED,
-	NULLIFIED = statusName.NULLIFIED,
+}
+
+enum hasEffectOnRemove {
+	EXHAUSTED = statusName.EXHAUSTED,
+	INVIGORATED = statusName.INVIGORATED,
 }
 
 enum canBeReApply {
@@ -62,7 +62,8 @@ enum canBeReApply {
 type listOfStatus =
 	| typeof preventToPlayRound
 	| typeof hasEffectAtTheEndOfRound
-	| typeof hasEffectDuringRound
+	| typeof hasEffectOnApply
+	| typeof hasEffectOnRemove
 	| typeof canBeReApply;
 
 interface statusInterface {
@@ -74,7 +75,8 @@ export {
 	statusInterface,
 	preventToPlayRound,
 	hasEffectAtTheEndOfRound,
-	hasEffectDuringRound,
+	hasEffectOnApply,
+	hasEffectOnRemove,
 	canBeReApply,
 	statusNameType,
 	statusName,
