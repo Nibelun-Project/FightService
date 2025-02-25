@@ -110,6 +110,7 @@ interface MonsterFightingInterface {
 	image: string;
 	passive: PassiveInterface;
 	skills: SkillInterface[];
+	startSkills?: SkillInterface[];
 	playerID: string;
 }
 

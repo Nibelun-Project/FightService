@@ -15,7 +15,7 @@ import { actionInterface } from "../interfaces/action.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { deathCheckActionTaget } from "./death.js";
 import { staminaRefill } from "./monsterStat.js";
-import { rollOnboardStatus } from "./status.js";
+import { rollStatusEndRound } from "./status.js";
 
 const fight = () => {
 	let mapFights: instanceInterface[] = [] as any;
@@ -60,7 +60,7 @@ const fight = () => {
 			doAction(instance, monsterID);
 		});
 		staminaRefill(instance);
-		rollOnboardStatus(instance);
+		rollStatusEndRound(instance);
 		applyChanges(instance);
 		clearActions(instance);
 		return instance;

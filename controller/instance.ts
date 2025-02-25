@@ -592,7 +592,7 @@ const isAvailableToPlayRound = (
 		monster.isAlive === false ||
 		monster.stats[monsterStatsEnum.HP] <= 0 || // the monster is alive
 		!isOnBoard(instance, monsterID) || // the monster is on the board
-		(hasStatusFromList(monster, preventToPlayRound) &&
+		(hasStatusFromList(monster, preventToPlayRound) && //TBD
 			!isSkillHighPriority(getActionByMonsterID(instance, monsterID)))
 	) {
 		isAvailableToPlayRound = false;

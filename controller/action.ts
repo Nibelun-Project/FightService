@@ -136,6 +136,10 @@ const _swapOnBoard = (
 	const onBoardSourceMonsterIndex = player.onBoard.findIndex(
 		(onBoardMonster) => onBoardMonster.id === actionsByTarget.sourceID,
 	);
+
+	player.onBoard[onBoardSourceMonsterIndex].skills =
+		player.onBoard[onBoardSourceMonsterIndex].startSkills;
+
 	player.onBoard[onBoardSourceMonsterIndex] =
 		player.team[teamTargetMonsterIndex];
 
