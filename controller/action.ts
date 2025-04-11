@@ -63,7 +63,7 @@ const effectsType = () => {
 		effect: effectInterface,
 	) => {
 		const monster = getMonsterBySpot(instance, actionsByTarget.targetInfo);
-		applyStatus(instance, monster, effect);
+		applyStatus(instance.fightInfo, monster, effect);
 	};
 
 	const swap = (
@@ -100,7 +100,7 @@ const _doCalculDamage = (
 		(typeEfficiency * stab); // multiplying factor
 	monsterTarget.stats[monsterStatsEnum.HP] += hpChanges;
 
-	updateHistory(instance, {
+	updateHistory(instance.fightInfo, {
 		context: historyContextEnum.DAMAGE,
 		content: {
 			monster: convertMonsterToHistory(monsterSource),
@@ -143,7 +143,7 @@ const _swapOnBoard = (
 	player.onBoard[onBoardSourceMonsterIndex] =
 		player.team[teamTargetMonsterIndex];
 
-	updateHistory(instance, {
+	updateHistory(instance.fightInfo, {
 		context: historyContextEnum.SWAP,
 		content: {
 			monster: convertMonsterToHistory(sourceMonster),

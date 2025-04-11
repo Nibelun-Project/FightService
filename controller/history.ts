@@ -56,10 +56,9 @@ const convertActionToHistory = (
 };
 
 const updateHistory = (
-	instance: instanceInterface,
+	fightInfo: fightInfoInterface,
 	update: historyInterface,
 ) => {
-	let fightInfo = instance[HISTORY_NAME];
 	if (
 		update.context !== historyContextEnum.SPEEDCONTEST ||
 		fightInfo.history[fightInfo.round - 1].every((event) => {
