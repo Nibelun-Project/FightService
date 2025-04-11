@@ -29,7 +29,7 @@ const doAction = (instance: instanceInterface, monsterID: string) => {
 	if (isAvailableToPlayRound(instance, monsterID)) {
 		const actionFromMonster = getActionByMonsterID(instance, monsterID);
 		paySkillCost(
-			instance,
+			instance.fightInfo,
 			getOnBoardMonsterByID(instance, monsterID),
 			actionFromMonster.skill,
 		);

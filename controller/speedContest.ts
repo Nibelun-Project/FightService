@@ -1,4 +1,7 @@
-import { historyContextEnum } from "../interfaces/history.js";
+import {
+	fightInfoInterface,
+	historyContextEnum,
+} from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import {
 	MonsterFightingInterface,
@@ -13,7 +16,7 @@ const speedContest = (instance: instanceInterface): string[] => {
 	let tempMonstersList = [];
 	tempMonstersList = _prepareMonstersToSpeedContest(instance);
 
-	return _getPlacesOnRound(tempMonstersList, instance);
+	return _getPlacesOnRound(tempMonstersList, instance.fightInfo);
 };
 
 const _prepareMonstersToSpeedContest = (
@@ -103,7 +106,7 @@ const _shuffleMonsters = (
  */
 const _getPlacesOnRound = (
 	speedContestTempsList: MonsterSpeedInterface[],
-	instance: instanceInterface,
+	fightInfo: fightInfoInterface,
 ): string[] => {
 	let sortedMonsters = [];
 	//1 - For each monster
@@ -123,7 +126,7 @@ const _getPlacesOnRound = (
 						speedContest.action.priority && //2.4.1 - the action priotity is equal
 						speedContest.monster.stats[monsterStatsEnum.SPEED] ===
 							tempMonster.monster.stats[monsterStatsEnum.SPEED] && //2.4.2 - the speed stat is equal,
-						_shuffleContest(speedContest, tempMonster, instance))) //2.4.3 - use the a random id to difine priority
+						_shuffleContest(speedContest, tempMonster, fightInfo))) //2.4.3 - use the a random id to difine priority
 			)
 				return true;
 
@@ -146,9 +149,9 @@ const _getPlacesOnRound = (
 const _shuffleContest = (
 	monster1: MonsterSpeedInterface,
 	monster2: MonsterSpeedInterface,
-	instance: instanceInterface,
+	fightInfo: fightInfoInterface,
 ): boolean => {
-	updateHistory(instance, {
+	updateHistory(fightInfo, {
 		context: historyContextEnum.SPEEDCONTEST,
 		content: { monstersID: [monster1.monster.id, monster2.monster.id] },
 	});

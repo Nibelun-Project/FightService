@@ -3,7 +3,10 @@ import {
 	effectTypeEnum,
 	targetTypeEnum,
 } from "../interfaces/action.js";
-import { historyContextEnum } from "../interfaces/history.js";
+import {
+	fightInfoInterface,
+	historyContextEnum,
+} from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import {
 	MonsterFightingInterface,
@@ -20,32 +23,32 @@ const isSkillHighPriority = (action: actionInterface): boolean => {
 };
 
 const paySkillCost = (
-	instance: instanceInterface,
+	fightInfo: fightInfoInterface,
 	monster: MonsterFightingInterface,
 	skill: SkillInterface,
 ) => {
-	costType()[skill.cost.type](instance, monster, skill.cost.value);
+	costType()[skill.cost.type](fightInfo, monster, skill.cost.value);
 };
 
 const costType = () => {
 	const balance = (
-		instance: instanceInterface,
+		fightInfo: fightInfoInterface,
 		monster: MonsterFightingInterface,
 		cost: number,
 	) => {};
 	const hp = (
-		instance: instanceInterface,
+		fightInfo: fightInfoInterface,
 		monster: MonsterFightingInterface,
 		cost: number,
 	) => {};
 	const stamina = (
-		instance: instanceInterface,
+		fightInfo: fightInfoInterface,
 		monster: MonsterFightingInterface,
 		cost: number,
 	) => {
 		monster.stats.stamina -= cost;
 
-		updateHistory(instance, {
+		updateHistory(fightInfo, {
 			context: historyContextEnum.DAMAGE,
 			content: {
 				monster: convertMonsterToHistory(monster),
@@ -58,14 +61,14 @@ const costType = () => {
 			const damage = monster.stats.stamina;
 			monster.stats.hp -= damage;
 			monster.stats.stamina = 0;
-			applyStatus(instance, monster, {
+			applyStatus(fightInfo, monster, {
 				targetType: targetTypeEnum.SINGLE,
 				type: effectTypeEnum.STATUS,
 				power: 1,
 				status: statusName.OVERSTRAIN,
 			});
 
-			updateHistory(instance, {
+			updateHistory(fightInfo, {
 				context: historyContextEnum.DAMAGE,
 				content: {
 					monster: convertMonsterToHistory(monster),
