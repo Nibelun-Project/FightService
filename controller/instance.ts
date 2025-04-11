@@ -463,7 +463,7 @@ const checkEndgame = (instance: instanceInterface, playerID: string) => {
 			(player) => player.id != playerID,
 		).id;
 
-		updateHistory(instance, {
+		updateHistory(instance.fightInfo, {
 			context: historyContextEnum.ENDGAME,
 			content: { winner: instance.fightInfo.winner },
 		});
@@ -598,7 +598,7 @@ const isAvailableToPlayRound = (
 		isAvailableToPlayRound = false;
 	}
 
-	updateHistory(instance, {
+	updateHistory(instance.fightInfo, {
 		context: historyContextEnum.PLAYROUND,
 		content: {
 			isAvailableToPlayRound: isAvailableToPlayRound,
