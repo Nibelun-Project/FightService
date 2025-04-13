@@ -1,3 +1,4 @@
+import { MonsterFightingInterface } from "./monster.js";
 import { SkillInterface } from "./skill.js";
 
 enum targetTypeEnum {
@@ -24,8 +25,11 @@ type effectType = `${effectTypeEnum}`;
 type targetType = `${targetTypeEnum}`;
 
 interface actionInterface {
-	sourceID: string;
-	targetInfo: targetInfoType;
+	sourceID?: string;
+	source?: MonsterFightingInterface;
+	targetInfo?: targetInfoType;
+	target?: MonsterFightingInterface;
+	targetTeam?: MonsterFightingInterface[];
 	skill: SkillInterface;
 }
 

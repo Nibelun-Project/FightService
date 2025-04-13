@@ -7,7 +7,6 @@ import {
 	fightInfoInterface,
 	historyContextEnum,
 } from "../interfaces/history.js";
-import { instanceInterface } from "../interfaces/instance.js";
 import {
 	MonsterFightingInterface,
 	monsterStatsEnum,

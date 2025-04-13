@@ -1,5 +1,8 @@
 import { actionInterface } from "../interfaces/action.js";
-import { historyContextEnum } from "../interfaces/history.js";
+import {
+	fightInfoInterface,
+	historyContextEnum,
+} from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import {
 	MonsterFightingInterface,
@@ -16,7 +19,6 @@ import {
 	getActionByMonsterID,
 	getMonsterBySpot,
 	getOnBoardMonsterByID,
-	getPlayerByID,
 	isAvailableToPlayRound,
 } from "./instance.js";
 import { getTypeEfficiency, isSTAB } from "./monsterType.js";
@@ -27,10 +29,16 @@ import { getTargeting } from "./targeting.js";
 
 const doAction = (instance: instanceInterface, monsterID: string) => {
 	if (isAvailableToPlayRound(instance, monsterID)) {
+		const sourceMonster = getOnBoardMonsterByID(instance, monsterID);
 		const actionFromMonster = getActionByMonsterID(instance, monsterID);
+		actionFromMonster.source = getOnBoardMonsterByID(instance, monsterID);
+		actionFromMonster.target = getOnBoardMonsterByID(
+			instance,
+			actionFromMonster.targetInfo.id,
+		);
 		paySkillCost(
 			instance.fightInfo,
-			getOnBoardMonsterByID(instance, monsterID),
+			sourceMonster,
 			actionFromMonster.skill,
 		);
 		//Loop through skill effects
@@ -50,11 +58,11 @@ const doAction = (instance: instanceInterface, monsterID: string) => {
 
 const effectsType = () => {
 	const damage = (
-		instance: instanceInterface,
+		fightInfo: fightInfoInterface,
 		actionsByTarget: actionInterface,
 		effect: effectInterface,
 	) => {
-		_doCalculDamage(instance, actionsByTarget, effect.power);
+		_doCalculDamage(fightInfo, actionsByTarget, effect.power);
 	};
 
 	const status = (
@@ -67,26 +75,23 @@ const effectsType = () => {
 	};
 
 	const swap = (
-		instance: instanceInterface,
+		fightInfo: fightInfoInterface,
 		actionsByTarget: actionInterface,
 	) => {
-		_swapOnBoard(instance, actionsByTarget);
+		_swapOnBoard(fightInfo, actionsByTarget);
 	};
 
 	return { damage, status, swap };
 };
 
 const _doCalculDamage = (
-	instance: instanceInterface,
-	target: actionInterface,
+	fightInfo: fightInfoInterface,
+	action: actionInterface,
 	power: number,
 ): MonsterFightingInterface => {
-	const skill = target.skill;
-	const monsterSource = getOnBoardMonsterByID(instance, target.sourceID);
-	const monsterTarget = getPlayerByID(
-		target.targetInfo.targetedPlayerID,
-		instance,
-	).onBoard[target.targetInfo.spot];
+	const skill = action.skill;
+	const monsterSource = action.source;
+	const monsterTarget = action.target;
 	const typeEfficiency = getTypeEfficiency(skill.type, monsterTarget.type);
 	const stab = isSTAB(monsterSource.type, skill.type);
 
@@ -100,7 +105,7 @@ const _doCalculDamage = (
 		(typeEfficiency * stab); // multiplying factor
 	monsterTarget.stats[monsterStatsEnum.HP] += hpChanges;
 
-	updateHistory(instance.fightInfo, {
+	updateHistory(fightInfo, {
 		context: historyContextEnum.DAMAGE,
 		content: {
 			monster: convertMonsterToHistory(monsterSource),
@@ -117,38 +122,27 @@ const _doCalculDamage = (
 };
 
 const _swapOnBoard = (
-	instance: instanceInterface,
+	fightInfo: fightInfoInterface,
 	actionsByTarget: actionInterface,
 ) => {
-	const sourceMonster = getOnBoardMonsterByID(
-		instance,
-		actionsByTarget.sourceID,
-	);
-	const player = getPlayerByID(sourceMonster.playerID, instance);
-	const teamSourceMonsterIndex = player.team.findIndex(
+	const teamSourceMonsterIndex = actionsByTarget.targetTeam.findIndex(
 		(teamMonster) => teamMonster.id === actionsByTarget.sourceID,
 	);
-	player.team[teamSourceMonsterIndex] = sourceMonster;
-
-	const teamTargetMonsterIndex = player.team.findIndex(
+	const teamTargetMonsterIndex = actionsByTarget.targetTeam.findIndex(
 		(teamMonster) => teamMonster.id === actionsByTarget.targetInfo.id,
 	);
-	const onBoardSourceMonsterIndex = player.onBoard.findIndex(
-		(onBoardMonster) => onBoardMonster.id === actionsByTarget.sourceID,
-	);
 
-	player.onBoard[onBoardSourceMonsterIndex].skills =
-		player.onBoard[onBoardSourceMonsterIndex].startSkills;
+	actionsByTarget.source.skills = actionsByTarget.source.startSkills;
+	actionsByTarget.targetTeam[teamSourceMonsterIndex] = actionsByTarget.source;
 
-	player.onBoard[onBoardSourceMonsterIndex] =
-		player.team[teamTargetMonsterIndex];
+	actionsByTarget.source = actionsByTarget.targetTeam[teamTargetMonsterIndex];
 
-	updateHistory(instance.fightInfo, {
+	updateHistory(fightInfo, {
 		context: historyContextEnum.SWAP,
 		content: {
-			monster: convertMonsterToHistory(sourceMonster),
+			monster: convertMonsterToHistory(actionsByTarget.source),
 			targetMonster: convertMonsterToHistory(
-				player.team[teamTargetMonsterIndex],
+				actionsByTarget.targetTeam[teamTargetMonsterIndex],
 			),
 		},
 	});
