@@ -7,6 +7,7 @@ import {
 	getOnBoardMonsterByID,
 	getOtherSpot,
 	getPlayerByID,
+	getSpotByMonsterID,
 	isTargetable,
 } from "./instance.js";
 
@@ -22,6 +23,11 @@ const getTargeting = (
 			player.onBoard.forEach((monster) => {
 				if (isTargetable(monster)) {
 					effectListByTarget.push({
+						sourceID: actionFromMonster.sourceID,
+						targetInfo: {
+							targetedPlayerID: monster.playerID,
+							spot: getSpotByMonsterID(instance, monster.id),
+						},
 						source: getOnBoardMonsterByID(
 							instance,
 							actionFromMonster.sourceID,
@@ -40,6 +46,11 @@ const getTargeting = (
 		if (!isTargetable(ally)) return [];
 		return [
 			{
+				sourceID: actionFromMonster.sourceID,
+				targetInfo: {
+					targetedPlayerID: ally.playerID,
+					spot: actionFromMonster.targetInfo.spot,
+				},
 				source: getOnBoardMonsterByID(
 					instance,
 					actionFromMonster.sourceID,
@@ -61,6 +72,11 @@ const getTargeting = (
 			(monster) => {
 				if (isTargetable(monster)) {
 					effectListByTarget.push({
+						sourceID: actionFromMonster.sourceID,
+						targetInfo: {
+							targetedPlayerID: sourceMonster.playerID,
+							spot: getSpotByMonsterID(instance, monster.id),
+						},
 						source: getOnBoardMonsterByID(
 							instance,
 							actionFromMonster.sourceID,
@@ -83,6 +99,11 @@ const getTargeting = (
 		).onBoard.forEach((monster) => {
 			if (isTargetable(monster)) {
 				effectListByTarget.push({
+					sourceID: actionFromMonster.sourceID,
+					targetInfo: {
+						targetedPlayerID: monster.playerID,
+						spot: getSpotByMonsterID(instance, monster.id),
+					},
 					source: getOnBoardMonsterByID(
 						instance,
 						actionFromMonster.sourceID,
@@ -103,6 +124,11 @@ const getTargeting = (
 		targetsList.forEach((monster) => {
 			if (isTargetable(monster)) {
 				effectListByTarget.push({
+					sourceID: actionFromMonster.sourceID,
+					targetInfo: {
+						targetedPlayerID: monster.playerID,
+						spot: getSpotByMonsterID(instance, monster.id),
+					},
 					source: getOnBoardMonsterByID(
 						instance,
 						actionFromMonster.sourceID,
@@ -124,6 +150,17 @@ const getTargeting = (
 		if (!isTargetable(self)) return [];
 		return [
 			{
+				sourceID: actionFromMonster.sourceID,
+				targetInfo: {
+					targetedPlayerID: getOnBoardMonsterByID(
+						instance,
+						actionFromMonster.sourceID,
+					).playerID,
+					spot: getSpotByMonsterID(
+						instance,
+						actionFromMonster.sourceID,
+					),
+				},
 				source: self,
 				target: self,
 				skill: actionFromMonster.skill,
@@ -144,6 +181,11 @@ const getTargeting = (
 
 			return [
 				{
+					sourceID: actionFromMonster.sourceID,
+					targetInfo: {
+						targetedPlayerID: target.playerID,
+						spot: actionFromMonster.targetInfo.spot,
+					},
 					source: getOnBoardMonsterByID(
 						instance,
 						actionFromMonster.sourceID,
@@ -156,6 +198,8 @@ const getTargeting = (
 
 		return [
 			{
+				sourceID: actionFromMonster.sourceID,
+				targetInfo: actionFromMonster.targetInfo,
 				source: getOnBoardMonsterByID(
 					instance,
 					actionFromMonster.sourceID,
@@ -173,8 +217,9 @@ const getTargeting = (
 		);
 		return [
 			{
-				source: source,
+				sourceID: actionFromMonster.sourceID,
 				targetInfo: actionFromMonster.targetInfo,
+				source: source,
 				targetTeam: getPlayerByID(source.playerID, instance).team,
 				skill: actionFromMonster.skill,
 			},

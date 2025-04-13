@@ -25,9 +25,9 @@ type effectType = `${effectTypeEnum}`;
 type targetType = `${targetTypeEnum}`;
 
 interface actionInterface {
-	sourceID?: string;
+	sourceID: string;
 	source?: MonsterFightingInterface;
-	targetInfo?: targetInfoType;
+	targetInfo: targetInfoType;
 	target?: MonsterFightingInterface;
 	targetTeam?: MonsterFightingInterface[];
 	skill: SkillInterface;
