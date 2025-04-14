@@ -2,7 +2,6 @@ import { playerFighting } from "../interfaces/player.js";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
 import {
-	applyChanges,
 	buildInstance,
 	clearBoardBeforeRound,
 	getPlayerByID,
@@ -61,7 +60,9 @@ const fight = () => {
 		});
 		staminaRefill(instance);
 		rollStatusEndRound(instance);
-		applyChanges(instance);
+		instance.players.forEach((player) => {
+			player.applyChanges();
+		});
 		clearActions(instance);
 		return instance;
 	};

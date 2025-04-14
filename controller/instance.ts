@@ -578,17 +578,6 @@ const isAvailableToPlayRound = (
 	return isAvailableToPlayRound;
 };
 
-const applyChanges = (instance: instanceInterface) => {
-	instance.players.forEach((player) => {
-		player.onBoard.forEach((onBoardMonster) => {
-			const teamMonsterIndex = player.team.findIndex(
-				(teamMonster) => teamMonster.id === onBoardMonster.id,
-			);
-			player.team[teamMonsterIndex] = onBoardMonster;
-		});
-	});
-};
-
 const isTargetable = (monster: MonsterFightingInterface): boolean => {
 	if (!_isAlive(monster)) {
 		return false;
@@ -612,7 +601,6 @@ export {
 	getPlayerByMonsterID,
 	isActionsFilled,
 	isAvailableToPlayRound,
-	applyChanges,
 	buildInstance,
 	isTargetable,
 	clearBoardBeforeRound,
