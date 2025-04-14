@@ -80,6 +80,15 @@ class Instance {
 		return {} as MonsterFightingInterface;
 	};
 
+	getEnnemies = (monsterID: string): MonsterFightingInterface[] => {
+		this.players.forEach((player) => {
+			if (player.onBoard.every((monster) => monster.id !== monsterID)) {
+				return player.onBoard;
+			}
+		});
+		return [];
+	};
+
 	public getPlayerByID = (playerID: string): playerFighting => {
 		return this.players.find((player) => player.id === playerID);
 	};

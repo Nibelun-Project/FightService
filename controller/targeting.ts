@@ -1,7 +1,7 @@
 import { actionInterface } from "../interfaces/action.js";
 import { Instance } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster.js";
-import { getEnnemies, getOtherSpot, isTargetable } from "./instance.js";
+import { getOtherSpot, isTargetable } from "./instance.js";
 
 const getTargeting = (
 	instance: Instance,
@@ -98,9 +98,7 @@ const getTargeting = (
 
 	const ennemies = (): actionInterface[] => {
 		const effectListByTarget = [];
-		const targetsList = getEnnemies(instance, actionFromMonster.sourceID);
-
-		targetsList.forEach((monster) => {
+		instance.getEnnemies(actionFromMonster.sourceID).forEach((monster) => {
 			if (isTargetable(monster)) {
 				const player = instance.getPlayerByID(monster.playerID);
 				effectListByTarget.push({

@@ -3,7 +3,6 @@ import { Instance } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
 import { effectsType } from "./action.js";
-import { getEnnemies } from "./instance.js";
 import { getTargeting } from "./targeting.js";
 
 const passif = (
@@ -13,7 +12,7 @@ const passif = (
 	instance: Instance,
 ) => {
 	const ennemies = (owner: MonsterFightingInterface) => {
-		return getEnnemies(instance, owner.id);
+		return instance.getEnnemies(owner.id);
 	};
 	const ally = (owner: MonsterFightingInterface) => {
 		return [instance.getAlly(owner.id)];
