@@ -1,11 +1,12 @@
 import { playerFighting } from "./player.js";
-import { fightInfoInterface } from "./history.js";
-import { isAlive } from "../controller/instance.js";
+import { fightInfoInterface, historyContextEnum } from "./history.js";
+import { getPlayerByID, isAlive } from "../controller/instance.js";
+import { updateHistory } from "../controller/history.js";
 
 class Instance {
 	_id: string;
-	_players: playerFighting[];
-	_fightInfo: fightInfoInterface;
+	_players: playerFighting[] = [];
+	_fightInfo: fightInfoInterface = {} as fightInfoInterface;
 
 	constructor(
 		id: string,
@@ -47,6 +48,21 @@ class Instance {
 				isAlive(player.getOnBoardMonsterByID(action.sourceID)),
 			);
 		});
+	};
+
+	public checkEndgame = (playerID: string) => {
+		const playerToCheck = getPlayerByID(playerID, this);
+		if (playerToCheck.team.every((monster) => monster.isAlive === false)) {
+			this.fightInfo.endgame = true;
+			this.fightInfo.winner = this.players.find(
+				(player) => player.id != playerID,
+			).id;
+
+			updateHistory(this.fightInfo, {
+				context: historyContextEnum.ENDGAME,
+				content: { winner: this.fightInfo.winner },
+			});
+		}
 	};
 }
 

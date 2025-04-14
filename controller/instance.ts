@@ -438,24 +438,6 @@ const _getNewFightId = (): string => {
 	return "fid_" + Date.now().toString();
 };
 
-const checkEndgame = (instance: Instance, playerID: string) => {
-	if (
-		getPlayerByID(playerID, instance).team.every(
-			(monster) => monster.isAlive === false,
-		)
-	) {
-		instance.fightInfo.endgame = true;
-		instance.fightInfo.winner = instance.players.find(
-			(player) => player.id != playerID,
-		).id;
-
-		updateHistory(instance.fightInfo, {
-			context: historyContextEnum.ENDGAME,
-			content: { winner: instance.fightInfo.winner },
-		});
-	}
-};
-
 /**
  *
  * @param {*} spot = to 1 or 0 only
@@ -586,6 +568,5 @@ export {
 	isAvailableToPlayRound,
 	buildInstance,
 	isTargetable,
-	checkEndgame,
 	isAlive,
 };
