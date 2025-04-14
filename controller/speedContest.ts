@@ -9,7 +9,6 @@ import {
 	monsterStatsEnum,
 } from "../interfaces/monster.js";
 import { updateHistory } from "./history.js";
-import { getActionByMonsterID } from "./instance.js";
 
 const speedContest = (instance: Instance): string[] => {
 	//1 - Prepare array of monster to proceed the speed constest with all needly informations
@@ -33,8 +32,7 @@ const _prepareMonstersToSpeedContest = (
 
 	//3 - add for each monster the action he's playing
 	tempMonstersList.forEach((customMonster) => {
-		customMonster.action = getActionByMonsterID(
-			instance,
+		customMonster.action = instance.getActionByMonsterID(
 			customMonster.monster.id,
 		).skill;
 	});

@@ -447,21 +447,6 @@ const getOtherSpot = (spot: number): number => {
 	return (spot + 1) % 2;
 };
 
-const getActionByMonsterID = (
-	instance: Instance,
-	monsterID: string,
-): actionInterface => {
-	for (let index = 0; index < instance.players.length; index++) {
-		const player = instance.players[index];
-
-		if (player.actions.some((action) => action.sourceID === monsterID)) {
-			return player.actions.find(
-				(action) => action.sourceID === monsterID,
-			);
-		}
-	}
-};
-
 const isActionsFilled = (currInstance: Instance): boolean => {
 	return currInstance.players.every((player) => player.actions.length > 0);
 };
@@ -478,7 +463,7 @@ const isAvailableToPlayRound = (
 		monster.stats[monsterStatsEnum.HP] <= 0 || // the monster is alive
 		!player.isOnBoard(monsterID) || // the monster is on the board
 		(hasStatusFromList(monster, preventToPlayRound) && //TBD
-			!isSkillHighPriority(getActionByMonsterID(instance, monsterID)))
+			!isSkillHighPriority(instance.getActionByMonsterID(monsterID)))
 	) {
 		isAvailableToPlayRound = false;
 	}
@@ -489,7 +474,7 @@ const isAvailableToPlayRound = (
 			isAvailableToPlayRound: isAvailableToPlayRound,
 			monster: convertMonsterToHistory(monster),
 			action: convertActionToHistory(
-				getActionByMonsterID(instance, monsterID),
+				instance.getActionByMonsterID(monsterID),
 			),
 		},
 	});
@@ -513,7 +498,6 @@ const isAlive = (monster: MonsterFightingInterface): boolean => {
 
 export {
 	getOtherSpot,
-	getActionByMonsterID,
 	isActionsFilled,
 	isAvailableToPlayRound,
 	buildInstance,
