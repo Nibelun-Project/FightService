@@ -6,8 +6,8 @@ import { effectsType } from "./action.js";
 import {
 	getAlly,
 	getEnnemies,
-	getOnBoardMonsterByID,
 	getPlayerByID,
+	getPlayerByMonsterID,
 	getSpotByMonsterID,
 } from "./instance.js";
 import { getTargeting } from "./targeting.js";
@@ -86,10 +86,10 @@ const passif = (
 					targetInfo:
 						effect.side === "from"
 							? {
-									targetedPlayerID: getOnBoardMonsterByID(
-										instance,
+									targetedPlayerID: getPlayerByMonsterID(
 										from.id,
-									).playerID,
+										instance,
+									).id,
 									spot: getSpotByMonsterID(instance, from.id),
 								}
 							: to,
@@ -167,7 +167,7 @@ const passif = (
 			const monster = whenArray[i];
 			if (
 				eventWhen[monster.passive.trigger.when](
-					getOnBoardMonsterByID(instance, target.sourceID),
+					target.source,
 					target.targetInfo,
 					monster,
 				) &&

@@ -447,7 +447,7 @@ const clearBoardBeforeRound = (instance: instanceInterface) => {
 	instance.players.forEach((player) => {
 		player.onBoard = player.onBoard.filter((monster) => _isAlive(monster));
 		player.actions = player.actions.filter((action) =>
-			_isAlive(getOnBoardMonsterByID(instance, action.sourceID)),
+			_isAlive(player.getOnBoardMonsterByID(action.sourceID)),
 		);
 	});
 };
@@ -489,11 +489,12 @@ const getAlly = (
 	instance: instanceInterface,
 	monsterID: string,
 ): MonsterFightingInterface => {
-	for (let index = 0; index < instance.players.length; index++) {
-		const player = instance.players[index];
-		if (player.id === getOnBoardMonsterByID(instance, monsterID).playerID)
+	instance.players.forEach((player) => {
+		if (player.onBoard.some((monster) => monster.id === monsterID)) {
 			return player.onBoard.find((monster) => monster.id !== monsterID);
-	}
+		}
+	});
+	return {} as MonsterFightingInterface;
 };
 
 const getEnnemies = (
@@ -506,20 +507,6 @@ const getEnnemies = (
 			return player.onBoard;
 		}
 	}
-};
-
-const getOnBoardMonsterByID = (
-	instance: instanceInterface,
-	monsterID: string,
-): MonsterFightingInterface => {
-	for (let index = 0; index < instance.players.length; index++) {
-		const player = instance.players[index];
-
-		if (player.onBoard.some((monster) => monster.id === monsterID)) {
-			return player.getOnBoardMonsterByID(monsterID);
-		}
-	}
-	return {} as MonsterFightingInterface;
 };
 
 const isOnBoard = (instance: instanceInterface, monsterID: string): boolean => {
@@ -541,10 +528,14 @@ const getSpotByMonsterID = (
 	instance: instanceInterface,
 	monsterID: string,
 ): number => {
-	return getPlayerByID(
-		getOnBoardMonsterByID(instance, monsterID).playerID,
-		instance,
-	).onBoard.findIndex((onBoardMonster) => monsterID === onBoardMonster.id);
+	instance.players.forEach((player) => {
+		if (player.onBoard.some((monster) => monster.id === monsterID)) {
+			return player.onBoard.findIndex(
+				(monster) => monster.id === monsterID,
+			);
+		}
+	});
+	return -1;
 };
 
 const getActionByMonsterID = (
@@ -589,7 +580,8 @@ const isAvailableToPlayRound = (
 	instance: instanceInterface,
 	monsterID: string,
 ): boolean => {
-	const monster = getOnBoardMonsterByID(instance, monsterID);
+	const player = getPlayerByMonsterID(monsterID, instance);
+	const monster = player.getOnBoardMonsterByID(monsterID);
 	let isAvailableToPlayRound = true;
 	if (
 		monster.isAlive === false ||
@@ -644,7 +636,6 @@ export {
 	getOtherSpot,
 	getAlly,
 	getEnnemies,
-	getOnBoardMonsterByID,
 	isOnBoard,
 	getSpotByMonsterID,
 	getActionByMonsterID,

@@ -3,7 +3,6 @@ import { instanceInterface } from "../interfaces/instance.js";
 import {
 	getAlly,
 	getEnnemies,
-	getOnBoardMonsterByID,
 	getOtherSpot,
 	getPlayerByID,
 	getSpotByMonsterID,
@@ -27,10 +26,7 @@ const getTargeting = (
 							targetedPlayerID: monster.playerID,
 							spot: getSpotByMonsterID(instance, monster.id),
 						},
-						source: getOnBoardMonsterByID(
-							instance,
-							actionFromMonster.sourceID,
-						),
+						source: actionFromMonster.source,
 						target: monster,
 						skill: actionFromMonster.skill,
 					});
@@ -50,10 +46,7 @@ const getTargeting = (
 					targetedPlayerID: ally.playerID,
 					spot: actionFromMonster.targetInfo.spot,
 				},
-				source: getOnBoardMonsterByID(
-					instance,
-					actionFromMonster.sourceID,
-				),
+				source: actionFromMonster.source,
 				target: ally,
 				skill: actionFromMonster.skill,
 			},
@@ -62,30 +55,23 @@ const getTargeting = (
 
 	const allies = (): actionInterface[] => {
 		const effectListByTarget = [];
-		const sourceMonster = getOnBoardMonsterByID(
+		getPlayerByID(
+			actionFromMonster.source.playerID,
 			instance,
-			actionFromMonster.sourceID,
-		);
-
-		getPlayerByID(sourceMonster.playerID, instance).onBoard.forEach(
-			(monster) => {
-				if (isTargetable(monster)) {
-					effectListByTarget.push({
-						sourceID: actionFromMonster.sourceID,
-						targetInfo: {
-							targetedPlayerID: sourceMonster.playerID,
-							spot: getSpotByMonsterID(instance, monster.id),
-						},
-						source: getOnBoardMonsterByID(
-							instance,
-							actionFromMonster.sourceID,
-						),
-						target: monster,
-						skill: actionFromMonster.skill,
-					});
-				}
-			},
-		);
+		).onBoard.forEach((monster) => {
+			if (isTargetable(monster)) {
+				effectListByTarget.push({
+					sourceID: actionFromMonster.sourceID,
+					targetInfo: {
+						targetedPlayerID: actionFromMonster.source.playerID,
+						spot: getSpotByMonsterID(instance, monster.id),
+					},
+					source: actionFromMonster.source,
+					target: monster,
+					skill: actionFromMonster.skill,
+				});
+			}
+		});
 
 		return effectListByTarget;
 	};
@@ -103,10 +89,7 @@ const getTargeting = (
 						targetedPlayerID: monster.playerID,
 						spot: getSpotByMonsterID(instance, monster.id),
 					},
-					source: getOnBoardMonsterByID(
-						instance,
-						actionFromMonster.sourceID,
-					),
+					source: actionFromMonster.source,
 					target: monster,
 					skill: actionFromMonster.skill,
 				});
@@ -128,10 +111,7 @@ const getTargeting = (
 						targetedPlayerID: monster.playerID,
 						spot: getSpotByMonsterID(instance, monster.id),
 					},
-					source: getOnBoardMonsterByID(
-						instance,
-						actionFromMonster.sourceID,
-					),
+					source: actionFromMonster.source,
 					target: monster,
 					skill: actionFromMonster.skill,
 				});
@@ -142,26 +122,22 @@ const getTargeting = (
 	};
 
 	const self = (): actionInterface[] => {
-		const self = getOnBoardMonsterByID(
-			instance,
-			actionFromMonster.sourceID,
-		);
-		if (!isTargetable(self)) return [];
+		if (!isTargetable(actionFromMonster.source)) return [];
 		return [
 			{
 				sourceID: actionFromMonster.sourceID,
 				targetInfo: {
-					targetedPlayerID: getOnBoardMonsterByID(
+					targetedPlayerID: getPlayerByID(
+						actionFromMonster.source.playerID,
 						instance,
-						actionFromMonster.sourceID,
-					).playerID,
+					).id,
 					spot: getSpotByMonsterID(
 						instance,
 						actionFromMonster.sourceID,
 					),
 				},
-				source: self,
-				target: self,
+				source: actionFromMonster.source,
+				target: actionFromMonster.source,
 				skill: actionFromMonster.skill,
 			},
 		];
@@ -211,16 +187,15 @@ const getTargeting = (
 	};
 
 	const singleBackstage = (): actionInterface[] => {
-		const source = getOnBoardMonsterByID(
-			instance,
-			actionFromMonster.sourceID,
-		);
 		return [
 			{
 				sourceID: actionFromMonster.sourceID,
 				targetInfo: actionFromMonster.targetInfo,
-				source: source,
-				targetTeam: getPlayerByID(source.playerID, instance).team,
+				source: actionFromMonster.source,
+				targetTeam: getPlayerByID(
+					actionFromMonster.source.playerID,
+					instance,
+				).team,
 				skill: actionFromMonster.skill,
 			},
 		];
