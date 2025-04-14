@@ -492,13 +492,6 @@ const getActionByMonsterID = (
 	}
 };
 
-const getPlayerByID = (
-	playerID: string,
-	currInstance: Instance,
-): playerFighting => {
-	return currInstance.players.find((player) => player.id === playerID);
-};
-
 const getPlayerByMonsterID = (monsterID: string, instance: Instance) => {
 	instance.players.forEach((player) => {
 		if (player.team.some((monster) => monster.id === monsterID)) {
@@ -562,7 +555,6 @@ export {
 	getAlly,
 	getEnnemies,
 	getActionByMonsterID,
-	getPlayerByID,
 	getPlayerByMonsterID,
 	isActionsFilled,
 	isAvailableToPlayRound,

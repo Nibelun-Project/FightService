@@ -1,6 +1,6 @@
 import { playerFighting } from "./player.js";
 import { fightInfoInterface, historyContextEnum } from "./history.js";
-import { getPlayerByID, isAlive } from "../controller/instance.js";
+import { isAlive } from "../controller/instance.js";
 import { updateHistory } from "../controller/history.js";
 
 class Instance {
@@ -51,7 +51,7 @@ class Instance {
 	};
 
 	public checkEndgame = (playerID: string) => {
-		const playerToCheck = getPlayerByID(playerID, this);
+		const playerToCheck = this.getPlayerByID(playerID);
 		if (playerToCheck.team.every((monster) => monster.isAlive === false)) {
 			this.fightInfo.endgame = true;
 			this.fightInfo.winner = this.players.find(
@@ -63,6 +63,10 @@ class Instance {
 				content: { winner: this.fightInfo.winner },
 			});
 		}
+	};
+
+	public getPlayerByID = (playerID: string): playerFighting => {
+		return this.players.find((player) => player.id === playerID);
 	};
 }
 

@@ -4,7 +4,6 @@ import {
 	historyContextEnum,
 } from "../interfaces/history.js";
 import { Instance } from "../interfaces/instance.js";
-import { getPlayerByID } from "./instance.js";
 import {
 	MonsterFightingInterface,
 	monsterStatsEnum,
@@ -16,9 +15,8 @@ const deathCheckActionTaget = (
 	actionsByTarget: actionInterface,
 ): boolean => {
 	if (_isNeededToCheckDeath(actionsByTarget)) {
-		const monster = getPlayerByID(
+		const monster = instance.getPlayerByID(
 			actionsByTarget.targetInfo.targetedPlayerID,
-			instance,
 		).onBoard[actionsByTarget.targetInfo.spot];
 		if (monster.stats[monsterStatsEnum.HP] <= 0) {
 			_killActionTaget(instance, actionsByTarget);
@@ -50,9 +48,8 @@ const _killActionTaget = (
 	instance: Instance,
 	actionsByTarget: actionInterface,
 ) => {
-	const monster = getPlayerByID(
+	const monster = instance.getPlayerByID(
 		actionsByTarget.targetInfo.targetedPlayerID,
-		instance,
 	).onBoard[actionsByTarget.targetInfo.spot];
 	_killMonster(instance.fightInfo, monster);
 };

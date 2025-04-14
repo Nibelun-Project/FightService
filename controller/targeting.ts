@@ -4,7 +4,6 @@ import {
 	getAlly,
 	getEnnemies,
 	getOtherSpot,
-	getPlayerByID,
 	isTargetable,
 } from "./instance.js";
 
@@ -55,9 +54,8 @@ const getTargeting = (
 	const allies = (): actionInterface[] => {
 		const effectListByTarget = [];
 
-		const player = getPlayerByID(
+		const player = instance.getPlayerByID(
 			actionFromMonster.source.playerID,
-			instance,
 		);
 		player.onBoard.forEach((monster) => {
 			if (isTargetable(monster)) {
@@ -79,9 +77,8 @@ const getTargeting = (
 
 	const double = (): actionInterface[] => {
 		const effectListByTarget = [];
-		const player = getPlayerByID(
+		const player = instance.getPlayerByID(
 			actionFromMonster.targetInfo.targetedPlayerID,
-			instance,
 		);
 		player.onBoard.forEach((monster) => {
 			if (isTargetable(monster)) {
@@ -107,7 +104,7 @@ const getTargeting = (
 
 		targetsList.forEach((monster) => {
 			if (isTargetable(monster)) {
-				const player = getPlayerByID(monster.playerID, instance);
+				const player = instance.getPlayerByID(monster.playerID);
 				effectListByTarget.push({
 					sourceID: actionFromMonster.sourceID,
 					targetInfo: {
@@ -126,9 +123,8 @@ const getTargeting = (
 
 	const self = (): actionInterface[] => {
 		if (!isTargetable(actionFromMonster.source)) return [];
-		const player = getPlayerByID(
+		const player = instance.getPlayerByID(
 			actionFromMonster.source.playerID,
-			instance,
 		);
 		return [
 			{
@@ -145,9 +141,8 @@ const getTargeting = (
 	};
 
 	const single = (): actionInterface[] => {
-		const targetedPlayer = getPlayerByID(
+		const targetedPlayer = instance.getPlayerByID(
 			actionFromMonster.targetInfo.targetedPlayerID,
-			instance,
 		);
 		let target = targetedPlayer.getMonsterBySpot(
 			actionFromMonster.targetInfo.spot,
@@ -193,9 +188,8 @@ const getTargeting = (
 				sourceID: actionFromMonster.sourceID,
 				targetInfo: actionFromMonster.targetInfo,
 				source: actionFromMonster.source,
-				targetTeam: getPlayerByID(
+				targetTeam: instance.getPlayerByID(
 					actionFromMonster.source.playerID,
-					instance,
 				).team,
 				skill: actionFromMonster.skill,
 			},

@@ -1,7 +1,7 @@
 import { playerFighting } from "../interfaces/player.js";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
-import { buildInstance, getPlayerByID, isActionsFilled } from "./instance.js";
+import { buildInstance, isActionsFilled } from "./instance.js";
 import { clearActions, doAction, effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
 import { passif } from "./passif.js";
@@ -23,7 +23,7 @@ const fight = () => {
 	const waitActions = (actions, playerID, fightID) => {
 		const currInstance = getInstanceByID(fightID);
 		if (!currInstance) return { status: 3, match: null };
-		getPlayerByID(playerID, currInstance).actions = actions;
+		currInstance.getPlayerByID(playerID).actions = actions;
 
 		if (isActionsFilled(currInstance)) {
 			mapFights[fightID] = _playRound(currInstance);
@@ -69,7 +69,7 @@ const fight = () => {
 		both: boolean,
 	) => {
 		const currInstance = getInstanceByID(fightID);
-		if (both) getPlayerByID(playerID, currInstance).actions = swapActions;
+		if (both) currInstance.getPlayerByID(playerID).actions = swapActions;
 
 		for (let index = 0; index < swapActions.length; index++) {
 			const action = swapActions[index];
