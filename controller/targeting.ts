@@ -1,11 +1,7 @@
 import { actionInterface } from "../interfaces/action.js";
 import { Instance } from "../interfaces/instance.js";
-import {
-	getAlly,
-	getEnnemies,
-	getOtherSpot,
-	isTargetable,
-} from "./instance.js";
+import { MonsterFightingInterface } from "../interfaces/monster.js";
+import { getEnnemies, getOtherSpot, isTargetable } from "./instance.js";
 
 const getTargeting = (
 	instance: Instance,
@@ -35,7 +31,9 @@ const getTargeting = (
 	};
 
 	const ally = (): actionInterface[] => {
-		const ally = getAlly(instance, actionFromMonster.sourceID);
+		const ally: MonsterFightingInterface = instance.getAlly(
+			actionFromMonster.sourceID,
+		);
 		if (!isTargetable(ally)) return [];
 		return [
 			{

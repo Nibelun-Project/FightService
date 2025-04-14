@@ -447,24 +447,6 @@ const getOtherSpot = (spot: number): number => {
 	return (spot + 1) % 2;
 };
 
-/**
- *
- * @param {*} instance
- * @param {*} monsterID
- * @returns empty array if no ally on board: []
- */
-const getAlly = (
-	instance: Instance,
-	monsterID: string,
-): MonsterFightingInterface => {
-	instance.players.forEach((player) => {
-		if (player.onBoard.some((monster) => monster.id === monsterID)) {
-			return player.onBoard.find((monster) => monster.id !== monsterID);
-		}
-	});
-	return {} as MonsterFightingInterface;
-};
-
 const getEnnemies = (
 	instance: Instance,
 	monsterID: string,
@@ -543,7 +525,6 @@ const isAlive = (monster: MonsterFightingInterface): boolean => {
 
 export {
 	getOtherSpot,
-	getAlly,
 	getEnnemies,
 	getActionByMonsterID,
 	isActionsFilled,

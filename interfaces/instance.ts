@@ -2,6 +2,7 @@ import { playerFighting } from "./player.js";
 import { fightInfoInterface, historyContextEnum } from "./history.js";
 import { isAlive } from "../controller/instance.js";
 import { updateHistory } from "../controller/history.js";
+import { MonsterFightingInterface } from "./monster.js";
 
 class Instance {
 	_id: string;
@@ -65,11 +66,25 @@ class Instance {
 		}
 	};
 
+	/**
+	 * @returns empty array if no ally on board: []
+	 */
+	getAlly = (monsterID: string): MonsterFightingInterface => {
+		this.players.forEach((player) => {
+			if (player.onBoard.some((monster) => monster.id === monsterID)) {
+				return player.onBoard.find(
+					(monster) => monster.id !== monsterID,
+				);
+			}
+		});
+		return {} as MonsterFightingInterface;
+	};
+
 	public getPlayerByID = (playerID: string): playerFighting => {
 		return this.players.find((player) => player.id === playerID);
 	};
 
-	getPlayerByMonsterID = (monsterID: string): playerFighting => {
+	public getPlayerByMonsterID = (monsterID: string): playerFighting => {
 		this.players.forEach((player) => {
 			if (player.team.some((monster) => monster.id === monsterID)) {
 				return player;
