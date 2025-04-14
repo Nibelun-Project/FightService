@@ -518,26 +518,6 @@ const isOnBoard = (instance: instanceInterface, monsterID: string): boolean => {
 	return false;
 };
 
-/**
- *
- * @param {*} instance
- * @param {*} monsterID
- * @returns -1 for false
- */
-const getSpotByMonsterID = (
-	instance: instanceInterface,
-	monsterID: string,
-): number => {
-	instance.players.forEach((player) => {
-		if (player.onBoard.some((monster) => monster.id === monsterID)) {
-			return player.onBoard.findIndex(
-				(monster) => monster.id === monsterID,
-			);
-		}
-	});
-	return -1;
-};
-
 const getActionByMonsterID = (
 	instance: instanceInterface,
 	monsterID: string,
@@ -637,7 +617,6 @@ export {
 	getAlly,
 	getEnnemies,
 	isOnBoard,
-	getSpotByMonsterID,
 	getActionByMonsterID,
 	getPlayerByID,
 	getPlayerByMonsterID,

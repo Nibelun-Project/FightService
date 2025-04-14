@@ -8,7 +8,6 @@ import {
 	getEnnemies,
 	getPlayerByID,
 	getPlayerByMonsterID,
-	getSpotByMonsterID,
 } from "./instance.js";
 import { getTargeting } from "./targeting.js";
 
@@ -78,6 +77,8 @@ const passif = (
 	};
 
 	const applyEffects = (owner: MonsterFightingInterface, from, to) => {
+		const sourcePlayer = getPlayerByMonsterID(owner.id, instance);
+		const fromPlayer = getPlayerByMonsterID(from.id, instance);
 		owner.passive.effects.forEach((effect) => {
 			const effectTargets = getTargeting(
 				instance,
@@ -86,13 +87,13 @@ const passif = (
 					targetInfo:
 						effect.side === "from"
 							? {
-									targetedPlayerID: getPlayerByMonsterID(
+									targetedPlayerID: fromPlayer.id,
+									spot: fromPlayer.getSpotByMonsterID(
 										from.id,
-										instance,
-									).id,
-									spot: getSpotByMonsterID(instance, from.id),
+									),
 								}
 							: to,
+					source: sourcePlayer.getOnBoardMonsterByID(owner.id),
 					skill: {
 						targetType: effect.targetType,
 						name: owner.passive.name,
