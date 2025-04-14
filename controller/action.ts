@@ -3,7 +3,7 @@ import {
 	fightInfoInterface,
 	historyContextEnum,
 } from "../interfaces/history.js";
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import {
 	MonsterFightingInterface,
 	monsterStatsEnum,
@@ -26,7 +26,7 @@ import { paySkillCost } from "./skill.js";
 import { applyStatus } from "./status.js";
 import { getTargeting } from "./targeting.js";
 
-const doAction = (instance: instanceInterface, monsterID: string) => {
+const doAction = (instance: Instance, monsterID: string) => {
 	if (isAvailableToPlayRound(instance, monsterID)) {
 		const sourcePlayer = getPlayerByMonsterID(monsterID, instance);
 		const sourceMonster = sourcePlayer.getOnBoardMonsterByID(monsterID);
@@ -145,7 +145,7 @@ const _swapOnBoard = (
 	});
 };
 
-const clearActions = (instance: instanceInterface) => {
+const clearActions = (instance: Instance) => {
 	instance.players.forEach((player) => {
 		player.actions = [];
 	});

@@ -2,7 +2,7 @@ import {
 	fightInfoInterface,
 	historyContextEnum,
 } from "../interfaces/history.js";
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import { modCause } from "../interfaces/modification.js";
 import {
 	MonsterFightingInterface,
@@ -30,7 +30,7 @@ import {
 } from "./modification.js";
 import { refillStat } from "./monsterStat.js";
 
-const rollStatusEndRound = (instance: instanceInterface) => {
+const rollStatusEndRound = (instance: Instance) => {
 	instance.players.forEach((player) => {
 		player.onBoard.forEach((monster) => {
 			if (monster.isAlive === true) {

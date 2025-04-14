@@ -1,5 +1,5 @@
 import { actionInterface } from "../interfaces/action.js";
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import {
 	getAlly,
 	getEnnemies,
@@ -9,7 +9,7 @@ import {
 } from "./instance.js";
 
 const getTargeting = (
-	instance: instanceInterface,
+	instance: Instance,
 	actionFromMonster: actionInterface,
 	effectTargetType: string,
 ) => {

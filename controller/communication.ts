@@ -1,5 +1,5 @@
 import { playerFighting } from "../interfaces/player.js";
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import fight from "./fight.js";
 import matchmaking from "./matchmaking.js";
 
@@ -30,7 +30,7 @@ const comm = (io) => {
 		if (initialized) {
 			const { status, matchIDs } = matchmakingModule.addPlayer(playerID);
 			if (status >= 2) {
-				const instance: instanceInterface = fightModule.ready(matchIDs);
+				const instance: Instance = fightModule.ready(matchIDs);
 				return _socketTo(instance, "combat-started", instance, status);
 			} else if (status >= 1)
 				return _socketTo(playerID, "combat-pending", "", status);

@@ -2,7 +2,7 @@ import {
 	fightInfoInterface,
 	historyContextEnum,
 } from "../interfaces/history.js";
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import {
 	MonsterFightingInterface,
 	MonsterSpeedInterface,
@@ -11,7 +11,7 @@ import {
 import { updateHistory } from "./history.js";
 import { getActionByMonsterID } from "./instance.js";
 
-const speedContest = (instance: instanceInterface): string[] => {
+const speedContest = (instance: Instance): string[] => {
 	//1 - Prepare array of monster to proceed the speed constest with all needly informations
 	let tempMonstersList = [];
 	tempMonstersList = _prepareMonstersToSpeedContest(instance);
@@ -20,7 +20,7 @@ const speedContest = (instance: instanceInterface): string[] => {
 };
 
 const _prepareMonstersToSpeedContest = (
-	instance: instanceInterface,
+	instance: Instance,
 ): MonsterSpeedInterface[] => {
 	//1 - set an array with all the monsters on the board
 	let tempMonstersList = [];

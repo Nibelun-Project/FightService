@@ -1,11 +1,11 @@
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import {
 	MonsterFightingInterface,
 	monsterStatsEnum,
 	statsConst,
 } from "../interfaces/monster.js";
 
-const staminaRefill = (instance: instanceInterface) => {
+const staminaRefill = (instance: Instance) => {
 	instance.players.forEach((player) => {
 		player.onBoard.forEach((monster) => {
 			refillStat()[monsterStatsEnum.STAMINA](

@@ -7,7 +7,7 @@ import {
 	historyMonsterInterface,
 	historySkillInterface,
 } from "../interfaces/history.js";
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster.js";
 import { SkillInterface } from "../interfaces/skill.js";
 
@@ -20,7 +20,7 @@ const initFightInfo = (): fightInfoInterface => {
 	};
 };
 
-const initHistoryRound = (instance: instanceInterface) => {
+const initHistoryRound = (instance: Instance) => {
 	instance[HISTORY_NAME].history[instance[HISTORY_NAME].round] = [];
 	instance[HISTORY_NAME].round++;
 };

@@ -1,25 +1,20 @@
 import { playerFighting } from "../interfaces/player.js";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
-import {
-	buildInstance,
-	clearBoardBeforeRound,
-	getPlayerByID,
-	isActionsFilled,
-} from "./instance.js";
+import { buildInstance, getPlayerByID, isActionsFilled } from "./instance.js";
 import { clearActions, doAction, effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
 import { passif } from "./passif.js";
 import { actionInterface } from "../interfaces/action.js";
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import { deathCheckActionTaget } from "./death.js";
 import { staminaRefill } from "./monsterStat.js";
 import { rollStatusEndRound } from "./status.js";
 
 const fight = () => {
-	let mapFights: instanceInterface[] = [] as any;
+	let mapFights: Instance[] = [] as any;
 
-	const ready = (matchs: playerFighting[]): instanceInterface => {
+	const ready = (matchs: playerFighting[]): Instance => {
 		const instance = buildInstance(matchs);
 		mapFights.push(instance);
 		return instance;
@@ -47,13 +42,13 @@ const fight = () => {
 			};
 	};
 
-	const getInstanceByID = (fightID: string): instanceInterface => {
+	const getInstanceByID = (fightID: string): Instance => {
 		return mapFights.find((instance) => instance.id === fightID);
 	};
 
-	const _playRound = (instance: instanceInterface): instanceInterface => {
+	const _playRound = (instance: Instance): Instance => {
 		initHistoryRound(instance);
-		clearBoardBeforeRound(instance);
+		instance.clearBoardBeforeRound();
 		const sortedListOfMonstersID = speedContest(instance);
 		sortedListOfMonstersID.forEach((monsterID) => {
 			doAction(instance, monsterID);

@@ -1,5 +1,5 @@
 import { targetInfoType } from "../interfaces/action.js";
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
 import { effectsType } from "./action.js";
@@ -15,7 +15,7 @@ const passif = (
 	action,
 	target,
 	effect: effectInterface,
-	instance: instanceInterface,
+	instance: Instance,
 ) => {
 	const ennemies = (owner: MonsterFightingInterface) => {
 		return getEnnemies(instance, owner.id);

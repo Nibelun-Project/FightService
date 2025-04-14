@@ -1,7 +1,7 @@
-import { actionInterface, targetInfoType } from "../interfaces/action.js";
+import { actionInterface } from "../interfaces/action.js";
 import { playerFighting } from "../interfaces/player.js";
 import { historyContextEnum } from "../interfaces/history.js";
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import {
 	MonsterFightingInterface,
 	monsterStatsEnum,
@@ -430,12 +430,7 @@ const buildInstance = (matchs: playerFighting[]) => {
 		match.actions = [];
 	});
 	const fightId = _getNewFightId();
-	const instance: instanceInterface = {
-		id: fightId,
-		players: matchs,
-		fightInfo: initFightInfo(),
-	};
-
+	const instance: Instance = new Instance(fightId, matchs, initFightInfo());
 	return instance;
 };
 
@@ -443,16 +438,7 @@ const _getNewFightId = (): string => {
 	return "fid_" + Date.now().toString();
 };
 
-const clearBoardBeforeRound = (instance: instanceInterface) => {
-	instance.players.forEach((player) => {
-		player.onBoard = player.onBoard.filter((monster) => _isAlive(monster));
-		player.actions = player.actions.filter((action) =>
-			_isAlive(player.getOnBoardMonsterByID(action.sourceID)),
-		);
-	});
-};
-
-const checkEndgame = (instance: instanceInterface, playerID: string) => {
+const checkEndgame = (instance: Instance, playerID: string) => {
 	if (
 		getPlayerByID(playerID, instance).team.every(
 			(monster) => monster.isAlive === false,
@@ -486,7 +472,7 @@ const getOtherSpot = (spot: number): number => {
  * @returns empty array if no ally on board: []
  */
 const getAlly = (
-	instance: instanceInterface,
+	instance: Instance,
 	monsterID: string,
 ): MonsterFightingInterface => {
 	instance.players.forEach((player) => {
@@ -498,7 +484,7 @@ const getAlly = (
 };
 
 const getEnnemies = (
-	instance: instanceInterface,
+	instance: Instance,
 	monsterID: string,
 ): MonsterFightingInterface[] => {
 	for (let index = 0; index < instance.players.length; index++) {
@@ -510,7 +496,7 @@ const getEnnemies = (
 };
 
 const getActionByMonsterID = (
-	instance: instanceInterface,
+	instance: Instance,
 	monsterID: string,
 ): actionInterface => {
 	for (let index = 0; index < instance.players.length; index++) {
@@ -526,15 +512,12 @@ const getActionByMonsterID = (
 
 const getPlayerByID = (
 	playerID: string,
-	currInstance: instanceInterface,
+	currInstance: Instance,
 ): playerFighting => {
 	return currInstance.players.find((player) => player.id === playerID);
 };
 
-const getPlayerByMonsterID = (
-	monsterID: string,
-	instance: instanceInterface,
-) => {
+const getPlayerByMonsterID = (monsterID: string, instance: Instance) => {
 	instance.players.forEach((player) => {
 		if (player.team.some((monster) => monster.id === monsterID)) {
 			return player;
@@ -543,12 +526,12 @@ const getPlayerByMonsterID = (
 	return {} as playerFighting;
 };
 
-const isActionsFilled = (currInstance: instanceInterface): boolean => {
+const isActionsFilled = (currInstance: Instance): boolean => {
 	return currInstance.players.every((player) => player.actions.length > 0);
 };
 
 const isAvailableToPlayRound = (
-	instance: instanceInterface,
+	instance: Instance,
 	monsterID: string,
 ): boolean => {
 	const player = getPlayerByMonsterID(monsterID, instance);
@@ -579,13 +562,13 @@ const isAvailableToPlayRound = (
 };
 
 const isTargetable = (monster: MonsterFightingInterface): boolean => {
-	if (!_isAlive(monster)) {
+	if (!isAlive(monster)) {
 		return false;
 	}
 	return true;
 };
 
-const _isAlive = (monster: MonsterFightingInterface): boolean => {
+const isAlive = (monster: MonsterFightingInterface): boolean => {
 	if (monster === undefined || !monster.isAlive) {
 		return false;
 	}
@@ -603,6 +586,6 @@ export {
 	isAvailableToPlayRound,
 	buildInstance,
 	isTargetable,
-	clearBoardBeforeRound,
 	checkEndgame,
+	isAlive,
 };

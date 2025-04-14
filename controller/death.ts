@@ -3,7 +3,7 @@ import {
 	fightInfoInterface,
 	historyContextEnum,
 } from "../interfaces/history.js";
-import { instanceInterface } from "../interfaces/instance.js";
+import { Instance } from "../interfaces/instance.js";
 import { checkEndgame, getPlayerByID } from "./instance.js";
 import {
 	MonsterFightingInterface,
@@ -12,7 +12,7 @@ import {
 import { convertMonsterToHistory, updateHistory } from "./history.js";
 
 const deathCheckActionTaget = (
-	instance: instanceInterface,
+	instance: Instance,
 	actionsByTarget: actionInterface,
 ): boolean => {
 	if (_isNeededToCheckDeath(actionsByTarget)) {
@@ -30,7 +30,7 @@ const deathCheckActionTaget = (
 };
 
 const deathCheckMonster = (
-	instance: instanceInterface,
+	instance: Instance,
 	monster: MonsterFightingInterface,
 ): boolean => {
 	if (monster.stats[monsterStatsEnum.HP] <= 0) {
@@ -47,7 +47,7 @@ const _isNeededToCheckDeath = (actionsByTarget: actionInterface): boolean => {
 };
 
 const _killActionTaget = (
-	instance: instanceInterface,
+	instance: Instance,
 	actionsByTarget: actionInterface,
 ) => {
 	const monster = getPlayerByID(
