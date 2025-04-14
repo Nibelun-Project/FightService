@@ -17,7 +17,6 @@ import {
 } from "./history.js";
 import {
 	getActionByMonsterID,
-	getMonsterBySpot,
 	getOnBoardMonsterByID,
 	isAvailableToPlayRound,
 } from "./instance.js";
@@ -66,12 +65,12 @@ const effectsType = () => {
 	};
 
 	const status = (
-		instance: instanceInterface,
+		fightInfo: fightInfoInterface,
 		actionsByTarget: actionInterface,
 		effect: effectInterface,
 	) => {
-		const monster = getMonsterBySpot(instance, actionsByTarget.targetInfo);
-		applyStatus(instance.fightInfo, monster, effect);
+		const monster = actionsByTarget.target;
+		applyStatus(fightInfo, monster, effect);
 	};
 
 	const swap = (

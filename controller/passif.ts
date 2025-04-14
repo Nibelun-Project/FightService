@@ -174,7 +174,8 @@ const passif = (
 	};
 
 	loopThroughPassif(passifBefore);
-	if (!loopThroughPassif(passifPrevent)) action(instance, target, effect);
+	if (!loopThroughPassif(passifPrevent))
+		action(instance.fightInfo, target, effect);
 	loopThroughPassif(passifAfter);
 };
 
