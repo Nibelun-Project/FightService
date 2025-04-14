@@ -168,18 +168,21 @@ const getTargeting = (
 	};
 
 	const single = (): actionInterface[] => {
-		const player = getPlayerByID(
+		const targetedPlayer = getPlayerByID(
 			actionFromMonster.targetInfo.targetedPlayerID,
 			instance,
 		);
-		let target = player.getMonsterBySpot(actionFromMonster.targetInfo.spot);
-		//DAMIEN VA REVIEW CE MAUVAIS CODE
+		let target = targetedPlayer.getMonsterBySpot(
+			actionFromMonster.targetInfo.spot,
+		);
 		if (!isTargetable(target)) {
 			// if spot is empty
 			actionFromMonster.targetInfo.spot = getOtherSpot(
 				actionFromMonster.targetInfo.spot,
 			); // get the other spot
-			target = player.getMonsterBySpot(actionFromMonster.targetInfo.spot);
+			target = targetedPlayer.getMonsterBySpot(
+				actionFromMonster.targetInfo.spot,
+			);
 			if (!isTargetable(target)) return []; // if empty too return []
 
 			return [
@@ -189,10 +192,7 @@ const getTargeting = (
 						targetedPlayerID: target.playerID,
 						spot: actionFromMonster.targetInfo.spot,
 					},
-					source: getOnBoardMonsterByID(
-						instance,
-						actionFromMonster.sourceID,
-					),
+					source: actionFromMonster.source,
 					target: target,
 					skill: actionFromMonster.skill,
 				},
@@ -203,10 +203,7 @@ const getTargeting = (
 			{
 				sourceID: actionFromMonster.sourceID,
 				targetInfo: actionFromMonster.targetInfo,
-				source: getOnBoardMonsterByID(
-					instance,
-					actionFromMonster.sourceID,
-				),
+				source: actionFromMonster.source,
 				target: target,
 				skill: actionFromMonster.skill,
 			},

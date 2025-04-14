@@ -516,7 +516,7 @@ const getOnBoardMonsterByID = (
 		const player = instance.players[index];
 
 		if (player.onBoard.some((monster) => monster.id === monsterID)) {
-			return player.onBoard.find((monster) => monster.id === monsterID);
+			return player.getOnBoardMonsterByID(monsterID);
 		}
 	}
 	return {} as MonsterFightingInterface;
@@ -567,6 +567,18 @@ const getPlayerByID = (
 	currInstance: instanceInterface,
 ): playerFighting => {
 	return currInstance.players.find((player) => player.id === playerID);
+};
+
+const getPlayerByMonsterID = (
+	monsterID: string,
+	instance: instanceInterface,
+) => {
+	instance.players.forEach((player) => {
+		if (player.team.some((monster) => monster.id === monsterID)) {
+			return player;
+		}
+	});
+	return {} as playerFighting;
 };
 
 const isActionsFilled = (currInstance: instanceInterface): boolean => {
@@ -637,6 +649,7 @@ export {
 	getSpotByMonsterID,
 	getActionByMonsterID,
 	getPlayerByID,
+	getPlayerByMonsterID,
 	isActionsFilled,
 	isAvailableToPlayRound,
 	applyChanges,

@@ -17,7 +17,7 @@ import {
 } from "./history.js";
 import {
 	getActionByMonsterID,
-	getOnBoardMonsterByID,
+	getPlayerByMonsterID,
 	isAvailableToPlayRound,
 } from "./instance.js";
 import { getTypeEfficiency, isSTAB } from "./monsterType.js";
@@ -28,13 +28,11 @@ import { getTargeting } from "./targeting.js";
 
 const doAction = (instance: instanceInterface, monsterID: string) => {
 	if (isAvailableToPlayRound(instance, monsterID)) {
-		const sourceMonster = getOnBoardMonsterByID(instance, monsterID);
+		const sourcePlayer = getPlayerByMonsterID(monsterID, instance);
+		const sourceMonster = sourcePlayer.getOnBoardMonsterByID(monsterID);
 		const actionFromMonster = getActionByMonsterID(instance, monsterID);
-		actionFromMonster.source = getOnBoardMonsterByID(instance, monsterID);
-		actionFromMonster.target = getOnBoardMonsterByID(
-			instance,
-			actionFromMonster.targetInfo.id,
-		);
+		actionFromMonster.source = sourceMonster;
+
 		paySkillCost(
 			instance.fightInfo,
 			sourceMonster,
