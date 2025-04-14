@@ -4,7 +4,6 @@ import {
 	monsterStatsEnum,
 	statsConst,
 } from "../interfaces/monster.js";
-import { isOnBoard } from "./instance.js";
 
 const staminaRefill = (instance: instanceInterface) => {
 	instance.players.forEach((player) => {
@@ -15,7 +14,7 @@ const staminaRefill = (instance: instanceInterface) => {
 			);
 		});
 		player.team
-			.filter((monster) => !isOnBoard(instance, monster.id))
+			.filter((monster) => !player.isOnBoard(monster.id))
 			.forEach((monster) => {
 				refillStat()[monsterStatsEnum.STAMINA](
 					monster,

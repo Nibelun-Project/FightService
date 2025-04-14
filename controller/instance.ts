@@ -509,15 +509,6 @@ const getEnnemies = (
 	}
 };
 
-const isOnBoard = (instance: instanceInterface, monsterID: string): boolean => {
-	for (let index = 0; index < instance.players.length; index++) {
-		const player = instance.players[index];
-		if (player.team.some((monster) => monster.id === monsterID))
-			return player.onBoard.some((monster) => monster.id === monsterID);
-	}
-	return false;
-};
-
 const getActionByMonsterID = (
 	instance: instanceInterface,
 	monsterID: string,
@@ -566,7 +557,7 @@ const isAvailableToPlayRound = (
 	if (
 		monster.isAlive === false ||
 		monster.stats[monsterStatsEnum.HP] <= 0 || // the monster is alive
-		!isOnBoard(instance, monsterID) || // the monster is on the board
+		!player.isOnBoard(monsterID) || // the monster is on the board
 		(hasStatusFromList(monster, preventToPlayRound) && //TBD
 			!isSkillHighPriority(getActionByMonsterID(instance, monsterID)))
 	) {
@@ -616,7 +607,6 @@ export {
 	getOtherSpot,
 	getAlly,
 	getEnnemies,
-	isOnBoard,
 	getActionByMonsterID,
 	getPlayerByID,
 	getPlayerByMonsterID,
