@@ -1,5 +1,5 @@
 import { MonsterFightingInterface } from "./monster.js";
-import { actionInterface, spot } from "./action.js";
+import { actionInterface } from "./action.js";
 
 class playerFighting {
 	private _id: string;
@@ -55,7 +55,7 @@ class playerFighting {
 			: ({} as MonsterFightingInterface);
 	};
 
-	public getMonsterBySpot = (spot: spot): MonsterFightingInterface => {
+	public getMonsterBySpot = (spot: number): MonsterFightingInterface => {
 		return this.onBoard[spot];
 	};
 	/**

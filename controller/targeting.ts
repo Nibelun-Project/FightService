@@ -3,7 +3,6 @@ import { instanceInterface } from "../interfaces/instance.js";
 import {
 	getAlly,
 	getEnnemies,
-	getMonsterBySpot,
 	getOnBoardMonsterByID,
 	getOtherSpot,
 	getPlayerByID,
@@ -169,14 +168,18 @@ const getTargeting = (
 	};
 
 	const single = (): actionInterface[] => {
-		let target = getMonsterBySpot(instance, actionFromMonster.targetInfo);
+		const player = getPlayerByID(
+			actionFromMonster.targetInfo.targetedPlayerID,
+			instance,
+		);
+		let target = player.getMonsterBySpot(actionFromMonster.targetInfo.spot);
 		//DAMIEN VA REVIEW CE MAUVAIS CODE
 		if (!isTargetable(target)) {
 			// if spot is empty
 			actionFromMonster.targetInfo.spot = getOtherSpot(
 				actionFromMonster.targetInfo.spot,
 			); // get the other spot
-			target = getMonsterBySpot(instance, actionFromMonster.targetInfo);
+			target = player.getMonsterBySpot(actionFromMonster.targetInfo.spot);
 			if (!isTargetable(target)) return []; // if empty too return []
 
 			return [

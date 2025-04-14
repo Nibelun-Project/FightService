@@ -1,3 +1,4 @@
+import { targetInfoType } from "../interfaces/action.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
@@ -5,7 +6,6 @@ import { effectsType } from "./action.js";
 import {
 	getAlly,
 	getEnnemies,
-	getMonsterBySpot,
 	getOnBoardMonsterByID,
 	getPlayerByID,
 	getSpotByMonsterID,
@@ -33,7 +33,11 @@ const passif = (
 
 	const fromType = { ennemies, ally, allies, self };
 
-	const checkPassif = (from, to, owner: MonsterFightingInterface) => {
+	const checkPassif = (
+		from,
+		to: targetInfoType,
+		owner: MonsterFightingInterface,
+	) => {
 		if (
 			owner.passive.trigger.actionType &&
 			owner.passive.trigger.actionType !== effect.type
@@ -50,9 +54,10 @@ const passif = (
 			owner.passive.trigger.to &&
 			!fromType[owner.passive.trigger.to](owner).find(
 				(monster: MonsterFightingInterface) => {
+					const player = getPlayerByID(to.targetedPlayerID, instance);
 					return !monster
 						? false
-						: monster.id === getMonsterBySpot(instance, to).id;
+						: monster.id === player.getMonsterBySpot(to.spot).id;
 				},
 			)
 		)

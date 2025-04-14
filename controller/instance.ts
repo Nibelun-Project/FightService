@@ -470,15 +470,6 @@ const checkEndgame = (instance: instanceInterface, playerID: string) => {
 	}
 };
 
-const getMonsterBySpot = (
-	instance: instanceInterface,
-	spotInfo: targetInfoType,
-): MonsterFightingInterface => {
-	return getPlayerByID(spotInfo.targetedPlayerID, instance).onBoard[
-		spotInfo.spot
-	];
-};
-
 /**
  *
  * @param {*} spot = to 1 or 0 only
@@ -638,7 +629,6 @@ const _isAlive = (monster: MonsterFightingInterface): boolean => {
 };
 
 export {
-	getMonsterBySpot,
 	getOtherSpot,
 	getAlly,
 	getEnnemies,
