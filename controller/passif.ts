@@ -3,7 +3,7 @@ import { Instance } from "../interfaces/instance.js";
 import { MonsterFightingInterface } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
 import { effectsType } from "./action.js";
-import { getAlly, getEnnemies, getPlayerByMonsterID } from "./instance.js";
+import { getAlly, getEnnemies } from "./instance.js";
 import { getTargeting } from "./targeting.js";
 
 const passif = (
@@ -72,8 +72,8 @@ const passif = (
 	};
 
 	const applyEffects = (owner: MonsterFightingInterface, from, to) => {
-		const sourcePlayer = getPlayerByMonsterID(owner.id, instance);
-		const fromPlayer = getPlayerByMonsterID(from.id, instance);
+		const sourcePlayer = instance.getPlayerByMonsterID(owner.id);
+		const fromPlayer = instance.getPlayerByMonsterID(from.id);
 		owner.passive.effects.forEach((effect) => {
 			const effectTargets = getTargeting(
 				instance,

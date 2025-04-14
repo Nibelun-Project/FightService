@@ -492,15 +492,6 @@ const getActionByMonsterID = (
 	}
 };
 
-const getPlayerByMonsterID = (monsterID: string, instance: Instance) => {
-	instance.players.forEach((player) => {
-		if (player.team.some((monster) => monster.id === monsterID)) {
-			return player;
-		}
-	});
-	return {} as playerFighting;
-};
-
 const isActionsFilled = (currInstance: Instance): boolean => {
 	return currInstance.players.every((player) => player.actions.length > 0);
 };
@@ -509,7 +500,7 @@ const isAvailableToPlayRound = (
 	instance: Instance,
 	monsterID: string,
 ): boolean => {
-	const player = getPlayerByMonsterID(monsterID, instance);
+	const player = instance.getPlayerByMonsterID(monsterID);
 	const monster = player.getOnBoardMonsterByID(monsterID);
 	let isAvailableToPlayRound = true;
 	if (
@@ -555,7 +546,6 @@ export {
 	getAlly,
 	getEnnemies,
 	getActionByMonsterID,
-	getPlayerByMonsterID,
 	isActionsFilled,
 	isAvailableToPlayRound,
 	buildInstance,

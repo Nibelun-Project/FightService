@@ -68,6 +68,15 @@ class Instance {
 	public getPlayerByID = (playerID: string): playerFighting => {
 		return this.players.find((player) => player.id === playerID);
 	};
+
+	getPlayerByMonsterID = (monsterID: string): playerFighting => {
+		this.players.forEach((player) => {
+			if (player.team.some((monster) => monster.id === monsterID)) {
+				return player;
+			}
+		});
+		return {} as playerFighting;
+	};
 }
 
 export { Instance };
