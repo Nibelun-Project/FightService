@@ -1,4 +1,4 @@
-import { playerFightingInterface } from "../interfaces/player.js";
+import { playerFighting } from "../interfaces/player.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import fight from "./fight.js";
 import matchmaking from "./matchmaking.js";
@@ -84,7 +84,7 @@ const comm = (io) => {
 		if (typeof target !== "object" && typeof target === "string")
 			io.to(playerSockets[target], emit, data);
 		else {
-			target.players.forEach((player: playerFightingInterface) => {
+			target.players.forEach((player: playerFighting) => {
 				io.to(playerSockets[player.id]).emit(emit, data);
 			});
 		}

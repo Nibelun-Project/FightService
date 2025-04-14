@@ -1,5 +1,5 @@
 import { actionInterface, targetInfoType } from "../interfaces/action.js";
-import { playerFightingInterface } from "../interfaces/player.js";
+import { playerFighting } from "../interfaces/player.js";
 import { historyContextEnum } from "../interfaces/history.js";
 import { instanceInterface } from "../interfaces/instance.js";
 import {
@@ -423,7 +423,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 	];
 };
 
-const buildInstance = (matchs: playerFightingInterface[]) => {
+const buildInstance = (matchs: playerFighting[]) => {
 	matchs.forEach((match) => {
 		match["team"] = getTeam(match.id);
 		match["onBoard"] = [match.team[0], match.team[1]];
@@ -574,7 +574,7 @@ const getActionByMonsterID = (
 const getPlayerByID = (
 	playerID: string,
 	currInstance: instanceInterface,
-): playerFightingInterface => {
+): playerFighting => {
 	return currInstance.players.find((player) => player.id === playerID);
 };
 

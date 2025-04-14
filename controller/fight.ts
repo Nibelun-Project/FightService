@@ -1,4 +1,4 @@
-import { playerFightingInterface } from "../interfaces/player.js";
+import { playerFighting } from "../interfaces/player.js";
 import { initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
 import {
@@ -20,7 +20,7 @@ import { rollStatusEndRound } from "./status.js";
 const fight = () => {
 	let mapFights: instanceInterface[] = [] as any;
 
-	const ready = (matchs: playerFightingInterface[]): instanceInterface => {
+	const ready = (matchs: playerFighting[]): instanceInterface => {
 		const instance = buildInstance(matchs);
 		mapFights.push(instance);
 		return instance;

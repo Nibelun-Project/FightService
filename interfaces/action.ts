@@ -33,6 +33,7 @@ interface actionInterface {
 	skill: SkillInterface;
 }
 
+type spot = 0 | 1;
 interface targetInfoPlayerID {
 	targetedPlayerID: string;
 	spot: number;
@@ -53,4 +54,5 @@ export {
 	effectTypeEnum,
 	targetType,
 	targetTypeEnum,
+	spot,
 };

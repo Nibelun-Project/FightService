@@ -1,9 +1,9 @@
-import { playerFightingInterface } from "./player.js";
+import { playerFighting } from "./player.js";
 import { fightInfoInterface } from "./history.js";
 
 interface instanceInterface {
 	id: string;
-	players: playerFightingInterface[];
+	players: playerFighting[];
 	fightInfo: fightInfoInterface;
 }
 
