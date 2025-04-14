@@ -425,9 +425,9 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 
 const buildInstance = (matchs: playerFighting[]) => {
 	matchs.forEach((match) => {
-		match["team"] = getTeam(match.id);
-		match["onBoard"] = [match.team[0], match.team[1]];
-		match["actions"] = [];
+		match.team = getTeam(match.id);
+		match.onBoard = [match.team[0], match.team[1]];
+		match.actions = [];
 	});
 	const fightId = _getNewFightId();
 	const instance: instanceInterface = {

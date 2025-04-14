@@ -13,7 +13,7 @@ const matchmaking = () => {
 	const getPlayers = () => {
 		let players: playerFighting[] = [] as any;
 		waitingPlayers.forEach((idPlayer) => {
-			players.push({ id: idPlayer });
+			players.push(new playerFighting(idPlayer));
 		});
 
 		waitingPlayers = [];

@@ -3,15 +3,12 @@ import { actionInterface, spot } from "./action.js";
 
 class playerFighting {
 	private _id: string;
-	private _onBoard?: MonsterFightingInterface[];
-	private _team?: MonsterFightingInterface[];
-	private _actions?: actionInterface[];
+	private _onBoard?: MonsterFightingInterface[] = [];
+	private _team?: MonsterFightingInterface[] = [];
+	private _actions?: actionInterface[] = [];
 
-	constructor(player: playerFighting) {
-		this.id = player.id;
-		this.onBoard = player.onBoard;
-		this.team = player.team;
-		this.actions = player._actions;
+	constructor(id: string) {
+		this.id = id;
 	}
 
 	public get id(): string {

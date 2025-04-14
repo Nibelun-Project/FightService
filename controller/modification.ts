@@ -1,4 +1,4 @@
-import { modCause, modInterface } from "../interfaces/modification";
+import { modInterface } from "../interfaces/modification";
 import { SkillInterface } from "../interfaces/skill";
 import { statusNameType } from "../interfaces/status";
 
