@@ -447,10 +447,6 @@ const getOtherSpot = (spot: number): number => {
 	return (spot + 1) % 2;
 };
 
-const isActionsFilled = (currInstance: Instance): boolean => {
-	return currInstance.players.every((player) => player.actions.length > 0);
-};
-
 const isAvailableToPlayRound = (
 	instance: Instance,
 	monsterID: string,
@@ -498,7 +494,6 @@ const isAlive = (monster: MonsterFightingInterface): boolean => {
 
 export {
 	getOtherSpot,
-	isActionsFilled,
 	isAvailableToPlayRound,
 	buildInstance,
 	isTargetable,

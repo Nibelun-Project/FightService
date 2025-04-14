@@ -115,6 +115,10 @@ class Instance {
 		});
 		return {} as playerFighting;
 	};
+
+	public isActionsFilled = (): boolean => {
+		return this.players.every((player) => player.actions.length > 0);
+	};
 }
 
 export { Instance };
