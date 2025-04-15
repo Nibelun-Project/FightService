@@ -15,7 +15,6 @@ import {
 	convertSkillToHistory,
 	updateHistory,
 } from "./history.js";
-import { isAvailableToPlayRound } from "./instance.js";
 import { getTypeEfficiency, isSTAB } from "./monsterType.js";
 import { passif } from "./passif.js";
 import { paySkillCost } from "./skill.js";
@@ -23,12 +22,17 @@ import { applyStatus } from "./status.js";
 import { getTargeting } from "./targeting.js";
 
 const doAction = (instance: Instance, monsterID: string) => {
-	if (isAvailableToPlayRound(instance, monsterID)) {
-		const sourcePlayer = instance.getPlayerByMonsterID(monsterID);
-		const sourceMonster = sourcePlayer.getOnBoardMonsterByID(monsterID);
-		const actionFromMonster = instance.getActionByMonsterID(monsterID);
-		actionFromMonster.source = sourceMonster;
-
+	const sourcePlayer = instance.getPlayerByMonsterID(monsterID);
+	const actionFromMonster = instance.getActionByMonsterID(monsterID);
+	const sourceMonster = sourcePlayer.getOnBoardMonsterByID(monsterID);
+	actionFromMonster.source = sourceMonster;
+	if (
+		sourcePlayer.isAvailableToPlayRound(
+			instance.fightInfo,
+			sourceMonster,
+			actionFromMonster,
+		)
+	) {
 		paySkillCost(
 			instance.fightInfo,
 			sourceMonster,

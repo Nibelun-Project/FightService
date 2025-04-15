@@ -1,20 +1,8 @@
-import { actionInterface } from "../interfaces/action.js";
 import { playerFighting } from "../interfaces/player.js";
-import { historyContextEnum } from "../interfaces/history.js";
 import { Instance } from "../interfaces/instance.js";
-import {
-	MonsterFightingInterface,
-	monsterStatsEnum,
-} from "../interfaces/monster.js";
-import {
-	convertActionToHistory,
-	convertMonsterToHistory,
-	initFightInfo,
-	updateHistory,
-} from "./history.js";
-import { isSkillHighPriority } from "./skill.js";
-import { preventToPlayRound, statusName } from "../interfaces/status.js";
-import { hasStatusFromList } from "./status.js";
+import { MonsterFightingInterface } from "../interfaces/monster.js";
+import { initFightInfo } from "./history.js";
+import { statusName } from "../interfaces/status.js";
 
 const getTeam = (playerID): MonsterFightingInterface[] => {
 	return [
@@ -447,37 +435,6 @@ const getOtherSpot = (spot: number): number => {
 	return (spot + 1) % 2;
 };
 
-const isAvailableToPlayRound = (
-	instance: Instance,
-	monsterID: string,
-): boolean => {
-	const player = instance.getPlayerByMonsterID(monsterID);
-	const monster = player.getOnBoardMonsterByID(monsterID);
-	let isAvailableToPlayRound = true;
-	if (
-		monster.isAlive === false ||
-		monster.stats[monsterStatsEnum.HP] <= 0 || // the monster is alive
-		!player.isOnBoard(monsterID) || // the monster is on the board
-		(hasStatusFromList(monster, preventToPlayRound) && //TBD
-			!isSkillHighPriority(instance.getActionByMonsterID(monsterID)))
-	) {
-		isAvailableToPlayRound = false;
-	}
-
-	updateHistory(instance.fightInfo, {
-		context: historyContextEnum.PLAYROUND,
-		content: {
-			isAvailableToPlayRound: isAvailableToPlayRound,
-			monster: convertMonsterToHistory(monster),
-			action: convertActionToHistory(
-				instance.getActionByMonsterID(monsterID),
-			),
-		},
-	});
-
-	return isAvailableToPlayRound;
-};
-
 const isTargetable = (monster: MonsterFightingInterface): boolean => {
 	if (!isAlive(monster)) {
 		return false;
@@ -492,10 +449,4 @@ const isAlive = (monster: MonsterFightingInterface): boolean => {
 	return true;
 };
 
-export {
-	getOtherSpot,
-	isAvailableToPlayRound,
-	buildInstance,
-	isTargetable,
-	isAlive,
-};
+export { getOtherSpot, buildInstance, isTargetable, isAlive };

@@ -1,5 +1,14 @@
 import { MonsterFightingInterface } from "./monster.js";
 import { actionInterface } from "./action.js";
+import { hasStatusFromList } from "../controller/status.js";
+import { preventToPlayRound } from "./status.js";
+import { isSkillHighPriority } from "../controller/skill.js";
+import {
+	convertActionToHistory,
+	convertMonsterToHistory,
+	updateHistory,
+} from "../controller/history.js";
+import { fightInfoInterface, historyContextEnum } from "./history.js";
 
 class playerFighting {
 	private _id: string;
@@ -69,6 +78,34 @@ class playerFighting {
 
 	public isOnBoard = (id: string): boolean => {
 		return this.onBoard.some((monster) => monster.id === id);
+	};
+
+	isAvailableToPlayRound = (
+		fightInfo: fightInfoInterface,
+		monster: MonsterFightingInterface,
+		action: actionInterface,
+	): boolean => {
+		let isAvailableToPlayRound = true;
+		if (
+			monster.isAlive === false ||
+			monster.stats.hp <= 0 || // the monster is alive
+			!this.isOnBoard(monster.id) || // the monster is on the board
+			(hasStatusFromList(monster, preventToPlayRound) && //TBD
+				!isSkillHighPriority(action))
+		) {
+			isAvailableToPlayRound = false;
+		}
+
+		updateHistory(fightInfo, {
+			context: historyContextEnum.PLAYROUND,
+			content: {
+				isAvailableToPlayRound: isAvailableToPlayRound,
+				monster: convertMonsterToHistory(monster),
+				action: convertActionToHistory(action),
+			},
+		});
+
+		return isAvailableToPlayRound;
 	};
 
 	public applyChanges = () => {
