@@ -1,7 +1,4 @@
-import { playerFighting } from "../interfaces/player.js";
-import { Instance } from "../interfaces/instance.js";
 import { MonsterFighting, monsterTypeEnum } from "../interfaces/monster.js";
-import { initFightInfo } from "./history.js";
 import { statusName } from "../interfaces/status.js";
 import { skillCostEnum } from "../interfaces/skill.js";
 
@@ -370,28 +367,4 @@ const getTeam = (playerID): MonsterFighting[] => {
 	];
 };
 
-const buildInstance = (matchs: playerFighting[]) => {
-	matchs.forEach((match) => {
-		match.team = getTeam(match.id);
-		match.onBoard = [match.team[0], match.team[1]];
-		match.actions = [];
-	});
-	const fightId = _getNewFightId();
-	const instance: Instance = new Instance(fightId, matchs, initFightInfo());
-	return instance;
-};
-
-const _getNewFightId = (): string => {
-	return "fid_" + Date.now().toString();
-};
-
-/**
- *
- * @param {*} spot = to 1 or 0 only
- * @returns change spot 0 to 1, and 1 to 0
- */
-const getOtherSpot = (spot: number): number => {
-	return (spot + 1) % 2;
-};
-
-export { getOtherSpot, buildInstance };
+export { getTeam };

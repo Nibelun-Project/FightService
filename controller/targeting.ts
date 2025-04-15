@@ -1,7 +1,6 @@
 import { actionInterface } from "../interfaces/action.js";
 import { Instance } from "../interfaces/instance.js";
 import { MonsterFighting } from "../interfaces/monster.js";
-import { getOtherSpot } from "./instance.js";
 
 const getTargeting = (
 	instance: Instance,
@@ -206,4 +205,13 @@ const getTargeting = (
 	return TargetTypes[effectTargetType]();
 };
 
-export { getTargeting };
+/**
+ *
+ * @param {*} spot = to 1 or 0 only
+ * @returns change spot 0 to 1, and 1 to 0
+ */
+const getOtherSpot = (spot: number): number => {
+	return (spot + 1) % 2;
+};
+
+export { getOtherSpot, getTargeting };

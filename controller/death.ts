@@ -55,14 +55,14 @@ const _killMonster = (
 	fightInfo: fightInfoInterface,
 	monster: MonsterFighting,
 ) => {
-	if (monster._isAlive)
+	if (monster.isAlive)
 		updateHistory(fightInfo, {
 			context: historyContextEnum.KILL,
 			content: { monster: convertMonsterToHistory(monster) },
 		});
 
 	monster.stats[monsterStatsEnum.HP] = 0;
-	monster._isAlive = false;
+	monster.isAlive = false;
 };
 
 export { deathCheckActionTaget, deathCheckMonster };

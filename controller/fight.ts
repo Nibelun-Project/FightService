@@ -1,7 +1,6 @@
 import { playerFighting } from "../interfaces/player.js";
-import { initHistoryRound } from "./history.js";
+import { initFightInfo, initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
-import { buildInstance } from "./instance.js";
 import { clearActions, doAction, effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
 import { passif } from "./passif.js";
@@ -10,6 +9,7 @@ import { Instance } from "../interfaces/instance.js";
 import { deathCheckActionTaget } from "./death.js";
 import { staminaRefill } from "./monsterStat.js";
 import { rollStatusEndRound } from "./status.js";
+import { getTeam } from "./instance.js";
 
 const fight = () => {
 	let mapFights: Instance[] = [] as any;
@@ -17,6 +17,21 @@ const fight = () => {
 	const ready = (matchs: playerFighting[]): Instance => {
 		const instance = buildInstance(matchs);
 		mapFights.push(instance);
+		return instance;
+	};
+
+	const buildInstance = (matchs: playerFighting[]) => {
+		matchs.forEach((match) => {
+			match.team = getTeam(match.id);
+			match.onBoard = [match.team[0], match.team[1]];
+			match.actions = [];
+		});
+		const fightId = "fid_" + Date.now().toString();
+		const instance: Instance = new Instance(
+			fightId,
+			matchs,
+			initFightInfo(),
+		);
 		return instance;
 	};
 
