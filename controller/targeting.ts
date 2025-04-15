@@ -1,7 +1,7 @@
 import { actionInterface } from "../interfaces/action.js";
 import { Instance } from "../interfaces/instance.js";
-import { MonsterFightingInterface } from "../interfaces/monster.js";
-import { getOtherSpot, isTargetable } from "./instance.js";
+import { MonsterFighting } from "../interfaces/monster.js";
+import { getOtherSpot } from "./instance.js";
 
 const getTargeting = (
 	instance: Instance,
@@ -13,7 +13,7 @@ const getTargeting = (
 
 		instance.players.forEach((player) => {
 			player.onBoard.forEach((monster) => {
-				if (isTargetable(monster)) {
+				if (monster.isTargetable()) {
 					effectListByTarget.push({
 						sourceID: actionFromMonster.sourceID,
 						targetInfo: {
@@ -31,10 +31,10 @@ const getTargeting = (
 	};
 
 	const ally = (): actionInterface[] => {
-		const ally: MonsterFightingInterface = instance.getAlly(
+		const ally: MonsterFighting = instance.getAlly(
 			actionFromMonster.sourceID,
 		);
-		if (!isTargetable(ally)) return [];
+		if (!ally.isTargetable()) return [];
 		return [
 			{
 				sourceID: actionFromMonster.sourceID,
@@ -56,7 +56,7 @@ const getTargeting = (
 			actionFromMonster.source.playerID,
 		);
 		player.onBoard.forEach((monster) => {
-			if (isTargetable(monster)) {
+			if (monster.isTargetable()) {
 				effectListByTarget.push({
 					sourceID: actionFromMonster.sourceID,
 					targetInfo: {
@@ -79,7 +79,7 @@ const getTargeting = (
 			actionFromMonster.targetInfo.targetedPlayerID,
 		);
 		player.onBoard.forEach((monster) => {
-			if (isTargetable(monster)) {
+			if (monster.isTargetable()) {
 				effectListByTarget.push({
 					sourceID: actionFromMonster.sourceID,
 					targetInfo: {
@@ -99,7 +99,7 @@ const getTargeting = (
 	const ennemies = (): actionInterface[] => {
 		const effectListByTarget = [];
 		instance.getEnnemies(actionFromMonster.sourceID).forEach((monster) => {
-			if (isTargetable(monster)) {
+			if (monster.isTargetable()) {
 				const player = instance.getPlayerByID(monster.playerID);
 				effectListByTarget.push({
 					sourceID: actionFromMonster.sourceID,
@@ -118,7 +118,7 @@ const getTargeting = (
 	};
 
 	const self = (): actionInterface[] => {
-		if (!isTargetable(actionFromMonster.source)) return [];
+		if (!actionFromMonster.source.isTargetable()) return [];
 		const player = instance.getPlayerByID(
 			actionFromMonster.source.playerID,
 		);
@@ -143,7 +143,7 @@ const getTargeting = (
 		let target = targetedPlayer.getMonsterBySpot(
 			actionFromMonster.targetInfo.spot,
 		);
-		if (!isTargetable(target)) {
+		if (!target.isTargetable()) {
 			// if spot is empty
 			actionFromMonster.targetInfo.spot = getOtherSpot(
 				actionFromMonster.targetInfo.spot,
@@ -151,7 +151,7 @@ const getTargeting = (
 			target = targetedPlayer.getMonsterBySpot(
 				actionFromMonster.targetInfo.spot,
 			);
-			if (!isTargetable(target)) return []; // if empty too return []
+			if (!target.isTargetable()) return []; // if empty too return []
 
 			return [
 				{

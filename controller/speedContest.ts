@@ -4,7 +4,7 @@ import {
 } from "../interfaces/history.js";
 import { Instance } from "../interfaces/instance.js";
 import {
-	MonsterFightingInterface,
+	MonsterFighting,
 	MonsterSpeedInterface,
 	monsterStatsEnum,
 } from "../interfaces/monster.js";
@@ -41,7 +41,7 @@ const _prepareMonstersToSpeedContest = (
 };
 
 const _shuffleMonsters = (
-	tempMonstersList: MonsterFightingInterface[],
+	tempMonstersList: MonsterFighting[],
 ): MonsterSpeedInterface[] => {
 	//1 - create array of "n°", look like: [1, 2, 3, 4]
 	const shuffleIndicators: number[] = [];

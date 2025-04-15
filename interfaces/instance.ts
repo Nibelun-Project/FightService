@@ -1,14 +1,13 @@
 import { playerFighting } from "./player.js";
 import { fightInfoInterface, historyContextEnum } from "./history.js";
-import { isAlive } from "../controller/instance.js";
 import { updateHistory } from "../controller/history.js";
-import { MonsterFightingInterface } from "./monster.js";
+import { MonsterFighting } from "./monster.js";
 import { actionInterface } from "./action.js";
 
 class Instance {
-	_id: string;
-	_players: playerFighting[] = [];
-	_fightInfo: fightInfoInterface = {} as fightInfoInterface;
+	private _id: string;
+	private _players: playerFighting[] = [];
+	private _fightInfo: fightInfoInterface = {} as fightInfoInterface;
 
 	constructor(
 		id: string,
@@ -43,11 +42,12 @@ class Instance {
 
 	public clearBoardBeforeRound = () => {
 		this.players.forEach((player) => {
-			player.onBoard = player.onBoard.filter((monster) =>
-				isAlive(monster),
+			player.onBoard = player.onBoard.filter(
+				(monster) => monster.isAlive,
 			);
-			player.actions = player.actions.filter((action) =>
-				isAlive(player.getOnBoardMonsterByID(action.sourceID)),
+			player.actions = player.actions.filter(
+				(action) =>
+					player.getOnBoardMonsterByID(action.sourceID).isAlive,
 			);
 		});
 	};
@@ -70,7 +70,7 @@ class Instance {
 	/**
 	 * @returns empty array if no ally on board: []
 	 */
-	public getAlly = (monsterID: string): MonsterFightingInterface => {
+	public getAlly = (monsterID: string): MonsterFighting => {
 		this.players.forEach((player) => {
 			if (player.onBoard.some((monster) => monster.id === monsterID)) {
 				return player.onBoard.find(
@@ -78,10 +78,10 @@ class Instance {
 				);
 			}
 		});
-		return {} as MonsterFightingInterface;
+		return {} as MonsterFighting;
 	};
 
-	public getEnnemies = (monsterID: string): MonsterFightingInterface[] => {
+	public getEnnemies = (monsterID: string): MonsterFighting[] => {
 		this.players.forEach((player) => {
 			if (player.onBoard.every((monster) => monster.id !== monsterID)) {
 				return player.onBoard;

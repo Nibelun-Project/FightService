@@ -4,10 +4,7 @@ import {
 	historyContextEnum,
 } from "../interfaces/history.js";
 import { Instance } from "../interfaces/instance.js";
-import {
-	MonsterFightingInterface,
-	monsterStatsEnum,
-} from "../interfaces/monster.js";
+import { MonsterFighting, monsterStatsEnum } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
 import { deathCheckActionTaget } from "./death.js";
 import {
@@ -85,7 +82,7 @@ const _doCalculDamage = (
 	fightInfo: fightInfoInterface,
 	action: actionInterface,
 	power: number,
-): MonsterFightingInterface => {
+): MonsterFighting => {
 	const skill = action.skill;
 	const monsterSource = action.source;
 	const monsterTarget = action.target;

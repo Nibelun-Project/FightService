@@ -1,15 +1,16 @@
 import { playerFighting } from "../interfaces/player.js";
 import { Instance } from "../interfaces/instance.js";
-import { MonsterFightingInterface } from "../interfaces/monster.js";
+import { MonsterFighting, monsterTypeEnum } from "../interfaces/monster.js";
 import { initFightInfo } from "./history.js";
 import { statusName } from "../interfaces/status.js";
+import { skillCostEnum } from "../interfaces/skill.js";
 
-const getTeam = (playerID): MonsterFightingInterface[] => {
+const getTeam = (playerID): MonsterFighting[] => {
 	return [
-		{
+		new MonsterFighting({
 			id: "ronka" + playerID.slice(0, 10),
 			name: "ronkarétoal1",
-			type: ["fire", "mental"],
+			type: [monsterTypeEnum.FIRE, monsterTypeEnum.MENTAL],
 			stats: {
 				hp: 300,
 				attack: 100,
@@ -18,21 +19,12 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 120,
 				balance: 100,
 			},
-			starting: {
-				hp: 300,
-				attack: 100,
-				def: 80,
-				speed: 50,
-				stamina: 120,
-				balance: 100,
-			},
-			statuses: [],
 			image: "../ronk.png",
 			passive: {
 				trigger: {
 					when: "after",
 					from: "self",
-					type: "mental",
+					type: monsterTypeEnum.MENTAL,
 				},
 				effects: [],
 				name: "Preventive Heal",
@@ -43,8 +35,8 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 					name: "Cold",
 					description:
 						"text sample.lorem ipsum dqsjdk jdqskdqs jqsdk .text sample.lorem ipsum dqsjdk jdqskdqs jqsdk ..",
-					type: "neutral",
-					cost: { type: "stamina", value: 40 },
+					type: monsterTypeEnum.NEUTRAL,
+					cost: { type: skillCostEnum.STAMINA, value: 40 },
 					effects: [
 						{
 							targetType: "single",
@@ -102,12 +94,10 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				},
 			],
 			playerID: playerID.toString(),
-			isAlive: true,
-		},
-		{
+		}),
+		new MonsterFighting({
 			id: "étoa2" + playerID.slice(0, 10),
 			name: "étoalronkaré2",
-			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -117,15 +107,6 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 100,
 				balance: 100,
 			},
-			starting: {
-				hp: 300,
-				attack: 100,
-				def: 100,
-				speed: 50,
-				stamina: 100,
-				balance: 100,
-			},
-			statuses: [],
 			image: "../etoal.png",
 			passive: {
 				name: "pâs2",
@@ -203,31 +184,19 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				},
 			],
 			playerID: playerID.toString(),
-		},
-		{
+		}),
+		new MonsterFighting({
 			id: 3 + playerID.slice(0, 10),
 			name: "ronkarétoal3",
-			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
 				attack: 100,
 				def: 80,
 				speed: 50,
-				// precision: 100,
-				// statusRes: 100,
 				stamina: 120,
 				balance: 100,
 			},
-			starting: {
-				hp: 300,
-				attack: 100,
-				def: 80,
-				speed: 50,
-				stamina: 120,
-				balance: 100,
-			},
-			statuses: [],
 			image: "../ronk.png",
 			passive: {
 				trigger: {
@@ -305,11 +274,10 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				},
 			],
 			playerID: playerID.toString(),
-		},
-		{
+		}),
+		new MonsterFighting({
 			id: 4 + playerID.slice(0, 10),
 			name: "ronkarétoal4",
-			isAlive: true,
 			type: ["fire", "mental"],
 			stats: {
 				hp: 300,
@@ -321,15 +289,6 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				stamina: 120,
 				balance: 100,
 			},
-			starting: {
-				hp: 300,
-				attack: 100,
-				def: 80,
-				speed: 50,
-				stamina: 120,
-				balance: 100,
-			},
-			statuses: [],
 			image: "../ronk.png",
 			passive: {
 				trigger: {
@@ -407,7 +366,7 @@ const getTeam = (playerID): MonsterFightingInterface[] => {
 				},
 			],
 			playerID: playerID.toString(),
-		},
+		}),
 	];
 };
 
@@ -435,18 +394,4 @@ const getOtherSpot = (spot: number): number => {
 	return (spot + 1) % 2;
 };
 
-const isTargetable = (monster: MonsterFightingInterface): boolean => {
-	if (!isAlive(monster)) {
-		return false;
-	}
-	return true;
-};
-
-const isAlive = (monster: MonsterFightingInterface): boolean => {
-	if (monster === undefined || !monster.isAlive) {
-		return false;
-	}
-	return true;
-};
-
-export { getOtherSpot, buildInstance, isTargetable, isAlive };
+export { getOtherSpot, buildInstance };

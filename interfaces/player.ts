@@ -1,4 +1,4 @@
-import { MonsterFightingInterface } from "./monster.js";
+import { MonsterFighting } from "./monster.js";
 import { actionInterface } from "./action.js";
 import { hasStatusFromList } from "../controller/status.js";
 import { preventToPlayRound } from "./status.js";
@@ -12,8 +12,8 @@ import { fightInfoInterface, historyContextEnum } from "./history.js";
 
 class playerFighting {
 	private _id: string;
-	private _onBoard?: MonsterFightingInterface[] = [];
-	private _team?: MonsterFightingInterface[] = [];
+	private _onBoard?: MonsterFighting[] = [];
+	private _team?: MonsterFighting[] = [];
 	private _actions?: actionInterface[] = [];
 
 	constructor(id: string) {
@@ -27,17 +27,17 @@ class playerFighting {
 		this._id = id;
 	}
 
-	public get onBoard(): MonsterFightingInterface[] {
+	public get onBoard(): MonsterFighting[] {
 		return this._onBoard;
 	}
-	public set onBoard(onBoard: MonsterFightingInterface[]) {
+	public set onBoard(onBoard: MonsterFighting[]) {
 		this._onBoard = onBoard;
 	}
 
-	public get team(): MonsterFightingInterface[] {
+	public get team(): MonsterFighting[] {
 		return this._team;
 	}
-	public set team(team: MonsterFightingInterface[]) {
+	public set team(team: MonsterFighting[]) {
 		this._team = team;
 	}
 
@@ -48,23 +48,21 @@ class playerFighting {
 		this._actions = actions;
 	}
 
-	public getOnBoardMonsterByID = (id: string): MonsterFightingInterface => {
+	public getOnBoardMonsterByID = (id: string): MonsterFighting => {
 		return this.getMonsterByID(id, this.onBoard);
 	};
-	public getTeamMonsterByID = (id: string): MonsterFightingInterface => {
+	public getTeamMonsterByID = (id: string): MonsterFighting => {
 		return this.getMonsterByID(id, this.team);
 	};
 	private getMonsterByID = (
 		id: string,
-		list: MonsterFightingInterface[],
-	): MonsterFightingInterface => {
+		list: MonsterFighting[],
+	): MonsterFighting => {
 		const monster = list.find((monster) => monster.id === id);
-		return monster != undefined
-			? monster
-			: ({} as MonsterFightingInterface);
+		return monster != undefined ? monster : ({} as MonsterFighting);
 	};
 
-	public getMonsterBySpot = (spot: number): MonsterFightingInterface => {
+	public getMonsterBySpot = (spot: number): MonsterFighting => {
 		return this.onBoard[spot];
 	};
 	/**
@@ -82,7 +80,7 @@ class playerFighting {
 
 	isAvailableToPlayRound = (
 		fightInfo: fightInfoInterface,
-		monster: MonsterFightingInterface,
+		monster: MonsterFighting,
 		action: actionInterface,
 	): boolean => {
 		let isAvailableToPlayRound = true;

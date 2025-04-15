@@ -7,10 +7,7 @@ import {
 	fightInfoInterface,
 	historyContextEnum,
 } from "../interfaces/history.js";
-import {
-	MonsterFightingInterface,
-	monsterStatsEnum,
-} from "../interfaces/monster.js";
+import { MonsterFighting, monsterStatsEnum } from "../interfaces/monster.js";
 import { SkillInterface } from "../interfaces/skill.js";
 import { statusName } from "../interfaces/status.js";
 import { convertMonsterToHistory, updateHistory } from "./history.js";
@@ -23,7 +20,7 @@ const isSkillHighPriority = (action: actionInterface): boolean => {
 
 const paySkillCost = (
 	fightInfo: fightInfoInterface,
-	monster: MonsterFightingInterface,
+	monster: MonsterFighting,
 	skill: SkillInterface,
 ) => {
 	costType()[skill.cost.type](fightInfo, monster, skill.cost.value);
@@ -32,17 +29,17 @@ const paySkillCost = (
 const costType = () => {
 	const balance = (
 		fightInfo: fightInfoInterface,
-		monster: MonsterFightingInterface,
+		monster: MonsterFighting,
 		cost: number,
 	) => {};
 	const hp = (
 		fightInfo: fightInfoInterface,
-		monster: MonsterFightingInterface,
+		monster: MonsterFighting,
 		cost: number,
 	) => {};
 	const stamina = (
 		fightInfo: fightInfoInterface,
-		monster: MonsterFightingInterface,
+		monster: MonsterFighting,
 		cost: number,
 	) => {
 		monster.stats.stamina -= cost;

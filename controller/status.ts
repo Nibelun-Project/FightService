@@ -4,10 +4,7 @@ import {
 } from "../interfaces/history.js";
 import { Instance } from "../interfaces/instance.js";
 import { modCause } from "../interfaces/modification.js";
-import {
-	MonsterFightingInterface,
-	monsterStatsEnum,
-} from "../interfaces/monster.js";
+import { MonsterFighting, monsterStatsEnum } from "../interfaces/monster.js";
 import { effectInterface, skillCostEnum } from "../interfaces/skill.js";
 import {
 	canBeReApply,
@@ -57,7 +54,7 @@ const rollStatusEndRound = (instance: Instance) => {
 
 const _statusEffectsEndRound = (
 	fightInfo: fightInfoInterface,
-	monster: MonsterFightingInterface,
+	monster: MonsterFighting,
 ) => {
 	const burned = () => {
 		monster.stats.hp -= monster.starting.hp * statusConst.BURNED;
@@ -116,7 +113,7 @@ const buildStatus = (
 
 const pushStatus = (
 	fightInfo: fightInfoInterface,
-	monster: MonsterFightingInterface,
+	monster: MonsterFighting,
 	status: statusInterface,
 ) => {
 	monster.statuses.push(status);
@@ -133,7 +130,7 @@ const pushStatus = (
 
 const applyStatus = (
 	fightInfo: fightInfoInterface,
-	monster: MonsterFightingInterface,
+	monster: MonsterFighting,
 	effect: effectInterface,
 ) => {
 	const statusToApply = buildStatus(effect.status, effect.power);
@@ -170,7 +167,7 @@ const applyStatus = (
 const _statusEffectsOnApply = () => {
 	const cold = (
 		fightInfo: fightInfoInterface,
-		monster: MonsterFightingInterface,
+		monster: MonsterFighting,
 		effect: effectInterface,
 	) => {
 		if (!hasStatus(monster, statusName.COLD)) {
@@ -193,7 +190,7 @@ const _statusEffectsOnApply = () => {
 
 	const exhausted = (
 		fightInfo: fightInfoInterface,
-		monster: MonsterFightingInterface,
+		monster: MonsterFighting,
 		effect: effectInterface,
 	) => {
 		if (hasStatus(monster, statusName.INVIGORATED)) {
@@ -223,7 +220,7 @@ const _statusEffectsOnApply = () => {
 
 	const invigorated = (
 		fightInfo: fightInfoInterface,
-		monster: MonsterFightingInterface,
+		monster: MonsterFighting,
 		effect: effectInterface,
 	) => {
 		if (hasStatus(monster, statusName.EXHAUSTED)) {
@@ -253,7 +250,7 @@ const _statusEffectsOnApply = () => {
 
 const removeStatus = (
 	fightInfo: fightInfoInterface,
-	monster: MonsterFightingInterface,
+	monster: MonsterFighting,
 	status: statusNameType,
 ) => {
 	if (hasStatus(monster, status)) {
@@ -275,7 +272,7 @@ const removeStatus = (
 };
 
 const _statusEffectsOnRemove = () => {
-	const exhausted = (monster: MonsterFightingInterface) => {
+	const exhausted = (monster: MonsterFighting) => {
 		_removeStatus(monster, statusName.EXHAUSTED);
 		monster.skills.forEach((skill) => {
 			if (hasSkillModStatus(skill, hasEffectOnApply.EXHAUSTED)) {
@@ -289,7 +286,7 @@ const _statusEffectsOnRemove = () => {
 		});
 	};
 
-	const invigorated = (monster: MonsterFightingInterface) => {
+	const invigorated = (monster: MonsterFighting) => {
 		_removeStatus(monster, statusName.INVIGORATED);
 		monster.skills.forEach((skill) => {
 			if (hasSkillModStatus(skill, hasEffectOnApply.INVIGORATED)) {
@@ -306,10 +303,7 @@ const _statusEffectsOnRemove = () => {
 	return { exhausted, invigorated };
 };
 
-const _removeStatus = (
-	monster: MonsterFightingInterface,
-	status: statusNameType,
-) => {
+const _removeStatus = (monster: MonsterFighting, status: statusNameType) => {
 	monster.statuses.splice(
 		monster.statuses.indexOf(monster.statuses[status]),
 		1,
@@ -324,7 +318,7 @@ const isStatusFromList = (
 };
 
 const hasStatusFromList = (
-	monster: MonsterFightingInterface,
+	monster: MonsterFighting,
 	statusList: listOfStatus,
 ): boolean => {
 	return monster.statuses.some((status) =>
@@ -333,14 +327,14 @@ const hasStatusFromList = (
 };
 
 const hasStatus = (
-	monster: MonsterFightingInterface,
+	monster: MonsterFighting,
 	status: statusNameType,
 ): boolean => {
 	return monster.statuses.some((status) => status.name === status.name);
 };
 
 const getStatus = (
-	monster: MonsterFightingInterface,
+	monster: MonsterFighting,
 	statusName: statusNameType,
 ): statusInterface => {
 	return monster.statuses.find((status) => status.name === statusName);

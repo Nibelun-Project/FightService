@@ -38,90 +38,95 @@ enum monsterStatsEnum {
 	STAMINA = "stamina",
 }
 
-type monsterStat = `${monsterStatsEnum}`;
+type monsterStatName = `${monsterStatsEnum}`;
+interface monsterStat {
+	hp: number;
+	attack: number;
+	def: number;
+	speed: number;
+	stamina: number;
+	balance: number;
+}
 
 enum statsConst {
 	STAMINAREFILLONBOARD = 10,
 	STAMINAREFILLNOTONBOARD = 15,
 }
 
-interface MonsterInfoInterface {
-	name: string;
-	type: monsterType[];
-	stats: {
-		hp: number;
-		attack: number;
-		def: number;
-		speed: number;
-		stamina: number;
-		balance: number;
-	};
-	image: string;
-	passive: string[];
-	trait: string;
-	skills: string[];
-}
-
-interface MonsterInterface {
-	name: string;
-	type: monsterType[];
-	stats: {
-		hp: number;
-		attack: number;
-		def: number;
-		speed: number;
-		stamina: number;
-		balance: number;
-	};
-	image: string;
-	passive: {};
-	trait: string;
-	skills: SkillInterface[];
-}
-
 interface MonsterSpeedInterface {
 	shuffleID: number;
-	monster: MonsterFightingInterface;
+	monster: MonsterFighting;
 	action?: SkillInterface;
 }
 
-interface MonsterFightingInterface {
+interface Monster {
 	id: string;
 	name: string;
 	type: monsterType[];
-	isAlive: boolean;
-	stats: {
-		hp: number;
-		attack: number;
-		def: number;
-		speed: number;
-		stamina: number;
-		balance: number;
-	};
-	starting: {
-		hp: number;
-		attack: number;
-		def: number;
-		speed: number;
-		stamina: number;
-		balance: number;
-	};
-	statuses: statusInterface[];
+	stats: monsterStat;
 	image: string;
 	passive: PassiveInterface;
 	skills: SkillInterface[];
-	startSkills?: SkillInterface[];
 	playerID: string;
 }
 
+class MonsterFighting implements Monster {
+	private _id: string = "";
+	name: string = "";
+	type: monsterType[] = [];
+	private _isAlive: boolean = true;
+	stats: monsterStat = {} as monsterStat;
+	starting: monsterStat = {} as monsterStat;
+	statuses: statusInterface[] = [];
+	image: string = "";
+	passive: PassiveInterface = {} as PassiveInterface;
+	skills: SkillInterface[] = [];
+	startSkills?: SkillInterface[] = [];
+	playerID: string = "";
+
+	constructor(monster: Monster) {
+		this.id = monster.id;
+		this.name = monster.name;
+		this.type = monster.type;
+		this._isAlive = true;
+		this.stats = monster.stats;
+		this.starting = monster.stats;
+		this.statuses = [];
+		this.image = monster.image;
+		this.passive = monster.passive;
+		this.skills = monster.skills;
+		this.startSkills = monster.skills;
+		this.playerID = monster.playerID;
+	}
+
+	public get id(): string {
+		return this._id;
+	}
+	private set id(id: string) {
+		this._id = id;
+	}
+
+	public get isAlive(): boolean {
+		if (this === undefined || !this._isAlive) {
+			return false;
+		}
+		return true;
+	}
+	public set isAlive(isAlive: boolean) {
+		this._isAlive = isAlive;
+	}
+
+	isTargetable = (): boolean => {
+		return !this.isAlive;
+	};
+}
+
 export {
-	MonsterInfoInterface,
-	MonsterInterface,
 	MonsterSpeedInterface,
-	MonsterFightingInterface,
+	MonsterFighting,
 	monsterType,
 	monsterTypeEnum,
-	monsterStat,
+	monsterStatName,
 	monsterStatsEnum,
 	statsConst,
 	typeConst,

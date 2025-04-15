@@ -8,7 +8,7 @@ import {
 	historySkillInterface,
 } from "../interfaces/history.js";
 import { Instance } from "../interfaces/instance.js";
-import { MonsterFightingInterface } from "../interfaces/monster.js";
+import { MonsterFighting } from "../interfaces/monster.js";
 import { SkillInterface } from "../interfaces/skill.js";
 
 const HISTORY_NAME = "fightInfo";
@@ -26,7 +26,7 @@ const initHistoryRound = (instance: Instance) => {
 };
 
 const convertMonsterToHistory = (
-	monster: MonsterFightingInterface,
+	monster: MonsterFighting,
 ): historyMonsterInterface => {
 	return {
 		id: monster.id,

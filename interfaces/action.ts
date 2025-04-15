@@ -1,4 +1,4 @@
-import { MonsterFightingInterface } from "./monster.js";
+import { MonsterFighting } from "./monster.js";
 import { SkillInterface } from "./skill.js";
 
 enum targetTypeEnum {
@@ -26,10 +26,10 @@ type targetType = `${targetTypeEnum}`;
 
 interface actionInterface {
 	sourceID: string;
-	source?: MonsterFightingInterface;
+	source?: MonsterFighting;
 	targetInfo: targetInfoType;
-	target?: MonsterFightingInterface;
-	targetTeam?: MonsterFightingInterface[];
+	target?: MonsterFighting;
+	targetTeam?: MonsterFighting[];
 	skill: SkillInterface;
 }
 

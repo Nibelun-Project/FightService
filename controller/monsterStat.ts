@@ -1,6 +1,6 @@
 import { Instance } from "../interfaces/instance.js";
 import {
-	MonsterFightingInterface,
+	MonsterFighting,
 	monsterStatsEnum,
 	statsConst,
 } from "../interfaces/monster.js";
@@ -25,21 +25,21 @@ const staminaRefill = (instance: Instance) => {
 };
 
 const refillStat = () => {
-	const balance = (monster: MonsterFightingInterface, value: number) => {
+	const balance = (monster: MonsterFighting, value: number) => {
 		if (monster.stats.balance !== monster.starting.balance) {
 			monster.stats.balance += value;
 			if (monster.stats.balance > monster.starting.balance)
 				monster.stats.balance = monster.starting.balance;
 		}
 	};
-	const hp = (monster: MonsterFightingInterface, value: number) => {
+	const hp = (monster: MonsterFighting, value: number) => {
 		if (monster.stats.hp !== monster.starting.hp) {
 			monster.stats.hp += value;
 			if (monster.stats.hp > monster.starting.hp)
 				monster.stats.hp = monster.starting.hp;
 		}
 	};
-	const stamina = (monster: MonsterFightingInterface, value: number) => {
+	const stamina = (monster: MonsterFighting, value: number) => {
 		if (monster.stats.stamina !== monster.starting.stamina) {
 			monster.stats.stamina += value;
 			if (monster.stats.stamina > monster.starting.stamina)

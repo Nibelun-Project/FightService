@@ -1,6 +1,6 @@
 import { targetInfoType } from "../interfaces/action.js";
 import { Instance } from "../interfaces/instance.js";
-import { MonsterFightingInterface } from "../interfaces/monster.js";
+import { MonsterFighting } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
 import { effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
@@ -11,26 +11,22 @@ const passif = (
 	effect: effectInterface,
 	instance: Instance,
 ) => {
-	const ennemies = (owner: MonsterFightingInterface) => {
+	const ennemies = (owner: MonsterFighting) => {
 		return instance.getEnnemies(owner.id);
 	};
-	const ally = (owner: MonsterFightingInterface) => {
+	const ally = (owner: MonsterFighting) => {
 		return [instance.getAlly(owner.id)];
 	};
-	const allies = (owner: MonsterFightingInterface) => {
+	const allies = (owner: MonsterFighting) => {
 		return [instance.getPlayerByID(owner.playerID).onBoard];
 	};
-	const self = (owner: MonsterFightingInterface) => {
+	const self = (owner: MonsterFighting) => {
 		return [owner];
 	};
 
 	const fromType = { ennemies, ally, allies, self };
 
-	const checkPassif = (
-		from,
-		to: targetInfoType,
-		owner: MonsterFightingInterface,
-	) => {
+	const checkPassif = (from, to: targetInfoType, owner: MonsterFighting) => {
 		if (
 			owner.passive.trigger.actionType &&
 			owner.passive.trigger.actionType !== effect.type
@@ -38,7 +34,7 @@ const passif = (
 			return false;
 		const ownerFrom = fromType[owner.passive.trigger.from](owner);
 		if (
-			!ownerFrom.find((monster: MonsterFightingInterface) => {
+			!ownerFrom.find((monster: MonsterFighting) => {
 				return !monster ? false : monster.id === from.id;
 			})
 		)
@@ -46,7 +42,7 @@ const passif = (
 		if (
 			owner.passive.trigger.to &&
 			!fromType[owner.passive.trigger.to](owner).find(
-				(monster: MonsterFightingInterface) => {
+				(monster: MonsterFighting) => {
 					const player = instance.getPlayerByID(to.targetedPlayerID);
 					return !monster
 						? false
@@ -70,7 +66,7 @@ const passif = (
 		return true;
 	};
 
-	const applyEffects = (owner: MonsterFightingInterface, from, to) => {
+	const applyEffects = (owner: MonsterFighting, from, to) => {
 		const sourcePlayer = instance.getPlayerByMonsterID(owner.id);
 		const fromPlayer = instance.getPlayerByMonsterID(from.id);
 		owner.passive.effects.forEach((effect) => {
