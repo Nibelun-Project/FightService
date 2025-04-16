@@ -3,12 +3,7 @@ import { actionInterface } from "./action.js";
 import { hasStatusFromList } from "../controller/status.js";
 import { preventToPlayRound } from "./status.js";
 import { isSkillHighPriority } from "../controller/skill.js";
-import {
-	convertActionToHistory,
-	convertMonsterToHistory,
-	updateHistory,
-} from "../controller/history.js";
-import { fightInfoInterface, historyContextEnum } from "./history.js";
+import { FightInfo, historyContextEnum } from "./history.js";
 
 class playerFighting {
 	private _id: string;
@@ -79,7 +74,7 @@ class playerFighting {
 	};
 
 	isAvailableToPlayRound = (
-		fightInfo: fightInfoInterface,
+		fightInfo: FightInfo,
 		monster: MonsterFighting,
 		action: actionInterface,
 	): boolean => {
@@ -94,12 +89,12 @@ class playerFighting {
 			isAvailableToPlayRound = false;
 		}
 
-		updateHistory(fightInfo, {
+		fightInfo.updateHistory({
 			context: historyContextEnum.PLAYROUND,
 			content: {
 				isAvailableToPlayRound: isAvailableToPlayRound,
-				monster: convertMonsterToHistory(monster),
-				action: convertActionToHistory(action),
+				monster: fightInfo.convertMonsterToHistory(monster),
+				action: fightInfo.convertActionToHistory(action),
 			},
 		});
 

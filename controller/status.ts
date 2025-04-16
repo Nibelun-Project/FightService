@@ -1,7 +1,4 @@
-import {
-	fightInfoInterface,
-	historyContextEnum,
-} from "../interfaces/history.js";
+import { FightInfo, historyContextEnum } from "../interfaces/history.js";
 import { Instance } from "../interfaces/instance.js";
 import { modCause } from "../interfaces/modification.js";
 import { MonsterFighting, monsterStatsEnum } from "../interfaces/monster.js";
@@ -18,7 +15,6 @@ import {
 	statusNameType,
 } from "../interfaces/status.js";
 import { deathCheckMonster } from "./death.js";
-import { convertMonsterToHistory, updateHistory } from "./history.js";
 import {
 	getSkillModByStatus,
 	hasSkillModStatus,
@@ -53,15 +49,15 @@ const rollStatusEndRound = (instance: Instance) => {
 };
 
 const _statusEffectsEndRound = (
-	fightInfo: fightInfoInterface,
+	fightInfo: FightInfo,
 	monster: MonsterFighting,
 ) => {
 	const burned = () => {
 		monster.stats.hp -= monster.starting.hp * statusConst.BURNED;
-		updateHistory(fightInfo, {
+		fightInfo.updateHistory({
 			context: historyContextEnum.DAMAGE,
 			content: {
-				targetMonster: convertMonsterToHistory(monster),
+				targetMonster: fightInfo.convertMonsterToHistory(monster),
 				statusName: statusName.BURNED,
 				statName: monsterStatsEnum.HP,
 				statChanges: monster.starting.hp * statusConst.BURNED,
@@ -71,10 +67,10 @@ const _statusEffectsEndRound = (
 
 	const poisoned = () => {
 		monster.stats.hp -= monster.starting.hp * statusConst.POISONED;
-		updateHistory(fightInfo, {
+		fightInfo.updateHistory({
 			context: historyContextEnum.DAMAGE,
 			content: {
-				targetMonster: convertMonsterToHistory(monster),
+				targetMonster: fightInfo.convertMonsterToHistory(monster),
 				statusName: statusName.POISONED,
 				statName: monsterStatsEnum.HP,
 				statChanges: monster.starting.hp * statusConst.POISONED,
@@ -87,10 +83,10 @@ const _statusEffectsEndRound = (
 			monster,
 			monster.starting.hp * statusConst.REGENERATED,
 		);
-		updateHistory(fightInfo, {
+		fightInfo.updateHistory({
 			context: historyContextEnum.HEAL,
 			content: {
-				targetMonster: convertMonsterToHistory(monster),
+				targetMonster: fightInfo.convertMonsterToHistory(monster),
 				statusName: statusName.REGENERATED,
 				statName: monsterStatsEnum.HP,
 				statChanges: monster.starting.hp * statusConst.REGENERATED,
@@ -112,16 +108,16 @@ const buildStatus = (
 };
 
 const pushStatus = (
-	fightInfo: fightInfoInterface,
+	fightInfo: FightInfo,
 	monster: MonsterFighting,
 	status: statusInterface,
 ) => {
 	monster.statuses.push(status);
 
-	updateHistory(fightInfo, {
+	fightInfo.updateHistory({
 		context: historyContextEnum.STATUS,
 		content: {
-			targetMonster: convertMonsterToHistory(monster),
+			targetMonster: fightInfo.convertMonsterToHistory(monster),
 			statusName: status.name,
 			nbrRound: status.nbrRound,
 		},
@@ -129,7 +125,7 @@ const pushStatus = (
 };
 
 const applyStatus = (
-	fightInfo: fightInfoInterface,
+	fightInfo: FightInfo,
 	monster: MonsterFighting,
 	effect: effectInterface,
 ) => {
@@ -140,10 +136,10 @@ const applyStatus = (
 		) &&
 		!isStatusFromList(statusToApply.name, canBeReApply)
 	) {
-		updateHistory(fightInfo, {
+		fightInfo.updateHistory({
 			context: historyContextEnum.STATUS,
 			content: {
-				targetMonster: convertMonsterToHistory(monster),
+				targetMonster: fightInfo.convertMonsterToHistory(monster),
 				statusName: statusToApply.name,
 				nbrRound: 0,
 			},
@@ -166,7 +162,7 @@ const applyStatus = (
 
 const _statusEffectsOnApply = () => {
 	const cold = (
-		fightInfo: fightInfoInterface,
+		fightInfo: FightInfo,
 		monster: MonsterFighting,
 		effect: effectInterface,
 	) => {
@@ -189,7 +185,7 @@ const _statusEffectsOnApply = () => {
 	};
 
 	const exhausted = (
-		fightInfo: fightInfoInterface,
+		fightInfo: FightInfo,
 		monster: MonsterFighting,
 		effect: effectInterface,
 	) => {
@@ -219,7 +215,7 @@ const _statusEffectsOnApply = () => {
 	};
 
 	const invigorated = (
-		fightInfo: fightInfoInterface,
+		fightInfo: FightInfo,
 		monster: MonsterFighting,
 		effect: effectInterface,
 	) => {
@@ -249,7 +245,7 @@ const _statusEffectsOnApply = () => {
 };
 
 const removeStatus = (
-	fightInfo: fightInfoInterface,
+	fightInfo: FightInfo,
 	monster: MonsterFighting,
 	status: statusNameType,
 ) => {
@@ -260,10 +256,10 @@ const removeStatus = (
 			_statusEffectsOnRemove()[status](monster);
 		}
 
-		updateHistory(fightInfo, {
+		fightInfo.updateHistory({
 			context: historyContextEnum.STATUS,
 			content: {
-				targetMonster: convertMonsterToHistory(monster),
+				targetMonster: fightInfo.convertMonsterToHistory(monster),
 				statusName: status,
 				nbrRound: -1,
 			},

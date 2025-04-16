@@ -99,7 +99,11 @@ const passif = (
 
 			if (effectTargets <= 0) return false;
 			effectTargets.forEach((target) => {
-				effectsType()[effect.type](instance, target, effect.power);
+				effectsType()[effect.type](
+					instance.fightInfo,
+					target,
+					effect.power,
+				);
 			});
 		});
 	};

@@ -1,5 +1,6 @@
-import { targetType } from "./action.js";
-import { monsterType } from "./monster.js";
+import { actionInterface, targetType } from "./action.js";
+import { MonsterFighting, monsterType } from "./monster.js";
+import { SkillInterface } from "./skill.js";
 
 enum historyContextEnum {
 	DAMAGE = "damage",
@@ -12,13 +13,6 @@ enum historyContextEnum {
 	STAMINA = "stamina",
 	STATUS = "status",
 	SWAP = "swap",
-}
-
-interface fightInfoInterface {
-	round: number;
-	history: historyInterface[][];
-	endgame: boolean;
-	winner?: string;
 }
 
 interface historyInterface {
@@ -60,8 +54,80 @@ interface historyActionInterface {
 	skill: historySkillInterface;
 }
 
+class FightInfo {
+	round: number = -1;
+	_history: historyInterface[][] = [];
+	endgame: boolean = false;
+	winner: string = "";
+
+	constructor() {
+		this.round = 0;
+		this.history = [];
+		this.endgame = false;
+	}
+
+	public get history(): historyInterface[][] {
+		return this._history;
+	}
+	private set history(history: historyInterface[][]) {
+		this._history = history;
+	}
+
+	initHistoryRound = () => {
+		this.history[this.round] = [];
+		this.round++;
+	};
+
+	updateHistory = (update: historyInterface) => {
+		if (
+			update.context !== historyContextEnum.SPEEDCONTEST ||
+			this.history[this.round - 1].every((event) => {
+				return !(
+					(event.content.monstersID[0] ===
+						update.content.monstersID[0] ||
+						event.content.monstersID[1] ===
+							update.content.monstersID[0]) &&
+					(event.content.monstersID[0] ===
+						update.content.monstersID[1] ||
+						event.content.monstersID[1] ===
+							update.content.monstersID[1])
+				);
+			})
+		)
+			this.history[this.round - 1].push(update);
+	};
+
+	convertMonsterToHistory = (
+		monster: MonsterFighting,
+	): historyMonsterInterface => {
+		return {
+			id: monster.id,
+			name: monster.name,
+			type: monster.type,
+			playerID: monster.playerID,
+		};
+	};
+
+	convertSkillToHistory = (skill: SkillInterface): historySkillInterface => {
+		return {
+			name: skill.name,
+			type: skill.type,
+			targetType: skill.targetType,
+		};
+	};
+
+	convertActionToHistory = (
+		action: actionInterface,
+	): historyActionInterface => {
+		return {
+			sourceID: action.sourceID,
+			skill: this.convertSkillToHistory(action.skill),
+		};
+	};
+}
+
 export {
-	fightInfoInterface,
+	FightInfo,
 	historyInterface,
 	historyContextEnum,
 	historyMonsterInterface,

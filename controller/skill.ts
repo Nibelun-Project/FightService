@@ -3,14 +3,10 @@ import {
 	effectTypeEnum,
 	targetTypeEnum,
 } from "../interfaces/action.js";
-import {
-	fightInfoInterface,
-	historyContextEnum,
-} from "../interfaces/history.js";
+import { FightInfo, historyContextEnum } from "../interfaces/history.js";
 import { MonsterFighting, monsterStatsEnum } from "../interfaces/monster.js";
 import { SkillInterface } from "../interfaces/skill.js";
 import { statusName } from "../interfaces/status.js";
-import { convertMonsterToHistory, updateHistory } from "./history.js";
 import { applyStatus } from "./status.js";
 
 const isSkillHighPriority = (action: actionInterface): boolean => {
@@ -19,7 +15,7 @@ const isSkillHighPriority = (action: actionInterface): boolean => {
 };
 
 const paySkillCost = (
-	fightInfo: fightInfoInterface,
+	fightInfo: FightInfo,
 	monster: MonsterFighting,
 	skill: SkillInterface,
 ) => {
@@ -28,26 +24,26 @@ const paySkillCost = (
 
 const costType = () => {
 	const balance = (
-		fightInfo: fightInfoInterface,
+		fightInfo: FightInfo,
 		monster: MonsterFighting,
 		cost: number,
 	) => {};
 	const hp = (
-		fightInfo: fightInfoInterface,
+		fightInfo: FightInfo,
 		monster: MonsterFighting,
 		cost: number,
 	) => {};
 	const stamina = (
-		fightInfo: fightInfoInterface,
+		fightInfo: FightInfo,
 		monster: MonsterFighting,
 		cost: number,
 	) => {
 		monster.stats.stamina -= cost;
 
-		updateHistory(fightInfo, {
+		fightInfo.updateHistory({
 			context: historyContextEnum.DAMAGE,
 			content: {
-				monster: convertMonsterToHistory(monster),
+				monster: fightInfo.convertMonsterToHistory(monster),
 				statName: monsterStatsEnum.STAMINA,
 				statChanges: cost,
 			},
@@ -64,10 +60,10 @@ const costType = () => {
 				status: statusName.OVERSTRAIN,
 			});
 
-			updateHistory(fightInfo, {
+			fightInfo.updateHistory({
 				context: historyContextEnum.DAMAGE,
 				content: {
-					monster: convertMonsterToHistory(monster),
+					monster: fightInfo.convertMonsterToHistory(monster),
 					statName: monsterStatsEnum.HP,
 					statChanges: damage,
 				},

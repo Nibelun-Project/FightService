@@ -1,22 +1,17 @@
 import { playerFighting } from "./player.js";
-import { fightInfoInterface, historyContextEnum } from "./history.js";
-import { updateHistory } from "../controller/history.js";
+import { FightInfo, historyContextEnum } from "./history.js";
 import { MonsterFighting } from "./monster.js";
 import { actionInterface } from "./action.js";
 
 class Instance {
 	private _id: string;
 	private _players: playerFighting[] = [];
-	private _fightInfo: fightInfoInterface = {} as fightInfoInterface;
+	private _fightInfo: FightInfo = {} as FightInfo;
 
-	constructor(
-		id: string,
-		players: playerFighting[],
-		fightInfo: fightInfoInterface,
-	) {
+	constructor(id: string, players: playerFighting[]) {
 		this.id = id;
 		this.players = players;
-		this.fightInfo = fightInfo;
+		this.fightInfo = new FightInfo();
 	}
 
 	public get id(): string {
@@ -33,10 +28,10 @@ class Instance {
 		this._players = players;
 	}
 
-	public get fightInfo(): fightInfoInterface {
+	public get fightInfo(): FightInfo {
 		return this._fightInfo;
 	}
-	public set fightInfo(fightInfo: fightInfoInterface) {
+	public set fightInfo(fightInfo: FightInfo) {
 		this._fightInfo = fightInfo;
 	}
 
@@ -60,7 +55,7 @@ class Instance {
 				(player) => player.id != playerID,
 			).id;
 
-			updateHistory(this.fightInfo, {
+			this.fightInfo.updateHistory({
 				context: historyContextEnum.ENDGAME,
 				content: { winner: this.fightInfo.winner },
 			});

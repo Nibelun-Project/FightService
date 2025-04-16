@@ -1,5 +1,4 @@
 import { playerFighting } from "../interfaces/player.js";
-import { initFightInfo, initHistoryRound } from "./history.js";
 import { speedContest } from "./speedContest.js";
 import { clearActions, doAction, effectsType } from "./action.js";
 import { getTargeting } from "./targeting.js";
@@ -27,11 +26,7 @@ const fight = () => {
 			match.actions = [];
 		});
 		const fightId = "fid_" + Date.now().toString();
-		const instance: Instance = new Instance(
-			fightId,
-			matchs,
-			initFightInfo(),
-		);
+		const instance: Instance = new Instance(fightId, matchs);
 		return instance;
 	};
 
@@ -62,7 +57,7 @@ const fight = () => {
 	};
 
 	const _playRound = (instance: Instance): Instance => {
-		initHistoryRound(instance);
+		instance.fightInfo.initHistoryRound();
 		instance.clearBoardBeforeRound();
 		const sortedListOfMonstersID = speedContest(instance);
 		sortedListOfMonstersID.forEach((monsterID) => {

@@ -1,14 +1,10 @@
-import {
-	fightInfoInterface,
-	historyContextEnum,
-} from "../interfaces/history.js";
+import { FightInfo, historyContextEnum } from "../interfaces/history.js";
 import { Instance } from "../interfaces/instance.js";
 import {
 	MonsterFighting,
 	MonsterSpeedInterface,
 	monsterStatsEnum,
 } from "../interfaces/monster.js";
-import { updateHistory } from "./history.js";
 
 const speedContest = (instance: Instance): string[] => {
 	//1 - Prepare array of monster to proceed the speed constest with all needly informations
@@ -104,7 +100,7 @@ const _shuffleMonsters = (
  */
 const _getPlacesOnRound = (
 	speedContestTempsList: MonsterSpeedInterface[],
-	fightInfo: fightInfoInterface,
+	fightInfo: FightInfo,
 ): string[] => {
 	let sortedMonsters = [];
 	//1 - For each monster
@@ -147,9 +143,9 @@ const _getPlacesOnRound = (
 const _shuffleContest = (
 	monster1: MonsterSpeedInterface,
 	monster2: MonsterSpeedInterface,
-	fightInfo: fightInfoInterface,
+	fightInfo: FightInfo,
 ): boolean => {
-	updateHistory(fightInfo, {
+	fightInfo.updateHistory({
 		context: historyContextEnum.SPEEDCONTEST,
 		content: { monstersID: [monster1.monster.id, monster2.monster.id] },
 	});

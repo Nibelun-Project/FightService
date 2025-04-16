@@ -1,11 +1,7 @@
 import { actionInterface } from "../interfaces/action";
-import {
-	fightInfoInterface,
-	historyContextEnum,
-} from "../interfaces/history.js";
+import { FightInfo, historyContextEnum } from "../interfaces/history.js";
 import { Instance } from "../interfaces/instance.js";
 import { MonsterFighting, monsterStatsEnum } from "../interfaces/monster.js";
-import { convertMonsterToHistory, updateHistory } from "./history.js";
 
 const deathCheckActionTaget = (
 	instance: Instance,
@@ -51,14 +47,11 @@ const _killActionTaget = (
 	_killMonster(instance.fightInfo, monster);
 };
 
-const _killMonster = (
-	fightInfo: fightInfoInterface,
-	monster: MonsterFighting,
-) => {
+const _killMonster = (fightInfo: FightInfo, monster: MonsterFighting) => {
 	if (monster.isAlive)
-		updateHistory(fightInfo, {
+		fightInfo.updateHistory({
 			context: historyContextEnum.KILL,
-			content: { monster: convertMonsterToHistory(monster) },
+			content: { monster: fightInfo.convertMonsterToHistory(monster) },
 		});
 
 	monster.stats[monsterStatsEnum.HP] = 0;

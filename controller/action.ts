@@ -1,17 +1,9 @@
 import { actionInterface } from "../interfaces/action.js";
-import {
-	fightInfoInterface,
-	historyContextEnum,
-} from "../interfaces/history.js";
+import { FightInfo, historyContextEnum } from "../interfaces/history.js";
 import { Instance } from "../interfaces/instance.js";
 import { MonsterFighting, monsterStatsEnum } from "../interfaces/monster.js";
 import { effectInterface } from "../interfaces/skill.js";
 import { deathCheckActionTaget } from "./death.js";
-import {
-	convertMonsterToHistory,
-	convertSkillToHistory,
-	updateHistory,
-} from "./history.js";
 import { getTypeEfficiency, isSTAB } from "./monsterType.js";
 import { passif } from "./passif.js";
 import { paySkillCost } from "./skill.js";
@@ -52,7 +44,7 @@ const doAction = (instance: Instance, monsterID: string) => {
 
 const effectsType = () => {
 	const damage = (
-		fightInfo: fightInfoInterface,
+		fightInfo: FightInfo,
 		actionsByTarget: actionInterface,
 		effect: effectInterface,
 	) => {
@@ -60,7 +52,7 @@ const effectsType = () => {
 	};
 
 	const status = (
-		fightInfo: fightInfoInterface,
+		fightInfo: FightInfo,
 		actionsByTarget: actionInterface,
 		effect: effectInterface,
 	) => {
@@ -68,10 +60,7 @@ const effectsType = () => {
 		applyStatus(fightInfo, monster, effect);
 	};
 
-	const swap = (
-		fightInfo: fightInfoInterface,
-		actionsByTarget: actionInterface,
-	) => {
+	const swap = (fightInfo: FightInfo, actionsByTarget: actionInterface) => {
 		_swapOnBoard(fightInfo, actionsByTarget);
 	};
 
@@ -79,7 +68,7 @@ const effectsType = () => {
 };
 
 const _doCalculDamage = (
-	fightInfo: fightInfoInterface,
+	fightInfo: FightInfo,
 	action: actionInterface,
 	power: number,
 ): MonsterFighting => {
@@ -99,14 +88,14 @@ const _doCalculDamage = (
 		(typeEfficiency * stab); // multiplying factor
 	monsterTarget.stats[monsterStatsEnum.HP] += hpChanges;
 
-	updateHistory(fightInfo, {
+	fightInfo.updateHistory({
 		context: historyContextEnum.DAMAGE,
 		content: {
-			monster: convertMonsterToHistory(monsterSource),
-			skill: convertSkillToHistory(skill),
+			monster: fightInfo.convertMonsterToHistory(monsterSource),
+			skill: fightInfo.convertSkillToHistory(skill),
 			typeEfficiency: typeEfficiency,
 			isSTAB: stab,
-			targetMonster: convertMonsterToHistory(monsterTarget),
+			targetMonster: fightInfo.convertMonsterToHistory(monsterTarget),
 			statName: monsterStatsEnum.HP,
 			statChanges: hpChanges,
 		},
@@ -116,7 +105,7 @@ const _doCalculDamage = (
 };
 
 const _swapOnBoard = (
-	fightInfo: fightInfoInterface,
+	fightInfo: FightInfo,
 	actionsByTarget: actionInterface,
 ) => {
 	const teamSourceMonsterIndex = actionsByTarget.targetTeam.findIndex(
@@ -131,11 +120,11 @@ const _swapOnBoard = (
 
 	actionsByTarget.source = actionsByTarget.targetTeam[teamTargetMonsterIndex];
 
-	updateHistory(fightInfo, {
+	fightInfo.updateHistory({
 		context: historyContextEnum.SWAP,
 		content: {
-			monster: convertMonsterToHistory(actionsByTarget.source),
-			targetMonster: convertMonsterToHistory(
+			monster: fightInfo.convertMonsterToHistory(actionsByTarget.source),
+			targetMonster: fightInfo.convertMonsterToHistory(
 				actionsByTarget.targetTeam[teamTargetMonsterIndex],
 			),
 		},
