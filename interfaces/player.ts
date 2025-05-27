@@ -109,6 +109,28 @@ class playerFighting {
 			this.team[teamMonsterIndex] = onBoardMonster;
 		});
 	};
+
+	public deathCheckActionTarget = (
+		fightInfo: FightInfo,
+		actionsByTarget: actionInterface,
+	): boolean => {
+		if (this.isNeededToCheckDeath(actionsByTarget)) {
+			const monster = this.onBoard[actionsByTarget.targetInfo.spot];
+			return monster.checkDeath(fightInfo);
+		}
+		return false;
+	};
+
+	public deathCheckTeam = (): boolean => {
+		return this.team.every((monster) => monster.isAlive === false);
+	};
+
+	private isNeededToCheckDeath = (
+		actionsByTarget: actionInterface,
+	): boolean => {
+		if (actionsByTarget.targetInfo.targetedPlayerID) return true;
+		else return false;
+	};
 }
 
 export { playerFighting };

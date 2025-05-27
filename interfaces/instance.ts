@@ -48,11 +48,10 @@ class Instance {
 	};
 
 	public checkEndgame = (playerID: string) => {
-		const playerToCheck = this.getPlayerByID(playerID);
-		if (playerToCheck.team.every((monster) => monster.isAlive === false)) {
+		if (this.getPlayerByID(playerID).deathCheckTeam) {
 			this.fightInfo.endgame = true;
 			this.fightInfo.winner = this.players.find(
-				(player) => player.id != playerID,
+				(player) => player.id != player.id,
 			).id;
 
 			this.fightInfo.updateHistory({
@@ -60,6 +59,16 @@ class Instance {
 				content: { winner: this.fightInfo.winner },
 			});
 		}
+	};
+
+	deathCheckActionTarget = (actionsByTarget: actionInterface): boolean => {
+		const player = this.getPlayerByID(
+			actionsByTarget.targetInfo.targetedPlayerID,
+		);
+		if (player.deathCheckActionTarget(this.fightInfo, actionsByTarget)) {
+			this.checkEndgame(player.id);
+		}
+		return false;
 	};
 
 	/**

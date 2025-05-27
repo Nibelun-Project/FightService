@@ -36,6 +36,9 @@ const doAction = (instance: Instance, monsterID: string) => {
 			);
 			effectTargets.forEach((target: actionInterface) => {
 				passif(effectsType()[effect.type], target, effect, instance);
+				instance
+					.getPlayerByID(target.targetInfo.targetedPlayerID)
+					.deathCheckActionTarget(instance.fightInfo, target);
 				return !deathCheckActionTaget(instance, target);
 			});
 		});

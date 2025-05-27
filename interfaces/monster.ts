@@ -1,3 +1,4 @@
+import { FightInfo, historyContextEnum } from "./history.js";
 import { PassiveInterface } from "./passive.js";
 import { SkillInterface } from "./skill.js";
 import { statusInterface } from "./status.js";
@@ -118,6 +119,26 @@ class MonsterFighting implements Monster {
 
 	isTargetable = (): boolean => {
 		return !this.isAlive;
+	};
+
+	checkDeath = (fightInfo: FightInfo) => {
+		if (this.stats.hp <= 0) {
+			this.killMonster(fightInfo);
+			return true;
+		}
+		return false;
+	};
+
+	private killMonster = (fightInfo: FightInfo) => {
+		if (this.isAlive)
+			fightInfo.updateHistory({
+				context: historyContextEnum.KILL,
+				content: {
+					monster: fightInfo.convertMonsterToHistory(this),
+				},
+			});
+		this.stats.hp = 0;
+		this.isAlive = false;
 	};
 }
 
